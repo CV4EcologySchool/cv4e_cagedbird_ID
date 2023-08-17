@@ -8,11 +8,11 @@ device: cuda
 num_workers: 4
 
 # dataset parameters
-data_root: datasets/CaltechCT
-num_classes: 16
+data_root: /home/sicily/cv4e_cagedbird_ID/data/high
+num_classes: 29
 
 # training hyperparameters
-image_size: [224, 224]
+image_size: [224] # [224, 224] keep it as [224] or [224, ] if you want to keep the aspect ratio the same
 num_epochs: 200
 batch_size: 128
 learning_rate: 0.001

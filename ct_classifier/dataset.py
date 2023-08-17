@@ -39,8 +39,8 @@ class CTDataset(Dataset):
         # load annotation file
         annoPath = os.path.join(
             self.data_root,
-            'eccv_18_annotation_files',
-            'train_annotations.json' if self.split=='train' else 'cis_val_annotations.json'
+            'high',
+            'training.json' if self.split=='train' else 'validation.json'
         )
         meta = json.load(open(annoPath, 'r'))
 
