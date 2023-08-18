@@ -10,6 +10,7 @@ category_names = [folder_name for folder_name in os.listdir(root_directory) if o
 category_names.sort()
 
 print(len(category_names))
+# This should only be 29 species
 
 coco_annotations = {
     "images": [],

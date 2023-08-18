@@ -27,11 +27,11 @@ for class_name, class_annotations in annotations.items():
     validation_annotations.extend(class_annotations[split_index:])
 
 # Create and write the training.json file
-with open('/home/sicily/cv4e_cagedbird_ID/data/high/training_new.json', 'w') as f:
+with open('/home/sicily/cv4e_cagedbird_ID/data/high/training_new2.json', 'w') as f:
     json.dump(training_annotations, f, indent=4)
 
 # Create and write the validation.json file
-with open('/home/sicily/cv4e_cagedbird_ID/data/high/validation_new.json', 'w') as f:
+with open('/home/sicily/cv4e_cagedbird_ID/data/high/validation_new2.json', 'w') as f:
     json.dump(validation_annotations, f, indent=4)
 
 print("Splitting and writing completed.")
