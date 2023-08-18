@@ -8,10 +8,10 @@ output_train_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/training_18_0
 output_val_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/val_18_08.json"
 
 # Load COCO annotations from a JSON file
-with open(os.path.join(root_directory, "annotations.json"), 'r') as coco_file:
+with open(os.path.join(root_directory, "annotations_test.json"), 'r') as coco_file:
     coco_annotations = json.load(coco_file)
 
-random.seed (3) # so the suffele is random but the same each time
+random.seed (3) # so the shuffle is random but the same each time
 
 # Shuffle the images and annotations together
 combined_data = list(zip(coco_annotations["images"], coco_annotations["annotations"]))

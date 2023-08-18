@@ -47,7 +47,7 @@ class CTDataset(Dataset):
 
         meta = json.load(open(annoPath, 'r'))
         # [print(anno) for anno in meta['annotations'] if anno['image_id']==4236]
-
+        # We previously put the breakpoint before and after this point
         images = dict([[i['id'], i['file_name']] for i in meta['images']])          # image id to filename lookup
         # print (images)
         # 
@@ -55,7 +55,9 @@ class CTDataset(Dataset):
         # print (images.keys())
 
         labels = dict([[c['id'], idx] for idx, c in enumerate(meta['categories'])]) # custom labelclass indices that start at zero
-        
+        print ("length of annotations")
+        print(len(meta['annotations']))
+
         # since we're doing classification, we're just taking the first annotation per image and drop the rest
         images_covered = set()      # all those images for which we have already assigned a label
         for anno in meta['annotations']:
@@ -64,7 +66,6 @@ class CTDataset(Dataset):
                 print(anno)
             if imgID in images_covered:
                 continue
-            
             # append image-label tuple to data
             imgFileName = images[imgID]
             label = anno['category_id']
@@ -89,9 +90,16 @@ class CTDataset(Dataset):
 
         # load image
         image_path = os.path.join(self.data_root, 'high', image_name)
-        img = Image.open(image_path).convert('RGB')     # the ".convert" makes sure we always get three bands in Red, Green, Blue order
+        print (image_path)
 
+        try:
+            img = Image.open(image_path).convert('RGB')     # the ".convert" makes sure we always get three bands in Red, Green, Blue order
+        except:
+            print(image_path)
+            pass # Doesn't do anything
+    
+        # print(img.size)
         # transform: see lines 31ff above where we define our transformations
         img_tensor = self.transform(img)
-
+        print(img_tensor.size())
         return img_tensor, label

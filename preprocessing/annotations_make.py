@@ -37,20 +37,17 @@ annotation_id = 0
 for folder in glob (root_directory +'/*'):
     if not Path(folder).is_dir(): # If this folder is a directory or not
         continue 
-    for file_name in files:
-        print (dir_name)
-        break # will break the for loop
-        if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
-            image_path = os.path.join(dir_name, file_name)
+    for image_path in glob (folder + '/*'):
+        if image_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
             image = Image.open(image_path)
             image_width, image_height = image.size
 
             # Determine the category of the image
-            category_name = os.path.basename(dir_name)
+            category_name = Path (folder).name
             category_id = category_id_mapping[category_name]
 
             coco_annotations["images"].append({
-                "file_name": file_name,
+                "file_name": f'{category_name}/{Path(image_path).name}',
                 "height": image_height,
                 "width": image_width,
                 "id": image_id
@@ -70,7 +67,7 @@ for folder in glob (root_directory +'/*'):
             image_id += 1
             annotation_id += 1
 
-    break 
-exit # kills the whole python script
+#     break 
+# exit # kills the whole python script
 with open(output_json_path, 'w') as output_json_file:
     json.dump(coco_annotations, output_json_file)

@@ -29,7 +29,9 @@ def create_dataloader(cfg, split='train'):
         PyTorch DataLoader object.
     '''
     dataset_instance = CTDataset(cfg, split)        # create an object instance of our CTDataset class
-
+    print ("Print the length of the dataset")
+    print(len(dataset_instance))
+    
     dataLoader = DataLoader(
             dataset=dataset_instance,
             batch_size=cfg['batch_size'],
@@ -48,11 +50,11 @@ def load_model(cfg):
 
     # load latest model state
     model_states = glob.glob('model_states/*.pt')
+    model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
     if len(model_states):
         # at least one save state found; get latest
         model_epochs = [int(m.replace('model_states/','').replace('.pt','')) for m in model_states]
-        start_epoch = max(model_epochs)
-
+        start_epoch = max(model_epochs) 
         # load state dict and apply weights to model
         print(f'Resuming from epoch {start_epoch}')
         state = torch.load(open(f'model_states/{start_epoch}.pt', 'rb'), map_location='cpu')
@@ -245,6 +247,12 @@ def main():
     # initialize data loaders for training and validation set
     dl_train = create_dataloader(cfg, split='train')
     dl_val = create_dataloader(cfg, split='val')
+    print ("Length of training dataloader")
+    # Number of training samples divided by batch size
+    
+    print(len(dl_train))
+    print ("Length of validation dataloader")
+    print(len(dl_val))
 
     # initialize model
     model, current_epoch = load_model(cfg)
@@ -280,6 +288,6 @@ if __name__ == '__main__':
     # (i.e., "python ct_classifier/train.py").
     main()
 
-CTDataset.__getitem__()
-CTDataset.len ()
-dataLoader.len()
+# CTDataset.__getitem__()
+# CTDataset.len ()
+# dataLoader.len()
