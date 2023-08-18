@@ -1,6 +1,8 @@
 import os
 import json
 from PIL import Image
+from pathlib import Path
+from glob import glob
 
 root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
 output_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/annotations_test.json"
@@ -32,8 +34,12 @@ for idx, category_name in enumerate(category_names):
 image_id = 0
 annotation_id = 0
 
-for dir_name, _, files in os.walk(root_directory):
+for folder in glob (root_directory +'/*'):
+    if not Path(folder).is_dir(): # If this folder is a directory or not
+        continue 
     for file_name in files:
+        print (dir_name)
+        break # will break the for loop
         if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
             image_path = os.path.join(dir_name, file_name)
             image = Image.open(image_path)
@@ -64,5 +70,7 @@ for dir_name, _, files in os.walk(root_directory):
             image_id += 1
             annotation_id += 1
 
+    break 
+exit # kills the whole python script
 with open(output_json_path, 'w') as output_json_file:
     json.dump(coco_annotations, output_json_file)
