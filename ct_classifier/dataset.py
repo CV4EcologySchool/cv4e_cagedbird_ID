@@ -40,17 +40,28 @@ class CTDataset(Dataset):
         annoPath = os.path.join(
             self.data_root,
             'high',
-            'training.json' if self.split=='train' else 'validation.json'
+            'training_clean.json' if self.split=='train' else 'validation.json'
         )
+
+        print(annoPath)
+
         meta = json.load(open(annoPath, 'r'))
+        # [print(anno) for anno in meta['annotations'] if anno['image_id']==4236]
 
         images = dict([[i['id'], i['file_name']] for i in meta['images']])          # image id to filename lookup
+        # print (images)
+        # 
+        #print (images [4236])
+        # print (images.keys())
+
         labels = dict([[c['id'], idx] for idx, c in enumerate(meta['categories'])]) # custom labelclass indices that start at zero
         
         # since we're doing classification, we're just taking the first annotation per image and drop the rest
         images_covered = set()      # all those images for which we have already assigned a label
         for anno in meta['annotations']:
             imgID = anno['image_id']
+            if imgID == 4286:
+                print(anno)
             if imgID in images_covered:
                 continue
             
@@ -77,7 +88,7 @@ class CTDataset(Dataset):
         image_name, label = self.data[idx]              # see line 57 above where we added these two items to the self.data list
 
         # load image
-        image_path = os.path.join(self.data_root, 'eccv_18_all_images_sm', image_name)
+        image_path = os.path.join(self.data_root, 'high', image_name)
         img = Image.open(image_path).convert('RGB')     # the ".convert" makes sure we always get three bands in Red, Green, Blue order
 
         # transform: see lines 31ff above where we define our transformations

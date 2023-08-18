@@ -3,11 +3,13 @@ import json
 from PIL import Image
 
 root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
-output_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/annotations.json"
+output_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/annotations_test.json"
 
 # Get a list of category names from subfolder names
 category_names = [folder_name for folder_name in os.listdir(root_directory) if os.path.isdir(os.path.join(root_directory, folder_name))]
 category_names.sort()
+
+print(len(category_names))
 
 coco_annotations = {
     "images": [],

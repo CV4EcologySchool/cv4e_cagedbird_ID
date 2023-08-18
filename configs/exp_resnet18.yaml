@@ -8,7 +8,7 @@ device: cuda
 num_workers: 4
 
 # dataset parameters
-data_root: /home/sicily/cv4e_cagedbird_ID/data/high
+data_root: /home/sicily/cv4e_cagedbird_ID/data
 num_classes: 29
 
 # training hyperparameters

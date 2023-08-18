@@ -279,3 +279,7 @@ if __name__ == '__main__':
     # This block only gets executed if you call the "train.py" script directly
     # (i.e., "python ct_classifier/train.py").
     main()
+
+CTDataset.__getitem__()
+CTDataset.len ()
+dataLoader.len()

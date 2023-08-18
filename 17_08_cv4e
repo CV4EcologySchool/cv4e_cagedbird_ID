@@ -1,0 +1,263 @@
+    1  exit
+    2  sudo vim /home/sicily/.bashrc
+    3  logout
+    4  python
+    5  vim test.py
+    6  python test.py 
+    7  sudo vim /home/sicily/.bashrc
+    8  python
+    9  sudo vim /home/sicily/.bashrc
+   10  logout
+   11  nvidia-smi
+   12  python
+   13  ls
+   14  git clone git@github.com:CV4EcologySchool/cv4e_cagedbird_ID.git
+   15  ssh-keygen
+   16  cat ssh-keygen
+   17  ls
+   18  cd ssh
+   19  cd .ssh
+   20  ls
+   21  cat id_rsa.pub
+   22  cd
+   23  git clone git@github.com:Sicily-F/cv4e_cagedbird_ID.git
+   24  ls
+   25  git pull
+   26  cd cv4e_cagedbird_ID/
+   27  git pull
+   28  git status
+   29  cd ..
+   30  ls
+   31  rm -r cv4e_cagedbird_ID/
+   32  git clone git@github.com:CV4EcologySchool/cv4e_cagedbird_ID.git
+   33  ls
+   34  cd
+   35  cd /mnt/hdd-0/cv4eco/sicily
+   36  cd /mnt/hdd-0/cv4eco/
+   37  ls
+   38  mkdir sicily
+   39  sudo mkdir sicily
+   40  ls
+   41  sudo chmod sicily 775
+   42  sudo chmod 775 sicily
+   43  cd sicily
+   44  ls
+   45  scp -r E:\species_to_review\crops0\90species sicily@198.176.97.113 :/mnt/hdd-0/cv4eco/sicily
+   46  scp -r E:\species_to_review\crops0\90species sicily@198.176.97.113:/mnt/hdd-0/cv4eco/sicily
+   47  ls -l
+   48  cd ..
+   49  ls -l
+   50  sudo chmod a+w sicily/
+   51  ls -l
+   52  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+   53  chmod +x Miniconda3-latest-Linux-x86_64.sh
+   54  cd
+   55  chmod +x Miniconda3-latest-Linux-x86_64.sh
+   56  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+   57  chmod +x Miniconda3-latest-Linux-x86_64.sh
+   58  bash Miniconda3-latest-Linux-x86_64.sh
+   59  rm Miniconda3-latest-Linux-x86_64.sh
+   60  conda
+   61  cd
+   62  conda
+   63  conda create -n cv4e python==3.10
+   64  conda activate cv4e
+   65  conda deactivate
+   66  conda install matplotlib
+   67  conda activate cv4e
+   68  conda install os
+   69  conda install matplotlib
+   70  ls
+   71  rm /mnt/hdd-0/cv4eco/sicily/90species/annotations.json
+   72  cd
+   73  ls
+   74  cd .mnt/hdd-0/cv4eco/sicily
+   75  cd ./mnt/hdd-0/cv4eco/sicily
+   76  cd /mnt/hdd-0/cv4eco/sicily
+   77  ls
+   78  conda ls
+   79  conda list
+   80  conda env list
+   81  conda env remove -n cv4e
+   82  conda create --name cv4e python=3.9
+   83  conda env remove -n cv4e
+   84  conda create --name cv4e python=3.9
+   85  ls
+   86  cd ./mnt/hdd-0/cv4eco/sicily
+   87  cd /mnt/hdd-0/cv4eco/sicily
+   88  ls
+   89  cd cv4e
+   90  conda activate cv4e
+   91  python --version
+   92  pip install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+   93  python import torch
+   94  python
+   95  which (pip)
+   96  which pip
+   97  cd ./cv4e_cagedbird_ID
+   98  git pull
+   99  ls
+  100  cd ..
+  101  ls
+  102  cd cv4e_cagedbird_ID
+  103  ls
+  104  cp -r ct_classifier/ .
+  105  cp ct_classifier/* .
+  106  cp -r ct_classifier/* .
+  107  ls
+  108  cd ct_classifier
+  109  ls
+  110  cd ..
+  111  cd ct_classifier
+  112  rm -r ./ct_classifier
+  113  ls
+  114  ..
+  115  cd ..
+  116  ls
+  117  cd data
+  118  mkdir high
+  119  cd
+  120  ls
+  121  cd /mnt/hdd-0/cv4eco/sicily/data
+  122  cd ..
+  123  ls
+  124  cd data
+  125  ls
+  126  cp -r raw/bluethroat high/bluethroat
+  127  mv /mnt/hdd-0/cv4eco/sicily/data ~/cv4e_cagedbird_ID
+  128  cd.
+  129  cd..
+  130  cd ..
+  131  git clone https://github.com/CV4EcologySchool/ct_classifier
+  132  ls
+  133  mv .ct_classifier .cv4e_cagedbird_ID
+  134  mv ./ct_classifier /.cv4e_cagedbird_ID
+  135  mv ./ct_classifier ./cv4e_cagedbird_ID
+  136  cd ct_classifier
+  137  cd ./ct_classifier
+  138  cd .ct_classifier
+  139  ls
+  140  cd cv4e_cagedbird_ID
+  141  ls
+  142  cd ct_classifier
+  143  ls
+  144  cd ..
+  145  git add .gitgnore
+  146  git add .gitignore
+  147  git status
+  148  git commit
+  149  git config --global core.editor "vim"
+  150  git commit
+  151  git push
+  152  git log
+  153  git config --global user.name "Your Name"
+  154  git config --global user.email "sicilyfiennes@gmail.com"
+  155  git config --global user.name "Sicily"
+  156  git push
+  157  python --version
+  158  conda activate cv4e
+  159  python --version
+  160  history
+  161  mv ./ct_classifier/* ./cv4e_cagedbird_ID
+  162  mv ./ct_classifier/* .
+  163  ls
+  164  cd ct_classifier
+  165  ls
+  166  mv ./ct_classifier ..
+  167  mv ct_classifier ..
+  168  mv ct_classifier ../..
+  169  ls
+  170  cd ..
+  171  ls
+  172  cd ct_classifier
+  173  ls
+  174  ls ..
+  175  cd ..
+  176  ls ..
+  177  ls
+  178  ls ct_classifier/.git
+  179  ls ct_classifier/
+  180  rm -rf ct_classifier/
+  181  ls
+  182  cd ..
+  183  mv ct_classifier/ cv4e_cagedbird_ID/
+  184  cd cv4e_cagedbird_ID/
+  185  ls
+  186  ls ct_classifier/
+  187  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/bm_leafbird ./data/high/
+  188  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/bw_myna ./data/high/
+  189  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/cf_white_eye ./data/high/
+  190  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/chestnut_munia ./data/high/
+  191  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/coal_tit_crops ./data/high/
+  192  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/common_myna ./data/high/
+  193  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/Common_redpoll ./data/high/
+  194  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/crested_lark ./data/high/
+  195  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/Eurasian_jay ./data/high/
+  196  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/Eurasian_siskin ./data/high/
+  197  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/fischers_lovebird ./data/high/
+  198  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/great_myna ./data/high/
+  199  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/grey_parrot ./data/high/
+  200  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/Grey_Parrot ./data/high/
+  201  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/hill_mynas ./data/high/
+  202  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/Hoopoe ./data/high/
+  203  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/hwamei ./data/high/
+  204  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/japanese_grosbeak ./data/high/
+  205  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/javan_pied_starling ./data/high/
+  206  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/marsh_tit ./data/high/
+  207  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/oriental_magpie_robin ./data/high/
+  208  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/oriental_skylark ./data/high/
+  209  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/red_billed_starling ./data/high/
+  210  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/red_whiskered_bulbul ./data/high/
+  211  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/siberrian_rubythroat /data/high/
+  212  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/siberian_rubythroat /data/high/
+  213  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/siberian_rubythroat ./data/high/
+  214  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/yellow_bellied_tits ./data/high/
+  215  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/zebra_dove ./data/high/
+  216  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/zebra_finch ./data/high/
+  217  cp -r /home/sicily/cv4e_cagedbird_ID/data/raw/swinhoes_whiteeye ./data/high/
+  218  python rename_files.py
+  219  cd ..
+  220  python rename_files.py
+  221  cd cv4e_cagedbird_ID
+  222  cd preprocessing
+  223  python rename_files.py
+  224  cd preprocessing
+  225  python rename_files.py
+  226  python delete_files.py
+  227  python rename_files.py
+  228  python delete_backup_folders.py
+  229  python annotations_make.py
+  230  conda activate
+  231  conda activate cv4e
+  232  python annotations_make.py
+  233  python rename_files.py
+  234  python annotations_make.py
+  235  python json_split_generate.py
+  236  ls
+  237  python json_split_generate.py
+  238  git push
+  239  git add
+  240  cd ..
+  241  git add
+  242  git commit
+  243  git add
+  244  git add.
+  245  git add .
+  246  git status
+  247  git push
+  248  git commit
+  249  git push
+  250  cd cv4e_cagedbird_ID/
+  251  ls
+  252  cd cv4e_cagedbird_ID
+  253  pwd
+  254  ls
+  255  cd cv4e_cagedbird_ID
+  256  pwd
+  257  conda activate cv4e
+  258  python
+  259  python train.py
+  260  python ct_classifier/train.py
+  261  python preprocessing/annotations_make.py
+  262  python preprocessing/annotations_remake.py
+  263  history > 17_08_cv4e
