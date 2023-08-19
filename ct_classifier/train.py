@@ -11,6 +11,9 @@ import yaml
 import glob
 from tqdm import trange
 
+# COMET WARNING: To get all data logged automatically, import comet_ml before the following modules: torch.
+import comet_ml
+
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -20,8 +23,6 @@ from torch.optim import SGD
 from util import init_seed
 from dataset import CTDataset
 from model import CustomResNet18
-
-
 
 def create_dataloader(cfg, split='train'):
     '''
@@ -50,7 +51,7 @@ def load_model(cfg):
 
     # load latest model state
     model_states = glob.glob('model_states/*.pt')
-    model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
+    # model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
     if len(model_states):
         # at least one save state found; get latest
         model_epochs = [int(m.replace('model_states/','').replace('.pt','')) for m in model_states]
@@ -225,6 +226,34 @@ def validate(cfg, dataLoader, model):
 
 def main():
 
+    # For Comet to start tracking a training run,
+# just add these two lines at the top of
+# your training script:
+
+    experiment = comet_ml.Experiment(
+        api_key="6D79SKeAIuSjteySwQwqx96nq",
+        project_name="cagedbird-classifier"
+    )
+    
+    resume = True # to update an existing experiment
+
+    if resume:
+        experiment = comet_ml.ExistingExperiment(
+            api_key="6D79SKeAIuSjteySwQwqx96nq",
+            experiment_key="cfac36ee909a4b3b8417991e522f3423",
+        )
+
+    else:
+        experiment = comet_ml.Experiment(
+            api_key="6D79SKeAIuSjteySwQwqx96nq",
+            project_name="cagedbird-classifier",
+        )
+
+# your model training or evaluation code
+
+# Metrics from this training run will now be
+# available in the Comet UI
+
     # Argument parser for command-line arguments:
     # python ct_classifier/train.py --config configs/exp_resnet18.yaml
     parser = argparse.ArgumentParser(description='Train deep learning model.')
@@ -276,6 +305,10 @@ def main():
             'oa_train': oa_train,
             'oa_val': oa_val
         }
+
+        # experiment.log_metric("loss", loss_train, step=current_epoch) # could do batch later
+        experiment.log_metric("accuracy", oa_train, step = current_epoch)
+
         save_model(cfg, current_epoch, model, stats)
     
 
