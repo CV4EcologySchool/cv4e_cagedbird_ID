@@ -92,14 +92,14 @@ class CTDataset(Dataset):
         image_path = os.path.join(self.data_root, 'high', image_name)
         print (image_path)
 
-        try:
-            img = Image.open(image_path).convert('RGB')     # the ".convert" makes sure we always get three bands in Red, Green, Blue order
-        except:
-            print(image_path)
-            pass # Doesn't do anything
+        # try:
+        #     img = Image.open(image_path).convert('RGB')     # the ".convert" makes sure we always get three bands in Red, Green, Blue order
+        # except:
+        #     print(image_path)
+        #     pass # Doesn't do anything
     
         # print(img.size)
         # transform: see lines 31ff above where we define our transformations
         img_tensor = self.transform(img)
-        print(img_tensor.size())
+        # print(img_tensor.size())
         return img_tensor, label

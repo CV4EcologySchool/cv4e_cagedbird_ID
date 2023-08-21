@@ -1,6 +1,7 @@
 PyYAML
 tqdm
 comet-ml
+scikit-learn
 
 # PyTorch
 # --find-links https://download.pytorch.org/whl/torch_stable.html
