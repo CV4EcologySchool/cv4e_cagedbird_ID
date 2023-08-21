@@ -51,7 +51,7 @@ def load_model(cfg):
 
     # load latest model state
     model_states = glob.glob('model_states/*.pt')
-    # model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
+    model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
     if len(model_states):
         # at least one save state found; get latest
         model_epochs = [int(m.replace('model_states/','').replace('.pt','')) for m in model_states]
@@ -234,8 +234,13 @@ def main():
         api_key="6D79SKeAIuSjteySwQwqx96nq",
         project_name="cagedbird-classifier"
     )
+    experiment.set_name ("a-resnet18_d-high_b-128_n-35")
     
-    resume = True # to update an existing experiment
+    # architecture name: 
+    # dataset type:_high
+    # batch size:
+    # number of epochs: 
+    resume = False # to update an existing experiment... or not
 
     if resume:
         experiment = comet_ml.ExistingExperiment(
@@ -263,7 +268,8 @@ def main():
     # load config
     print(f'Using config "{args.config}"')
     cfg = yaml.safe_load(open(args.config, 'r'))
-
+     
+    # this is the yaml one loaded as cfg
     # init random number generator seed (set at the start)
     init_seed(cfg.get('seed', None))
 
@@ -277,8 +283,8 @@ def main():
     dl_train = create_dataloader(cfg, split='train')
     dl_val = create_dataloader(cfg, split='val')
     print ("Length of training dataloader")
+
     # Number of training samples divided by batch size
-    
     print(len(dl_train))
     print ("Length of validation dataloader")
     print(len(dl_val))
@@ -306,8 +312,16 @@ def main():
             'oa_val': oa_val
         }
 
-        # experiment.log_metric("loss", loss_train, step=current_epoch) # could do batch later
-        experiment.log_metric("accuracy", oa_train, step = current_epoch)
+        experiment.log_metric("Training loss", loss_train, step=current_epoch) # could do batch later
+        experiment.log_metric("Validation loss", loss_val, step=current_epoch) # could do batch later
+        experiment.log_metric("Training accuracy", oa_train, step = current_epoch)
+        experiment.log_metric("Validation accuracy", oa_val, step = current_epoch)
+
+        # experiment.log_params(cfg)
+
+        # this code 
+        experiment.log_param('learning_rate', cfg['learning_rate'])
+        experiment.log_param('batch_size', cfg['batch_size'])
 
         save_model(cfg, current_epoch, model, stats)
     
