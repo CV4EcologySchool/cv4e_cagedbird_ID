@@ -317,19 +317,12 @@ def main():
         experiment.log_metric("Training accuracy", oa_train, step = current_epoch)
         experiment.log_metric("Validation accuracy", oa_val, step = current_epoch)
 
-        # experiment.log_params(cfg)
-
-        # this code 
+        # experiment.log_params(cfg), if you want to plot all the hyperparameters together or you can plot the other ones separately
         experiment.log_param('learning_rate', cfg['learning_rate'])
         experiment.log_param('batch_size', cfg['batch_size'])
 
         save_model(cfg, current_epoch, model, stats)
     
-
-    # That's all, folks!
-        
-
-
 if __name__ == '__main__':
     # This block only gets executed if you call the "train.py" script directly
     # (i.e., "python ct_classifier/train.py").
