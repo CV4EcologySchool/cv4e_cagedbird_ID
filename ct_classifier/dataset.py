@@ -15,7 +15,7 @@
 import os
 import json
 from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Resize, ToTensor
+from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad
 from PIL import Image
 
 
@@ -28,10 +28,40 @@ class CTDataset(Dataset):
         '''
         self.data_root = cfg['data_root']
         self.split = split
-        self.transform = Compose([              # Transforms. Here's where we could add data augmentation (see Björn's lecture on August 11).
-            Resize((cfg['image_size'])),        # For now, we just resize the images to the same dimensions...
-            ToTensor()                          # ...and convert them to torch.Tensor.
+
+        def MyPad (img):
+            c, h, w = img.shape
+            # a list can also be referred to as a sequence (same for a tuple)
+            target_size = cfg['image_size']
+            pad_diff_h = target_size[0] - h 
+            pad_diff_w = target_size[1] - w
+            padding = [0, pad_diff_h, pad_diff_w, 0]
+            padder = Pad(padding)
+
+            # don't include all the defaults: https://pytorch.org/vision/main/generated/torchvision.transforms.Pad.html
+
+            # define all 4 sides
+            # 0 for the left and 0 for the bottom
+            return padder (img)
+
+
+        # Might be to add your own transformation. lambda
+
+        
+        self.transform = Compose([  
+            ToTensor(),            # ...and convert them to torch.Tensor first, so we can pad it as a tensor later in the same function, if you put the 
+            # to tensor at the end of the Compose function then it will resize the image as a Pillow object and then transform it. Before we have to put the tensor at the end
+            Resize((cfg['image_size']),
+            Lambda(MyPad)),       # For now, we just resize the images to the same dimensions... Transforms. Here's where we could add data augmentation (see Björn's lecture on August 11).
+                                     
         ])
+
+        # self.transform = Compose([
+        #     Resize((cfg['image_size'])),
+        #     PadToSize(),
+        #     ToTensor()
+        # ])
+        # the tensor format is channels, height, width
         
         # index data into list
         self.data = []
@@ -50,8 +80,6 @@ class CTDataset(Dataset):
         # We previously put the breakpoint before and after this point
         images = dict([[i['id'], i['file_name']] for i in meta['images']])          # image id to filename lookup
         # print (images)
-        # 
-        #print (images [4236])
         # print (images.keys())
 
         labels = dict([[c['id'], idx] for idx, c in enumerate(meta['categories'])]) # custom labelclass indices that start at zero
@@ -96,8 +124,8 @@ class CTDataset(Dataset):
             print(image_path)
             pass # Doesn't do anything if it can't be opened
     
-        # print(img.size)
+        print(img.size)
         # transform: see lines 31ff above where we define our transformations
         img_tensor = self.transform(img)
-        # print(img_tensor.size())
+        print(img_tensor.size())
         return img_tensor, label
