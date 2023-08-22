@@ -121,7 +121,7 @@ def train(cfg, dataLoader, model, optimizer):
     # print(probabilities)
 
     # loss function
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss() # the softmax is internal to this function: https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html
 
     # running averages
     loss_total, oa_total = 0.0, 0.0                         # for now, we just log the loss and overall accuracy (OA)
@@ -234,12 +234,11 @@ def main():
     # For Comet to start tracking a training run,
 # just add these two lines at the top of
 # your training script:
-
     experiment = comet_ml.Experiment(
         api_key="6D79SKeAIuSjteySwQwqx96nq",
-        project_name="cagedbird-classifier"
+        project_name="cagedbird-classifier",
+        set_name="a-resnet18_d-high_b-128_n-50" # This is isn't working
     )
-    experiment.set_name ("a-resnet18_d-high_b-128_n-35")
     
     # architecture name: 
     # dataset type:_high
@@ -258,10 +257,6 @@ def main():
             api_key="6D79SKeAIuSjteySwQwqx96nq",
             project_name="cagedbird-classifier",
         )
-
-    # Log hyperparameters
-    # experiment.log_parameter("learning_rate", cfg["learning_rate"]) 
-    # experiment.log_parameter("batch_size", cfg["batch_size"])
 
 # your model training or evaluation code
 
@@ -290,6 +285,20 @@ def main():
 
     # initialize data loaders for training and validation set
     dl_train = create_dataloader(cfg, split='train')
+    sample_batch = next(iter(dl_train))
+    inputs, labels = sample_batch
+
+    # Display the images
+    fig = plt.figure(figsize=(12, 8))
+    for idx in range(12):
+    ax = fig.add_subplot(3, 4, idx + 1, xticks=[], yticks=[])
+    # The imshow function is used to display the images, and the loop displays a sample of 12 images along with their corresponding labels
+    imshow(inputs[idx])
+
+    plt.tight_layout()
+    plt.show()
+    # Add a debugging breakpoint
+
     dl_val = create_dataloader(cfg, split='val')
     print ("Length of training dataloader")
 
@@ -325,6 +334,10 @@ def main():
         experiment.log_metric("Validation loss", loss_val, step=current_epoch) # could do batch later
         experiment.log_metric("Training accuracy", oa_train, step = current_epoch)
         experiment.log_metric("Validation accuracy", oa_val, step = current_epoch)
+
+         # Log hyperparameters like the learning rate and the batch size
+        for param_name, param_value in cfg.items():
+            experiment.log_parameter(param_name, param_value)
 
         save_model(cfg, current_epoch, model, stats)
     
