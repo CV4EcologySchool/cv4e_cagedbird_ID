@@ -115,6 +115,11 @@ def train(cfg, dataLoader, model, optimizer):
     # and validation (examples: Batch Normalization, Dropout, etc.)
     model.train()
 
+    # needs to have a softmax function : # Apply softmax to convert logits to probabilities
+    # softmax = nn.Softmax(dim=1)
+    # probabilities = softmax(logits)
+    # print(probabilities)
+
     # loss function
     criterion = nn.CrossEntropyLoss()
 
@@ -254,6 +259,10 @@ def main():
             project_name="cagedbird-classifier",
         )
 
+    # Log hyperparameters
+    # experiment.log_parameter("learning_rate", cfg["learning_rate"]) 
+    # experiment.log_parameter("batch_size", cfg["batch_size"])
+
 # your model training or evaluation code
 
 # Metrics from this training run will now be
@@ -316,10 +325,6 @@ def main():
         experiment.log_metric("Validation loss", loss_val, step=current_epoch) # could do batch later
         experiment.log_metric("Training accuracy", oa_train, step = current_epoch)
         experiment.log_metric("Validation accuracy", oa_val, step = current_epoch)
-
-        # experiment.log_params(cfg), if you want to plot all the hyperparameters together or you can plot the other ones separately
-        experiment.log_param('learning_rate', cfg['learning_rate'])
-        experiment.log_param('batch_size', cfg['batch_size'])
 
         save_model(cfg, current_epoch, model, stats)
     
