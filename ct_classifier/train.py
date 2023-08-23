@@ -41,23 +41,28 @@ def create_dataloader(cfg, split='train'):
             shuffle=True,
             num_workers=cfg['num_workers']
         )
+    
+    # one required argument and everything else is optional
     return dataLoader
 
 
 
-def load_model(cfg):
+def load_model(cfg,load_latest_version=False):
     '''
         Creates a model instance and loads the latest model state weights.
+
+        Default is to start from 0 for the epochs. If you want to load an existing model
+        you can call load_model(cfg, load_latest_version = True), which will load an already trained-ish model
     '''
     model_instance = CustomResNet18(cfg['num_classes'])         # create an object instance of our CustomResNet18 class
 
     # load latest model state
     model_states = glob.glob('model_states/*.pt')
-    model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
-    if len(model_states):
+    #model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
+    if len(model_states)>0 and load_latest_version==True:
         # at least one save state found; get latest
         model_epochs = [int(m.replace('model_states/','').replace('.pt','')) for m in model_states]
-        start_epoch = max(model_epochs) 
+        start_epoch = max(model_epochs) # The highest or latest epoch that the model hsa run to
         # load state dict and apply weights to model
         print(f'Resuming from epoch {start_epoch}')
         state = torch.load(open(f'model_states/{start_epoch}.pt', 'rb'), map_location='cpu')
@@ -239,6 +244,7 @@ def main():
         api_key="6D79SKeAIuSjteySwQwqx96nq",
         project_name="cagedbird-classifier"
     )
+
     experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_fixed")
 
     # Get the experiment key
@@ -361,7 +367,8 @@ def main():
             experiment.log_parameter(param_name, param_value)
 
         save_model(cfg, current_epoch, model, stats)
-    
+
+        experiment.end()
 if __name__ == '__main__':
     # This block only gets executed if you call the "train.py" script directly
     # (i.e., "python ct_classifier/train.py").
