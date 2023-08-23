@@ -37,25 +37,24 @@ class CTDataset(Dataset):
             def __call__(self, img):
                 w,h = img.size
                 aspect_ratio = float(h) / float(w)
-                if h>self.size or w>self.size:
-                    if h>w:
-                        new_w = math.ceil(self.size / aspect_ratio)
-                        img = functional.resize(img, (self.size, new_w))
-                    else:
-                        new_h = math.ceil( aspect_ratio * self.size) # it eas / before diving
-                        img = functional.resize(img, (new_h,self.size))
+                if h>w:
+                    new_w = math.ceil(self.size / aspect_ratio)
+                    img = functional.resize(img, (self.size, new_w))
+                else:
+                    new_h = math.ceil( aspect_ratio * self.size) # it eas / before diving
+                    img = functional.resize(img, (new_h,self.size))
 
                 #c, h, w = img.shape
                 w,h = img.size # PIL image formats are in w and h, transformed to rgb, h, w later, and needs to see size, Tensors # are seen in shape
                 # a list can also be referred to as a sequence (same for a tuple)
                 pad_diff_h = self.size - h 
-                print ("Print the pad_d_h")
-                print(pad_diff_h)
+                # print ("Print the pad_d_h")
+                # print(pad_diff_h)
 
                 pad_diff_w =self.size - w
 
-                print ("Print the pad_d_w")
-                print(pad_diff_w)
+                # print ("Print the pad_d_w")
+                # print(pad_diff_w)
                 
                 padding = [0, pad_diff_h, pad_diff_w, 0]
                 padder = Pad(padding)
@@ -72,14 +71,14 @@ class CTDataset(Dataset):
         # index data into list
         self.data = []
 
-        # load annotation file
+        # git a annotation file
         annoPath = os.path.join(
             self.data_root,
             'high',
             'training_18_08.json' if self.split=='train' else 'val_18_08.json'
         )
 
-        print(annoPath)
+        # print(annoPath)
 
         meta = json.load(open(annoPath, 'r'))
         # [print(anno) for anno in meta['annotations'] if anno['image_id']==4236]
@@ -141,5 +140,5 @@ class CTDataset(Dataset):
             print(idx)
             raise Exception from exc
 
-        print(img_tensor.size())
+        # print(img_tensor.size())
         return img_tensor, label
