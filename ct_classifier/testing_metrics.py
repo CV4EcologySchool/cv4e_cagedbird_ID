@@ -8,7 +8,7 @@ from comet_ml import Experiment
 import torch
 import yaml
 
-from train import create_dataloader, load_model       # NOTE: since we're using these functions across files, it could make sense to put them in e.g. a "util.py" script.
+from train import create_dataloader, load_model, experiment # experiment should add the confusion matrix to the cometML experiment    # NOTE: since we're using these functions across files, it could make sense to put them in e.g. a "util.py" script.
 from sklearn.metrics import confusion_matrix
 
 from util import * # To import th init seed from the util.py file in the same folder named ct_classifier
@@ -51,21 +51,25 @@ for inputs, labels in dl_val:
     print(inputs.shape)
     labels = labels.numpy()
 
-experiment = comet_ml.Experiment(
-    api_key="6D79SKeAIuSjteySwQwqx96nq",
-    project_name="cagedbird-classifier"
-)
-experiment.set_name ("a-resnet18_d-high_b-128_n-35")
-
 # Calculate the confusion matrix using scikit-learn
 cm = confusion_matrix(labels, predictions)
 
+# the colours need to mean something - need to scale the roles
 # Plot confusion matrix to CometML
-experiment.log_confusion_matrix(matrix=cm, title="Confusion Matrix") # Try and plot the labels for each of the, add labels=labels (this will print),
-# we just want the labels that are there in our batch, so it should be labels=labels.unique - this iwll show the unique labels for the batch
+experiment.log_confusion_matrix(matrix=cm, images=inputs, title="Confusion Matrix", labels=labels.unique) # Try and plot the labels for each of the, add labels=labels (this will print),
+# we just want the labels that are there in our batch, so it should be labels=labels.unique - this will show the unique labels for the batch
 # 29 classes, which are currently mapped onto numbers as well; labels[0:28]
 
-if __name__ == '__main__':
-    # This block only gets executed if you call the "testing_metrics.py" script directly
-    # (i.e., "python ct_classifier/testing_metrics.py").
-    main()
+# Logs the image corresponding to the model prediction
+experiment.log_confusion_matrix(
+    y_test,
+    predictions,
+    images=x_test,
+    title="Confusion Matrix: Evaluation",
+    file_name="confusion-matrix-eval.json",
+)
+
+# if __name__ == '__main__':
+#     # This block only gets executed if you call the "testing_metrics.py" script directly
+#     # (i.e., "python ct_classifier/testing_metrics.py").
+#     main()

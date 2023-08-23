@@ -13,7 +13,7 @@ num_classes: 29
 
 # training hyperparameters
 image_size: [224, 224] # [224, 224] keep it as [224] or [224, ] if you want to keep the aspect ratio the same
-num_epochs: 35 # 200, dataset is currently unbalanced, wa 10 and then 20
+num_epochs: 50 # 200, dataset is currently unbalanced, wa 10 and then 20
 batch_size: 128
 learning_rate: 0.001
 weight_decay: 0.001
