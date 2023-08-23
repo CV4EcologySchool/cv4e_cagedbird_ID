@@ -239,7 +239,13 @@ def main():
         api_key="6D79SKeAIuSjteySwQwqx96nq",
         project_name="cagedbird-classifier"
     )
-    experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images")
+    experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_fixed")
+
+    # Get the experiment key
+    experiment_key = experiment.get_key()
+
+    # Print the experiment key
+    print("Experiment Key:", experiment_key)
 
     # architecture name: 
     # dataset type:_high
@@ -301,9 +307,9 @@ def main():
 
         # print("Print the image paths for the images that are being plotted")
         # print (image_path(idx))
-        image_name, _ = dataset.data[idx]  # Assuming dataset is the instance of your CustomDataset
-        image_path = os.path.join(dl_train.data_root, 'high', image_name)
-        print(f"Image Path: {image_path}")
+        # image_name, _ = dataset.data[idx]  # Assuming dataset is the instance of your CustomDataset
+        # image_path = os.path.join(dl_train.data_root, 'high', image_name)
+        # print(f"Image Path: {image_path}")
         # ax.set_title(f"Label: {labels[idx]}\nPath: {image_paths[idx]}") 
 
    
