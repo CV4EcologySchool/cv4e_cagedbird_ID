@@ -42,7 +42,7 @@ class CTDataset(Dataset):
                         new_w = math.ceil(self.size / aspect_ratio)
                         img = functional.resize(img, (self.size, new_w))
                     else:
-                        new_h = math.ceil( aspect_ratio / self.size)
+                        new_h = math.ceil( aspect_ratio * self.size) # it eas / before diving
                         img = functional.resize(img, (new_h,self.size))
 
                 #c, h, w = img.shape
