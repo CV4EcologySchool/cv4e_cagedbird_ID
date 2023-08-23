@@ -15,8 +15,9 @@
 import os
 import json
 from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad
+from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional
 from PIL import Image
+import math
 
 
 class CTDataset(Dataset):
@@ -29,38 +30,43 @@ class CTDataset(Dataset):
         self.data_root = cfg['data_root']
         self.split = split
 
-        def MyPad (img):
-            c, h, w = img.shape
-            # a list can also be referred to as a sequence (same for a tuple)
-            target_size = cfg['image_size']
-            pad_diff_h = target_size[0] - h 
-            pad_diff_w = target_size[1] - w
-            padding = [0, pad_diff_h, pad_diff_w, 0]
-            padder = Pad(padding)
+        class FixedHeightResize:
+            def __init__(self, size):
+                self.size = size
+                
+            def __call__(self, img):
+                w,h = img.size
+                aspect_ratio = float(h) / float(w)
+                if h>self.size or w>self.size:
+                    if h>w:
+                        new_w = math.ceil(self.size / aspect_ratio)
+                        img = functional.resize(img, (self.size, new_w))
+                    else:
+                        new_h = math.ceil( aspect_ratio / self.size)
+                        img = functional.resize(img, (new_h,self.size))
 
-            # don't include all the defaults: https://pytorch.org/vision/main/generated/torchvision.transforms.Pad.html
+                #c, h, w = img.shape
+                w,h = img.size # PIL image formats are in w and h, transformed to rgb, h, w later, and needs to see size, Tensors # are seen in shape
+                # a list can also be referred to as a sequence (same for a tuple)
+                pad_diff_h = self.size - h 
+                print ("Print the pad_d_h")
+                print(pad_diff_h)
 
-            # define all 4 sides
-            # 0 for the left and 0 for the bottom
-            return padder (img)
+                pad_diff_w =self.size - w
 
+                print ("Print the pad_d_w")
+                print(pad_diff_w)
+                
+                padding = [0, pad_diff_h, pad_diff_w, 0]
+                padder = Pad(padding)
+                img = padder(img)
 
-        # Might be to add your own transformation. lambda
+                return img
 
-        
-        self.transform = Compose([  
-            ToTensor(),            # ...and convert them to torch.Tensor first, so we can pad it as a tensor later in the same function, if you put the 
-            # to tensor at the end of the Compose function then it will resize the image as a Pillow object and then transform it. Before we have to put the tensor at the end
-            Resize((cfg['image_size']),
-            Lambda(MyPad)),       # For now, we just resize the images to the same dimensions... Transforms. Here's where we could add data augmentation (see Björn's lecture on August 11).
-                                     
+        self.transform = Compose([
+            FixedHeightResize(224),
+            ToTensor(),
         ])
-
-        # self.transform = Compose([
-        #     Resize((cfg['image_size'])),
-        #     PadToSize(),
-        #     ToTensor()
-        # ])
         # the tensor format is channels, height, width
         
         # index data into list
@@ -124,8 +130,16 @@ class CTDataset(Dataset):
             print(image_path)
             pass # Doesn't do anything if it can't be opened
     
-        print(img.size)
+        # print(img.size)
         # transform: see lines 31ff above where we define our transformations
-        img_tensor = self.transform(img)
+        try:
+            img_tensor = self.transform(img)
+        except Exception as exc:
+            print('bad image:')
+            print(type(img))
+            print(image_path)
+            print(idx)
+            raise Exception from exc
+
         print(img_tensor.size())
         return img_tensor, label
