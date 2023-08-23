@@ -23,6 +23,8 @@ from torch.optim import SGD
 from util import init_seed
 from dataset import CTDataset
 from model import CustomResNet18
+import matplotlib.pyplot as plt
+import numpy as np
 
 def create_dataloader(cfg, split='train'):
     '''
@@ -85,8 +87,6 @@ def save_model(cfg, epoch, model, stats):
     if not os.path.exists(cfpath):
         with open(cfpath, 'w') as f:
             yaml.dump(cfg, f)
-
-            
 
 def setup_optimizer(cfg, model):
     '''
@@ -234,12 +234,13 @@ def main():
     # For Comet to start tracking a training run,
 # just add these two lines at the top of
 # your training script:
+
     experiment = comet_ml.Experiment(
         api_key="6D79SKeAIuSjteySwQwqx96nq",
-        project_name="cagedbird-classifier",
-        set_name="a-resnet18_d-high_b-128_n-50" # This is isn't working
+        project_name="cagedbird-classifier"
     )
-    
+    experiment.set_name("a-resnet18_d-high_b-128_n-50_padded_images")
+
     # architecture name: 
     # dataset type:_high
     # batch size:
@@ -291,13 +292,16 @@ def main():
     # Display the images
     fig = plt.figure(figsize=(12, 8))
     for idx in range(12):
-    ax = fig.add_subplot(3, 4, idx + 1, xticks=[], yticks=[])
-    # The imshow function is used to display the images, and the loop displays a sample of 12 images along with their corresponding labels
-    imshow(inputs[idx])
+        ax = fig.add_subplot(3, 4, idx + 1, xticks=[], yticks=[])
+        # The imshow function is used to display the images, and the loop displays a sample of 12 images along with their corresponding labels
+        ax.imshow(inputs[idx].permute(1, 2, 0)) # or is to transpose?
 
     plt.tight_layout()
-    plt.show()
-    # Add a debugging breakpoint
+    # plt.show()
+    plt.savefig("output.png")
+
+
+    # Add a debugging breakpoint here
 
     dl_val = create_dataloader(cfg, split='val')
     print ("Length of training dataloader")
