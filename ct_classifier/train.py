@@ -21,7 +21,7 @@ from torch.optim import SGD
 
 # let's import our own classes and functions!
 from util import init_seed
-from dataset import CTDataset
+from dataset import CTDataset #,image_path
 from model import CustomResNet18
 import matplotlib.pyplot as plt
 import numpy as np
@@ -239,7 +239,7 @@ def main():
         api_key="6D79SKeAIuSjteySwQwqx96nq",
         project_name="cagedbird-classifier"
     )
-    experiment.set_name("a-resnet18_d-high_b-128_n-50_padded_images")
+    experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images")
 
     # architecture name: 
     # dataset type:_high
@@ -288,6 +288,8 @@ def main():
     dl_train = create_dataloader(cfg, split='train')
     sample_batch = next(iter(dl_train))
     inputs, labels = sample_batch
+    print (labels)
+
 
     # Display the images
     fig = plt.figure(figsize=(12, 8))
@@ -295,10 +297,19 @@ def main():
         ax = fig.add_subplot(3, 4, idx + 1, xticks=[], yticks=[])
         # The imshow function is used to display the images, and the loop displays a sample of 12 images along with their corresponding labels
         ax.imshow(inputs[idx].permute(1, 2, 0)) # or is to transpose?
+        ax.set_title(f"Label: {labels[idx]}")
 
+        # print("Print the image paths for the images that are being plotted")
+        # print (image_path(idx))
+        image_name, _ = dataset.data[idx]  # Assuming dataset is the instance of your CustomDataset
+        image_path = os.path.join(dl_train.data_root, 'high', image_name)
+        print(f"Image Path: {image_path}")
+        # ax.set_title(f"Label: {labels[idx]}\nPath: {image_paths[idx]}") 
+
+   
     plt.tight_layout()
     # plt.show()
-    plt.savefig("output.png")
+    plt.savefig("val_loader.png")
 
 
     # Add a debugging breakpoint here
