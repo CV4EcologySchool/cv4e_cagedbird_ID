@@ -25,77 +25,53 @@ cfg = yaml.safe_load(open(config, 'r'))
 init_seed(cfg.get('seed', None))
 
 # setup entities
-dl_val = create_dataloader(cfg, split='val') # Or it could be with test, and then it should be labelled dl_test, this should in theory
-dl_train = create_dataloader(cfg, split='train') # Or it could be with test, and then it should be labelled dl_test, this should in theory
-
-# load 128 images (1 batch) across 29 of the classes
+dl_val = create_dataloader (cfg, split='val') # Or it could be with test, and then it should be labelled dl_test, this should in theory
+# load 128 images (1 batch) across 29 of the classes, for all of the batches within the dataloader
 
 # load model - should load the saved model at the last checkpoint
-model, start_epoch = load_model(cfg)
+model, start_epoch = load_model(cfg, load_latest_version=True)
+print(start_epoch)
+# # Display the images
+# fig1 = plt.figure(figsize=(12, 8))
+# for idx in range(12):
+#     ax1 = fig1.add_subplot(3, 4, idx + 1, xticks=[], yticks=[])
+#     # The imshow function is used to display the images, and the loop displays a sample of 12 images along with their corresponding labels
+#     ax1.imshow(inputs[idx].permute(1, 2, 0)) # or is to transpose?
 
-# Generate example true labels and predicted labels, start it for a few examples
-inputs, labels = next(iter(dl_val))
+# plt.tight_layout()
+# # plt.show()
+# plt.savefig("val_loader2.png")
 
-# Display the images
-fig1 = plt.figure(figsize=(12, 8))
-for idx in range(12):
-    ax1 = fig1.add_subplot(3, 4, idx + 1, xticks=[], yticks=[])
-    # The imshow function is used to display the images, and the loop displays a sample of 12 images along with their corresponding labels
-    ax1.imshow(inputs[idx].permute(1, 2, 0)) # or is to transpose?
+inputs_list = []
+labels_list = []
+pred_list = []
 
-plt.tight_layout()
-# plt.show()
-plt.savefig("val_loader.png")
-
-inputs1, labels1 = next(iter(dl_train))
-
-# Display the images
-fig2 = plt.figure(figsize=(12, 8))
-for idx in range(12):
-    ax2 = fig2.add_subplot(3, 4, idx + 1, xticks=[], yticks=[])
-    # The imshow function is used to display the images, and the loop displays a sample of 12 images along with their corresponding labels
-    ax2.imshow(inputs1[idx].permute(1, 2, 0)) # or is to transpose?
-
-plt.tight_layout()
-# plt.show()
-plt.savefig("train_loader.png")
+# Here the internal Dataloader in PyTorch base code, knows that when it gets a DataLoader class that it will iterate
+# through each item in the list rather than just generate a list for one batch in dl_val, so when we call dl_val
+# we can iterate over all batches whereas this will just do one batch from the validation dataset, as loaded by the dataloader
+# inputs, labels = next(iter(dl_val))
 
 for inputs, labels in dl_val:
-    # Create NumPy arrays for the inputs and the labels
-
-    # print ("The labels that are being loaded for the batch")
-    # print (labels)
-
-    # Compute predictions
     predictions = model(inputs) 
-    predictions = predictions.argmax(dim=1).numpy() # argmax is saying what is the index position for the largest value in a list of numbers
-    # I have to choose a number to label thi sample, hoose the inde  positin that has the highest score
-    inputs = inputs.numpy()
-    # print ("Print the shape of the inputs")
-    # print (inputs)
-    print(inputs.shape)
-    labels = labels.numpy()
+    predictions = predictions.argmax(dim=1) # argmax is saying what is the index position for the largest value in a list of number
+    # I have to choose a number to label this sample, it will choose the index position that has the highest score, we are convertin as we go so we don't need to relaebl
+    # objects as they are converted anyway
+    pred_list.extend(list(predictions))
+    inputs_list.extend(list(inputs))
+    labels_list.extend(list(labels))
 
+# Append wraps your item into a list, so you end up with a list of lists [[],[],[],[],[]]
+# Extend puts the list into a newer list, but putting it into brackets [.....]
 
-# Build a confusion matrix for a sample of the training data as well
-for inputs1, labels1 in dl_train:
-    # Create NumPy arrays for the inputs and the labels
+# Create NumPy arrays for the inputs and the labels and predictions, outside of the for loop now we have generated our lists
+inputs_list = np.array(inputs_list)
+labels_list = np.array(labels_list)
+pred_list = np.array (pred_list)
 
-    # print ("The labels that are being loaded for the batch")
-    # print (labels)
-
-    # Compute predictions
-    predictions1 = model(inputs1) 
-    predictions1 = predictions1.argmax(dim=1).numpy() # argmax is saying what is the index position for the largest value in a list of numbers
-    # I have to choose a number to label thi sample, hoose the inde  positin that has the highest score
-    inputs1 = inputs1.numpy()
-    # print ("Print the shape of the inputs")
-    # print (inputs)
-    print(inputs1.shape)
-    labels1 = labels1.numpy()
+print (pred_list)
 
 # Calculate the confusion matrix using scikit-learn
-cm1 = confusion_matrix(labels, predictions)
+cm1 = confusion_matrix(labels_list, pred_list)
 
 # the colours need to mean something - need to scale the roles
 # Plot confusion matrix to CometML
@@ -106,7 +82,8 @@ experiment = Experiment(
 )
 experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_confusion_matrix")
 
-experiment.log_confusion_matrix(matrix=cm1, images=inputs, title="Confusion Matrix 1", labels=labels) 
+experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=labels) # images=inputs,
+
 # AttributeError: 'numpy.ndarray' object has no attribute 'unique'
 # Try and plot the labels for each of the, add labels=labels (this will print),
 # we just want the labels that are there in our batch, so it should be labels=labels.unique - this will show the unique labels for the batch
@@ -115,9 +92,9 @@ experiment.log_confusion_matrix(matrix=cm1, images=inputs, title="Confusion Matr
 # Start a new context for the second confusion matrix, we can use this if we are adding a plot to the same matrix, how do we add context to an experiment that
 # is already connected to another one 
 # with experiment.new_context("Confusion Matrix 2"):
-# Calculate the second confusion matrix using scikit-learn
-cm2 = confusion_matrix(labels1, predictions1)# Your second confusion matrix data
-experiment.log_confusion_matrix(matrix=cm2, title="Confusion Matrix 2")
+
+# cm2 = confusion_matrix(labels1, predictions1)# Your second confusion matrix data
+# experiment.log_confusion_matrix(matrix=cm2, title="Confusion Matrix 2")
 
 # if __name__ == '__main__':
 #     # This block only gets executed if you call the "testing_metrics.py" script directly
