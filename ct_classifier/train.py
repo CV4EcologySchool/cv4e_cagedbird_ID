@@ -130,6 +130,11 @@ def train(cfg, dataLoader, model, optimizer):
 
     # iterate over dataLoader
     progressBar = trange(len(dataLoader))
+
+    # initialise predictions and labels lists
+    labels_list = []
+    pred_list = []
+
     for idx, (data, labels) in enumerate(dataLoader):       # see the last line of file "dataset.py" where we return the image tensor (data) and label
 
         # put data and labels on device
@@ -157,6 +162,10 @@ def train(cfg, dataLoader, model, optimizer):
         oa = torch.mean((pred_label == labels).float()) # OA: number of correct predictions divided by batch size (i.e., average/mean)
         oa_total += oa.item()
 
+        # auprc preparation
+        pred_list.extend(list(pred_label))
+        labels_list.extend(list(labels))
+
         progressBar.set_description(
             '[Train] Loss: {:.2f}; OA: {:.2f}%'.format(
                 loss_total/(idx+1),
@@ -164,13 +173,25 @@ def train(cfg, dataLoader, model, optimizer):
             )
         )
         progressBar.update(1)
-    
+
+    # Use label_binarize to be multi-label like settings
+    one_hot_labels = label_binarize(labels_list, classes=list(range(len(np.unique(labels_list))))) # this will index from 0-28 for 29 classes
+    n_classes = one_hot_labels.shape[1]
+
+    one_hot_preds = label_binarize(pred_list, classes=list(range(len(np.unique(pred_list))))) # this will index from 0-28 for 29 classes
+    n_classes = one_hot_preds.shape[1]
+
+    # auprc = average_precision_score(labels.detach().cpu().numpy() , prediction.detach().cpu().numpy(),average=None)
+    auprc = average_precision_score(one_hot_labels, one_hot_preds,average=None)
+    mAP_train = np.mean(auprc)
+
+
     # end of epoch; finalize
     progressBar.close()
     loss_total /= len(dataLoader)           # shorthand notation for: loss_total = loss_total / len(dataLoader)
     oa_total /= len(dataLoader)
 
-    return loss_total, oa_total
+    return loss_total, oa_total, mAP_train
 
 
 def validate(cfg, dataLoader, model):
@@ -212,6 +233,10 @@ def validate(cfg, dataLoader, model):
             pred_label = torch.argmax(prediction, dim=1)
             oa = torch.mean((pred_label == labels).float())
             oa_total += oa.item()
+            
+            # auprc preparation
+            pred_list.extend(list(pred_label))
+            labels_list.extend(list(labels))
 
             progressBar.set_description(
                 '[Val ] Loss: {:.2f}; OA: {:.2f}%'.format(
@@ -220,13 +245,24 @@ def validate(cfg, dataLoader, model):
                 )
             )
             progressBar.update(1)
+
+        # Use label_binarize to be multi-label like settings
+        one_hot_labels = label_binarize(labels_list, classes=list(range(len(np.unique(labels_list))))) # this will index from 0-28 for 29 classes
+        n_classes = one_hot_labels.shape[1]
+
+        one_hot_preds = label_binarize(pred_list, classes=list(range(len(np.unique(pred_list))))) # this will index from 0-28 for 29 classes
+        n_classes = one_hot_preds.shape[1]
+
+        # auprc = average_precision_score(labels.detach().cpu().numpy() , prediction.detach().cpu().numpy(),average=None)
+        auprc = average_precision_score(one_hot_labels, one_hot_preds,average=None)
+        mAP_val = np.mean(auprc)
     
     # end of epoch; finalize
     progressBar.close()
     loss_total /= len(dataLoader)
     oa_total /= len(dataLoader)
 
-    return loss_total, oa_total
+    return loss_total, oa_total, mAP_val
 
 
 
@@ -236,35 +272,49 @@ def main():
 # just add these two lines at the top of
 # your training script:
 
-    experiment = comet_ml.Experiment(
-        api_key="6D79SKeAIuSjteySwQwqx96nq",
-        project_name="cagedbird-classifier"
-    )
-
-    experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_random_flipping")
-
-    # Get the experiment key
-    experiment_key = experiment.get_key()
-
-
+    # experiment = comet_ml.Experiment(
+    #     api_key="6D79SKeAIuSjteySwQwqx96nq",
+    #     project_name="cagedbird-classifier"
+    # )
 
     # architecture name: 
     # dataset type:_high
     # batch size:
     # number of epochs: 
-    # resume = False # to update an existing experiment... or not
+    # resume = True # to update an existing experiment... or not
 
-    # if resume:
-    #     experiment = comet_ml.ExistingExperiment(
-    #         api_key="6D79SKeAIuSjteySwQwqx96nq",
-    #         project_name="cagedbird-classifier",
-    #     )
 
-    # else:
-    #     experiment = comet_ml.Experiment(
-    #         api_key="6D79SKeAIuSjteySwQwqx96nq",
-    #         project_name="cagedbird-classifier",
-    #     )
+# resume = True  # Set this to True if you want to resume an existing experiment
+
+# if resume:
+#     experiment_key = "YOUR_EXISTING_EXPERIMENT_KEY"  # Replace with your actual experiment key
+#     experiment = comet_ml.ExistingExperiment(
+#         api_key="YOUR_API_KEY",
+#         previous_experiment=experiment_key,
+#     )
+# else:
+#     experiment = comet_ml.Experiment(
+#         api_key="YOUR_API_KEY",
+#         project_name="cagedbird-classifier",
+#     )
+#     experiment.set_name("a-resnet18_d-high_b-128_n-100_padded_images_random_flipping")
+
+
+#     if resume:
+#         experiment = comet_ml.ExistingExperiment(
+#             api_key="6D79SKeAIuSjteySwQwqx96nq",
+#             project_name="cagedbird-classifier",
+#         )
+
+#     else:
+#         experiment = comet_ml.Experiment(
+#             api_key="6D79SKeAIuSjteySwQwqx96nq",
+#             project_name="cagedbird-classifier",
+#         )
+#         experiment.set_name("a-resnet18_d-high_b-128_n-100_padded_images_random_flipping")
+
+    # # Get the experiment key
+    #     experiment_key = experiment.get_key()
 
 # your model training or evaluation code
 
@@ -341,21 +391,28 @@ def main():
         current_epoch += 1
         print(f'Epoch {current_epoch}/{numEpochs}')
 
-        loss_train, oa_train = train(cfg, dl_train, model, optim)
-        loss_val, oa_val = validate(cfg, dl_val, model)
+        loss_train, oa_train, mAP_train = train(cfg, dl_train, model, optim)
+        loss_val, oa_val, mAP_val = validate(cfg, dl_val, model)
+
 
         # combine stats and save
         stats = {
             'loss_train': loss_train,
             'loss_val': loss_val,
             'oa_train': oa_train,
-            'oa_val': oa_val
+            'oa_val': oa_val,
+            'mAP_train': mAP_train,
+            'mAP_val': mAP_val
         }
 
-        experiment.log_metric("Training loss", loss_train, step=current_epoch) # could do batch later
-        experiment.log_metric("Validation loss", loss_val, step=current_epoch) # could do batch later
-        experiment.log_metric("Training accuracy", oa_train, step = current_epoch)
-        experiment.log_metric("Validation accuracy", oa_val, step = current_epoch)
+        # Log loss metrics in the same plot
+        experiment.log_metric("Loss Metrics", [('Training loss', loss_train),('Validation loss', loss_val),], step=current_epoch)
+
+        # Group accuracy metrics in a plot
+        experiment.log_metric("Accuracy Metrics", [('Training OA accuracy', oa_train),('Validation OA accuracy', oa_val),], step=current_epoch)
+
+        # Group mAP metrics in a plot
+        experiment.log_metric("mAP Metrics", [('Training mAP', mAP_train),('Validation mAP', mAP_val),], step=current_epoch)
 
          # Log hyperparameters like the learning rate and the batch size
         for param_name, param_value in cfg.items():
@@ -370,7 +427,7 @@ def main():
         with open("experiment_key.txt", "w") as file:
             file.write(experiment_key)
 
-        experiment.end()
+        # experiment.end()
 
 
 if __name__ == '__main__':

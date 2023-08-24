@@ -8,11 +8,14 @@ from comet_ml import Experiment, ExistingExperiment
 
 import torch
 import yaml
+import pickle 
 
 from train import create_dataloader, load_model # experiment should add the confusion matrix to the cometML experiment    # NOTE: since we're using these functions across files, it could make sense to put them in e.g. a "util.py" script.
-from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve
+from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve, ConfusionMatrixDisplay
+from sklearn.preprocessing import label_binarize
 
-from util import * # To import th init seed from the util.py file in the same folder named ct_classifier
+
+from util import * # To import the init seed from the util.py file in the same folder named ct_classifier
 
 # Load the experiment key from the file
 with open("experiment_key.txt", "r") as file:
@@ -71,7 +74,8 @@ for inputs, labels in dl_val:
     inputs_list.extend(list(inputs))
     labels_list.extend(list(labels))
 
-print (labels)
+# this would just print the last batch as a batch sized tensor
+# print (labels)
 
 # Append wraps your item into a list, so you end up with a list of lists [[],[],[],[],[]]
 # Extend puts the list into a newer list, but putting it into brackets [.....]
@@ -81,8 +85,24 @@ inputs_list = np.array(inputs_list)
 labels_list = np.array(labels_list)
 pred_list = np.array (pred_list)
 
-print (labels_list)
+print("Print the length of the label list")
+print(len(labels_list))
 
+print("Print the length of the pred list")
+print (len(pred_list))
+
+
+# Use label_binarize to be multi-label like settings
+one_hot_labels = label_binarize(labels_list, classes=list(range(len(np.unique(labels_list))))) # this will index from 0-28 for 29 classes
+n_classes = one_hot_labels.shape[1]
+
+one_hot_preds = label_binarize(pred_list, classes=list(range(len(np.unique(pred_list))))) # this will index from 0-28 for 29 classes
+n_classes = one_hot_preds.shape[1]
+
+
+# auprc = average_precision_score(labels.detach().cpu().numpy() , prediction.detach().cpu().numpy(),average=None)
+auprc = average_precision_score(one_hot_labels, one_hot_preds,average=None)
+print (auprc)
 # print (pred_list)
 
 # For each class, for a multi-label or multi-class situation: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
@@ -105,103 +125,46 @@ print (labels_list)
 # print (average_precision["micro"])
 # print (average_precision_score)
 
-# Calculate the confusion matrix using scikit-learn
-cm1 = confusion_matrix(labels_list, pred_list)
-
-# the colours need to mean something - need to scale the roles
-# Plot confusion matrix to CometML
-
-# use_experiment.py
-
-# use_experiment.py
-
 
 # Use the experiment key to interact with Comet.ml or perform any other action
 
-# Experiment Key: f53b5ec49e694758827fd1d1d978ed05
-
-# experiment = Experiment(
-#     api_key="6D79SKeAIuSjteySwQwqx96nq",
-#     project_name="cagedbird-classifier"
-# )
-# experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_confusion_matrix")
 
 # Map the class names to the labels
 
 # # Sample data containing class information
-# class_data = [
-# {'id': 0, 'name': 'Eurasian_jay', 'supercategory': 'object'}
-# {'id': 1, 'name': 'Eurasian_siskin', 'supercategory': 'object'}
-# {'id': 2, 'name': 'Grey_Parrot', 'supercategory': 'object'}
-# {'id': 3, 'name': 'Hoopoe', 'supercategory': 'object'}
-# {'id': 4, 'name': 'bluethroat', 'supercategory': 'object'}
-# {'id': 5, 'name': 'bm_leafbird', 'supercategory': 'object'}
-# {'id': 6, 'name': 'bw_myna', 'supercategory': 'object'}
-# {'id': 7, 'name': 'cf_white_eye', 'supercategory': 'object'}
-# {'id': 8, 'name': 'chestnut_munia', 'supercategory': 'object'}
-# {'id': 9, 'name': 'coal_tit_crops', 'supercategory': 'object'}
-# {'id': 10, 'name': 'common_myna', 'supercategory': 'object'}
-# {'id': 11, 'name': 'common_redpoll', 'supercategory': 'object'}
-# {'id': 12, 'name': 'crested_lark', 'supercategory': 'object'}
-# {'id': 13, 'name': 'fischers_lovebird', 'supercategory': 'object'}
-# {'id': 14, 'name': 'great_myna', 'supercategory': 'object'}
-# {'id': 15, 'name': 'hill_mynas', 'supercategory': 'object'}
-# {'id': 16, 'name': 'hwamei', 'supercategory': 'object'}
-# {'id': 17, 'name': 'japanese_grosbeak', 'supercategory': 'object'}
-# {'id': 18, 'name': 'javan_pied_starling', 'supercategory': 'object'}
-# {'id': 19, 'name': 'marsh_tit', 'supercategory': 'object'}
-# {'id': 20, 'name': 'oriental_magpie_robin', 'supercategory': 'object'}
-# {'id': 21, 'name': 'oriental_skylark', 'supercategory': 'object'}
-# {'id': 22, 'name': 'red_billed_starling', 'supercategory': 'object'}
-# {'id': 23, 'name': 'red_whiskered_bulbul', 'supercategory': 'object'}
-# {'id': 24, 'name': 'siberian_rubythroat', 'supercategory': 'object'}
-# {'id': 25, 'name': 'swinhoes_whiteeye', 'supercategory': 'object'}
-# {'id': 26, 'name': 'yellow_bellied_tits', 'supercategory': 'object'}
-# {'id': 27, 'name': 'zebra_dove', 'supercategory': 'object'}
-# {'id': 28, 'name': 'zebra_finch', 'supercategory': 'object'}
-# {'id': 0, 'name': 'Eurasian_jay', 'supercategory': 'object'}
-# {'id': 1, 'name': 'Eurasian_siskin', 'supercategory': 'object'}
-# {'id': 2, 'name': 'Grey_Parrot', 'supercategory': 'object'}
-# {'id': 3, 'name': 'Hoopoe', 'supercategory': 'object'}
-# {'id': 4, 'name': 'bluethroat', 'supercategory': 'object'}
-# {'id': 5, 'name': 'bm_leafbird', 'supercategory': 'object'}
-# {'id': 6, 'name': 'bw_myna', 'supercategory': 'object'}
-# {'id': 7, 'name': 'cf_white_eye', 'supercategory': 'object'}
-# {'id': 8, 'name': 'chestnut_munia', 'supercategory': 'object'}
-# {'id': 9, 'name': 'coal_tit_crops', 'supercategory': 'object'}
-# {'id': 10, 'name': 'common_myna', 'supercategory': 'object'}
-# {'id': 11, 'name': 'common_redpoll', 'supercategory': 'object'}
-# {'id': 12, 'name': 'crested_lark', 'supercategory': 'object'}
-# {'id': 13, 'name': 'fischers_lovebird', 'supercategory': 'object'}
-# {'id': 14, 'name': 'great_myna', 'supercategory': 'object'}
-# {'id': 15, 'name': 'hill_mynas', 'supercategory': 'object'}
-# {'id': 16, 'name': 'hwamei', 'supercategory': 'object'}
-# {'id': 17, 'name': 'japanese_grosbeak', 'supercategory': 'object'}
-# {'id': 18, 'name': 'javan_pied_starling', 'supercategory': 'object'}
-# {'id': 19, 'name': 'marsh_tit', 'supercategory': 'object'}
-# {'id': 20, 'name': 'oriental_magpie_robin', 'supercategory': 'object'}
-# {'id': 21, 'name': 'oriental_skylark', 'supercategory': 'object'}
-# {'id': 22, 'name': 'red_billed_starling', 'supercategory': 'object'}
-# {'id': 23, 'name': 'red_whiskered_bulbul', 'supercategory': 'object'}
-# {'id': 24, 'name': 'siberian_rubythroat', 'supercategory': 'object'}
-# {'id': 25, 'name': 'swinhoes_whiteeye', 'supercategory': 'object'}
-# {'id': 26, 'name': 'yellow_bellied_tits', 'supercategory': 'object'}
-# {'id': 27, 'name': 'zebra_dove', 'supercategory': 'object'}
-# {'id': 28, 'name': 'zebra_finch', 'supercategory': 'object'}
-# ]
 
-# # Create a mapping from 'id' to 'name'
-# id_to_name_mapping = {class_info['id']: class_info['name'] for class_info in class_data}
+with open('ct_classifier/class_mapping.pickle', 'rb') as f:
+    class_mapping = pickle.load(f)
 
-# # # Sample numeric labels as tensors, but this should just be my labels_list
-# # numeric_labels = [28, 0, 1, 10]  # Replace with your actual numeric labels
+print(class_mapping)
 
-# # Map numeric labels to class names using the mapping
-# class_names = [id_to_name_mapping[labels_list] for labels_list in labels_list]
+names_label_list = []
 
-# print("Mapped Class Names:", class_names)
+for label in labels_list:
+    name = class_mapping [label] # each "0" and then that 0 in every labe to 'Eurasian jay'
+    names_label_list.append(name)
 
-existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=labels) # images=inputs,
+unique_names_label_list = []
+
+for i in range (29):
+    name = class_mapping [i]
+    unique_names_label_list.append(name)
+
+names_pred_list = []
+for predictions in pred_list:
+    name = class_mapping [predictions] # each "0" and then that 0 in every labe to 'Eurasian jay'
+    names_pred_list.append(name)
+
+for i in range (29):
+    name = class_mapping [i]
+    unique_names_label_list.append(name)
+
+# print (names_label_list)
+
+# Calculate the confusion matrix using scikit-learn
+cm1 = confusion_matrix(labels_list, pred_list)
+
+existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
 existing_experiment.end()
 
 # you should just be able to log the confusion matrix again with another line with a diffe

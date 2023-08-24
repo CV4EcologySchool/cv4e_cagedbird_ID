@@ -2,6 +2,7 @@ import os
 import json
 import random
 from PIL import Image
+import pickle
 
 root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
 output_train_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/training_18_08.json"
@@ -57,24 +58,23 @@ with open(output_train_json_path, 'w') as output_train_json_file:
 with open(output_val_json_path, 'w') as output_validation_json_file:
     json.dump(validation_data, output_validation_json_file)
 
-for key in training_data["categories"]:
-    print(key)
+class_mapping = {} # because it is a dictionary
 
-# saved_keys = []  # Create an empty list to store the keys
+for idx, item in enumerate(training_data["categories"]):
+    item["id"]
+    item["name"]
+    class_mapping[item["id"]] = item["name"]  # Keys need to be strings and there are strings in the name
+    class_mapping
 
+with open('./ct_classifier/class_mapping.pickle', 'wb') as f:
+    pickle.dump(class_mapping, f)
+
+
+# this was to see the same categories are in training and val data
 # for key in training_data["categories"]:
 #     print(key)
-#     saved_keys.append(key)  # Append the key to the list
 
-# # Save the list to a file
-# with open("saved_keys.txt", "w") as file:
-#     for key in saved_keys:
-#         file.write(key + "\n")
-
-# # Now you have all the keys saved in the 'saved_keys' list
-
-
-for key in validation_data["categories"]:
-    print(key)
+# for key in validation_data["categories"]:
+#     print(key)
 
 
