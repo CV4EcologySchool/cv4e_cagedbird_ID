@@ -60,6 +60,20 @@ with open(output_val_json_path, 'w') as output_validation_json_file:
 for key in training_data["categories"]:
     print(key)
 
+# saved_keys = []  # Create an empty list to store the keys
+
+# for key in training_data["categories"]:
+#     print(key)
+#     saved_keys.append(key)  # Append the key to the list
+
+# # Save the list to a file
+# with open("saved_keys.txt", "w") as file:
+#     for key in saved_keys:
+#         file.write(key + "\n")
+
+# # Now you have all the keys saved in the 'saved_keys' list
+
+
 for key in validation_data["categories"]:
     print(key)
 
