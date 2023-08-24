@@ -46,7 +46,6 @@ def create_dataloader(cfg, split='train'):
     return dataLoader
 
 
-
 def load_model(cfg,load_latest_version=False):
     '''
         Creates a model instance and loads the latest model state weights.
@@ -74,8 +73,6 @@ def load_model(cfg,load_latest_version=False):
         start_epoch = 0
 
     return model_instance, start_epoch
-
-
 
 def save_model(cfg, epoch, model, stats):
     # make sure save directory exists; create if not
@@ -176,7 +173,6 @@ def train(cfg, dataLoader, model, optimizer):
     return loss_total, oa_total
 
 
-
 def validate(cfg, dataLoader, model):
     '''
         Validation function. Note that this looks almost the same as the training
@@ -245,31 +241,30 @@ def main():
         project_name="cagedbird-classifier"
     )
 
-    experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_fixed")
+    experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_fixed_ADDING")
 
     # Get the experiment key
     experiment_key = experiment.get_key()
 
-    # Print the experiment key
-    print("Experiment Key:", experiment_key)
+
 
     # architecture name: 
     # dataset type:_high
     # batch size:
     # number of epochs: 
-    resume = False # to update an existing experiment... or not
+    # resume = False # to update an existing experiment... or not
 
-    if resume:
-        experiment = comet_ml.ExistingExperiment(
-            api_key="6D79SKeAIuSjteySwQwqx96nq",
-            experiment_key="cfac36ee909a4b3b8417991e522f3423",
-        )
+    # if resume:
+    #     experiment = comet_ml.ExistingExperiment(
+    #         api_key="6D79SKeAIuSjteySwQwqx96nq",
+    #         project_name="cagedbird-classifier",
+    #     )
 
-    else:
-        experiment = comet_ml.Experiment(
-            api_key="6D79SKeAIuSjteySwQwqx96nq",
-            project_name="cagedbird-classifier",
-        )
+    # else:
+    #     experiment = comet_ml.Experiment(
+    #         api_key="6D79SKeAIuSjteySwQwqx96nq",
+    #         project_name="cagedbird-classifier",
+    #     )
 
 # your model training or evaluation code
 
@@ -330,9 +325,9 @@ def main():
     print ("Length of training dataloader")
 
     # Number of training samples divided by batch size
-    print(len(dl_train))
-    print ("Length of validation dataloader")
-    print(len(dl_val))
+    # print(len(dl_train))
+    # print ("Length of validation dataloader")
+    # print(len(dl_val))
 
     # initialize model
     model, current_epoch = load_model(cfg)
@@ -368,7 +363,16 @@ def main():
 
         save_model(cfg, current_epoch, model, stats)
 
+        # Print the experiment key to load in the evaluation file
+        print("Experiment Key:", experiment_key)
+
+        # Save the experiment key to a file
+        with open("experiment_key.txt", "w") as file:
+            file.write(experiment_key)
+
         experiment.end()
+
+
 if __name__ == '__main__':
     # This block only gets executed if you call the "train.py" script directly
     # (i.e., "python ct_classifier/train.py").
