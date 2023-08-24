@@ -4,15 +4,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import comet_ml
-from comet_ml import Experiment
+from comet_ml import Experiment, ExistingExperiment
 
 import torch
 import yaml
 
 from train import create_dataloader, load_model # experiment should add the confusion matrix to the cometML experiment    # NOTE: since we're using these functions across files, it could make sense to put them in e.g. a "util.py" script.
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve
 
 from util import * # To import th init seed from the util.py file in the same folder named ct_classifier
+
+# Load the experiment key from the file
+with open("experiment_key.txt", "r") as file:
+    experiment_key = file.read().strip()
+
+
+# Provide the experiment key to continue an existing experiment
+#  experiment_key = "b0ccf310a6d1443b8e89160a74f4680f"
+existing_experiment = comet_ml.ExistingExperiment(api_key="6D79SKeAIuSjteySwQwqx96nq", previous_experiment=experiment_key)
+
+
 # Parameters
 config = 'configs/exp_resnet18.yaml'
 split = 'val'
@@ -60,6 +71,8 @@ for inputs, labels in dl_val:
     inputs_list.extend(list(inputs))
     labels_list.extend(list(labels))
 
+print (labels)
+
 # Append wraps your item into a list, so you end up with a list of lists [[],[],[],[],[]]
 # Extend puts the list into a newer list, but putting it into brackets [.....]
 
@@ -68,7 +81,29 @@ inputs_list = np.array(inputs_list)
 labels_list = np.array(labels_list)
 pred_list = np.array (pred_list)
 
-print (pred_list)
+print (labels_list)
+
+# print (pred_list)
+
+# For each class, for a multi-label or multi-class situation: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
+
+# precision = dict()
+# recall = dict()
+# n_classes = 29
+# average_precision = dict()
+# for i in range(n_classes):
+#     precision[i], recall[i], _ = precision_recall_curve(labels_list[:, i], pred_list[:, i])
+#     average_precision[i] = average_precision_score(labels_list[:, i], pred_list[:, i])
+
+# # A "micro-average": quantifying score on all classes jointly
+# precision["micro"], recall["micro"], _ = precision_recall_curve(
+#     labels_list.ravel(), pred_list.ravel()
+# )
+# average_precision["micro"] = average_precision_score(labels_list, pred_list, average="micro")
+
+# print ("Print the average precision score")
+# print (average_precision["micro"])
+# print (average_precision_score)
 
 # Calculate the confusion matrix using scikit-learn
 cm1 = confusion_matrix(labels_list, pred_list)
@@ -76,14 +111,100 @@ cm1 = confusion_matrix(labels_list, pred_list)
 # the colours need to mean something - need to scale the roles
 # Plot confusion matrix to CometML
 
-experiment = Experiment(
-    api_key="6D79SKeAIuSjteySwQwqx96nq",
-    project_name="cagedbird-classifier"
-)
-experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_confusion_matrix")
+# use_experiment.py
 
-experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=labels) # images=inputs,
+# use_experiment.py
 
+
+# Use the experiment key to interact with Comet.ml or perform any other action
+
+# Experiment Key: f53b5ec49e694758827fd1d1d978ed05
+
+# experiment = Experiment(
+#     api_key="6D79SKeAIuSjteySwQwqx96nq",
+#     project_name="cagedbird-classifier"
+# )
+# experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_confusion_matrix")
+
+# Map the class names to the labels
+
+# # Sample data containing class information
+# class_data = [
+# {'id': 0, 'name': 'Eurasian_jay', 'supercategory': 'object'}
+# {'id': 1, 'name': 'Eurasian_siskin', 'supercategory': 'object'}
+# {'id': 2, 'name': 'Grey_Parrot', 'supercategory': 'object'}
+# {'id': 3, 'name': 'Hoopoe', 'supercategory': 'object'}
+# {'id': 4, 'name': 'bluethroat', 'supercategory': 'object'}
+# {'id': 5, 'name': 'bm_leafbird', 'supercategory': 'object'}
+# {'id': 6, 'name': 'bw_myna', 'supercategory': 'object'}
+# {'id': 7, 'name': 'cf_white_eye', 'supercategory': 'object'}
+# {'id': 8, 'name': 'chestnut_munia', 'supercategory': 'object'}
+# {'id': 9, 'name': 'coal_tit_crops', 'supercategory': 'object'}
+# {'id': 10, 'name': 'common_myna', 'supercategory': 'object'}
+# {'id': 11, 'name': 'common_redpoll', 'supercategory': 'object'}
+# {'id': 12, 'name': 'crested_lark', 'supercategory': 'object'}
+# {'id': 13, 'name': 'fischers_lovebird', 'supercategory': 'object'}
+# {'id': 14, 'name': 'great_myna', 'supercategory': 'object'}
+# {'id': 15, 'name': 'hill_mynas', 'supercategory': 'object'}
+# {'id': 16, 'name': 'hwamei', 'supercategory': 'object'}
+# {'id': 17, 'name': 'japanese_grosbeak', 'supercategory': 'object'}
+# {'id': 18, 'name': 'javan_pied_starling', 'supercategory': 'object'}
+# {'id': 19, 'name': 'marsh_tit', 'supercategory': 'object'}
+# {'id': 20, 'name': 'oriental_magpie_robin', 'supercategory': 'object'}
+# {'id': 21, 'name': 'oriental_skylark', 'supercategory': 'object'}
+# {'id': 22, 'name': 'red_billed_starling', 'supercategory': 'object'}
+# {'id': 23, 'name': 'red_whiskered_bulbul', 'supercategory': 'object'}
+# {'id': 24, 'name': 'siberian_rubythroat', 'supercategory': 'object'}
+# {'id': 25, 'name': 'swinhoes_whiteeye', 'supercategory': 'object'}
+# {'id': 26, 'name': 'yellow_bellied_tits', 'supercategory': 'object'}
+# {'id': 27, 'name': 'zebra_dove', 'supercategory': 'object'}
+# {'id': 28, 'name': 'zebra_finch', 'supercategory': 'object'}
+# {'id': 0, 'name': 'Eurasian_jay', 'supercategory': 'object'}
+# {'id': 1, 'name': 'Eurasian_siskin', 'supercategory': 'object'}
+# {'id': 2, 'name': 'Grey_Parrot', 'supercategory': 'object'}
+# {'id': 3, 'name': 'Hoopoe', 'supercategory': 'object'}
+# {'id': 4, 'name': 'bluethroat', 'supercategory': 'object'}
+# {'id': 5, 'name': 'bm_leafbird', 'supercategory': 'object'}
+# {'id': 6, 'name': 'bw_myna', 'supercategory': 'object'}
+# {'id': 7, 'name': 'cf_white_eye', 'supercategory': 'object'}
+# {'id': 8, 'name': 'chestnut_munia', 'supercategory': 'object'}
+# {'id': 9, 'name': 'coal_tit_crops', 'supercategory': 'object'}
+# {'id': 10, 'name': 'common_myna', 'supercategory': 'object'}
+# {'id': 11, 'name': 'common_redpoll', 'supercategory': 'object'}
+# {'id': 12, 'name': 'crested_lark', 'supercategory': 'object'}
+# {'id': 13, 'name': 'fischers_lovebird', 'supercategory': 'object'}
+# {'id': 14, 'name': 'great_myna', 'supercategory': 'object'}
+# {'id': 15, 'name': 'hill_mynas', 'supercategory': 'object'}
+# {'id': 16, 'name': 'hwamei', 'supercategory': 'object'}
+# {'id': 17, 'name': 'japanese_grosbeak', 'supercategory': 'object'}
+# {'id': 18, 'name': 'javan_pied_starling', 'supercategory': 'object'}
+# {'id': 19, 'name': 'marsh_tit', 'supercategory': 'object'}
+# {'id': 20, 'name': 'oriental_magpie_robin', 'supercategory': 'object'}
+# {'id': 21, 'name': 'oriental_skylark', 'supercategory': 'object'}
+# {'id': 22, 'name': 'red_billed_starling', 'supercategory': 'object'}
+# {'id': 23, 'name': 'red_whiskered_bulbul', 'supercategory': 'object'}
+# {'id': 24, 'name': 'siberian_rubythroat', 'supercategory': 'object'}
+# {'id': 25, 'name': 'swinhoes_whiteeye', 'supercategory': 'object'}
+# {'id': 26, 'name': 'yellow_bellied_tits', 'supercategory': 'object'}
+# {'id': 27, 'name': 'zebra_dove', 'supercategory': 'object'}
+# {'id': 28, 'name': 'zebra_finch', 'supercategory': 'object'}
+# ]
+
+# # Create a mapping from 'id' to 'name'
+# id_to_name_mapping = {class_info['id']: class_info['name'] for class_info in class_data}
+
+# # # Sample numeric labels as tensors, but this should just be my labels_list
+# # numeric_labels = [28, 0, 1, 10]  # Replace with your actual numeric labels
+
+# # Map numeric labels to class names using the mapping
+# class_names = [id_to_name_mapping[labels_list] for labels_list in labels_list]
+
+# print("Mapped Class Names:", class_names)
+
+existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=labels) # images=inputs,
+existing_experiment.end()
+
+# you should just be able to log the confusion matrix again with another line with a diffe
 # AttributeError: 'numpy.ndarray' object has no attribute 'unique'
 # Try and plot the labels for each of the, add labels=labels (this will print),
 # we just want the labels that are there in our batch, so it should be labels=labels.unique - this will show the unique labels for the batch
