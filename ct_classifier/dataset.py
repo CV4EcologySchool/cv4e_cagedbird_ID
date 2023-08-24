@@ -15,7 +15,7 @@
 import os
 import json
 from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional
+from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip
 from PIL import Image
 import math
 
@@ -64,6 +64,7 @@ class CTDataset(Dataset):
 
         self.transform = Compose([
             FixedHeightResize(224),
+            RandomHorizontalFlip(p=0.5)
             ToTensor(),
         ])
         # the tensor format is channels, height, width
