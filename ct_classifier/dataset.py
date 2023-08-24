@@ -64,7 +64,7 @@ class CTDataset(Dataset):
 
         self.transform = Compose([
             FixedHeightResize(224),
-            RandomHorizontalFlip(p=0.5)
+            RandomHorizontalFlip(p=0.5),
             ToTensor(),
         ])
         # the tensor format is channels, height, width

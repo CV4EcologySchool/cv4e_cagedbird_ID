@@ -241,7 +241,7 @@ def main():
         project_name="cagedbird-classifier"
     )
 
-    experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_fixed_ADDING")
+    experiment.set_name("a-resnet18_d-high_b-128_n-75_padded_images_random_flipping")
 
     # Get the experiment key
     experiment_key = experiment.get_key()
