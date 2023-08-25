@@ -86,6 +86,7 @@ def save_model(cfg, epoch, model, stats):
     torch.save(stats, open(f'model_states/{epoch}.pt', 'wb'))
     
     # also save config file if not present
+    cfpath.append("/experiment_name")
     cfpath = 'model_states/config.yaml'
     if not os.path.exists(cfpath):
         with open(cfpath, 'w') as f:
@@ -293,17 +294,18 @@ def main():
         with open("experiment_key.txt", "r") as file:
                 experiment_key = file.read().strip()
         experiment = comet_ml.ExistingExperiment(
-            api_key="6D79SKeAIuSjteySwQwqx96nq",
-            project_name="cagedbird-classifier",
+            api_key=cfg["api_key"],
+            project_name=cfg["project_name"],
             previous_experiment=experiment_key,
         )
 
     else:
         experiment = comet_ml.Experiment(
-            api_key="6D79SKeAIuSjteySwQwqx96nq",
-            project_name="cagedbird-classifier",
+            api_key=cfg["api_key"],
+            project_name=cfg["project_name"],
         )
-        experiment.set_name("a-resnet18_d-high_b-128_n-102_padded_images_flipping_sharpen")
+        experiment.set_name(cfg["experiment_name"])
+
         # Get the experiment key
         experiment_key = experiment.get_key()
 

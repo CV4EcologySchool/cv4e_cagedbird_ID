@@ -17,16 +17,6 @@ from sklearn.preprocessing import label_binarize
 
 from util import * # To import the init seed from the util.py file in the same folder named ct_classifier
 
-# Load the experiment key from the file
-with open("experiment_key.txt", "r") as file:
-    experiment_key = file.read().strip()
-
-
-# Provide the experiment key to continue an existing experiment
-#  experiment_key = "b0ccf310a6d1443b8e89160a74f4680f"
-existing_experiment = comet_ml.ExistingExperiment(api_key="6D79SKeAIuSjteySwQwqx96nq", previous_experiment=experiment_key)
-
-
 # Parameters
 config = 'configs/exp_resnet18.yaml'
 split = 'val'
@@ -34,6 +24,13 @@ split = 'val'
 # load config
 print(f'Using config "{config}"')
 cfg = yaml.safe_load(open(config, 'r'))
+
+# Load the experiment key from the file
+with open("experiment_key.txt", "r") as file:
+    experiment_key = file.read().strip()
+
+# Provide the experiment key to continue an existing experiment
+existing_experiment = comet_ml.ExistingExperiment(api_key=cfg["api_key"], previous_experiment=experiment_key)
 
 # Set the seed, so you can reproduce the randomness, None is there as null because the seed is already in the config
 init_seed(cfg.get('seed', None))
@@ -69,7 +66,8 @@ max_pred_list = []
 for inputs, labels in dl_val:
     predictions = model(inputs) 
     argmax_pred = predictions.argmax(dim=1) # argmax is saying what is the index position for the largest value in a list of number
-    max_pred = predictions.max(dim=1)
+    max_pred = predictions.max(dim=1).values
+    print(max_pred.shape)
     # I have to choose a number to label this sample, it will choose the index position that has the highest score, we are convertin as we go so we don't need to relaebl
     # objects as they are converted anyway
     pred_list.extend(list(argmax_pred))
@@ -83,7 +81,6 @@ print ("Print the length of the labels list")
 print(len(labels_list))
 print ("Print the length of the max predictions list")
 print(len(max_pred_list))
-print (max_pred)
 
 # Calculate the number of unique classes in your data
 num_classes = len(np.unique(labels_list))
@@ -93,7 +90,7 @@ positive_scores = []
 negative_scores = []
 
 for i in range(len(labels_list)):
-    pred_score = max_pred_list [i]
+    pred_score = max_pred_list [i].detach().numpy()  # Detach and then convert to NumPy
     if labels_list[i] == pred_list[i]:
         positive_scores.append(pred_score)
     else:
@@ -200,6 +197,29 @@ for i in range (29):
 
 # Calculate the confusion matrix using scikit-learn
 cm1 = confusion_matrix(labels_list, pred_list)
+
+threshold = 0.3  # You can adjust this threshold value
+
+confusion_sums = cm1.sum(axis=1) - np.diag(cm1)  # Subtract diagonal elements
+high_confusion_classes = np.where(confusion_sums > threshold)[0] # Set your own threshold
+
+# fig, axes = plt.subplots(nrows=len(high_confusion_classes), ncols=3, figsize=(12, 8))
+fig, axes = plt.subplots(nrows=len(high_confusion_classes), ncols=10, figsize=(100, 100))  # Increase the height
+
+for i, class_idx in enumerate(high_confusion_classes):
+    class_samples = np.where(labels_list == class_idx)[0]
+    sample_indices = np.random.choice(class_samples, size=1, replace=False)
+
+    for j, sample_idx in enumerate(sample_indices):
+        ax = axes[i, j]
+        ax.imshow(inputs_list[sample_idx].transpose(1, 2, 0))
+        ax.set_title(f"True: {class_mapping[labels_list[sample_idx]]}\nPred: {class_mapping[pred_list[sample_idx]]}")
+        ax.axis('off')
+
+plt.tight_layout()
+plt.show()
+plt.savefig('Sample Of Bad Classes.png')
+
 
 existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
 existing_experiment.end()

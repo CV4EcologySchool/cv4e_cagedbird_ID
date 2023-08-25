@@ -15,5 +15,9 @@ num_classes: 29
 image_size: [224, 224] # [224, 224] keep it as [224] or [224, ] if you want to keep the aspect ratio the same
 num_epochs: 102 # 200, dataset is currently unbalanced, wa 10 and then 20
 batch_size: 128
-learning_rate: 0.001
+learning_rate: 0.005 # was 0.001 before (for ALL previous experiments)
+parameter: 
 weight_decay: 0.001
+experiment_name: a-resnet18_d-high_b-128_n-102_padded_images_flipping_sharpen
+project_name: cagedbird-classifier
+api_key: 6D79SKeAIuSjteySwQwqx96nq
