@@ -59,6 +59,7 @@ print(start_epoch)
 inputs_list = []
 labels_list = []
 pred_list = []
+max_pred_list = []
 
 # Here the internal Dataloader in PyTorch base code, knows that when it gets a DataLoader class that it will iterate
 # through each item in the list rather than just generate a list for one batch in dl_val, so when we call dl_val
@@ -67,12 +68,48 @@ pred_list = []
 
 for inputs, labels in dl_val:
     predictions = model(inputs) 
-    predictions = predictions.argmax(dim=1) # argmax is saying what is the index position for the largest value in a list of number
+    argmax_pred = predictions.argmax(dim=1) # argmax is saying what is the index position for the largest value in a list of number
+    max_pred = predictions.max(dim=1)
     # I have to choose a number to label this sample, it will choose the index position that has the highest score, we are convertin as we go so we don't need to relaebl
     # objects as they are converted anyway
-    pred_list.extend(list(predictions))
+    pred_list.extend(list(argmax_pred))
+    max_pred_list.extend(list(max_pred))
     inputs_list.extend(list(inputs))
     labels_list.extend(list(labels))
+
+print ("Print the length of the inputs list")
+print(len(inputs_list))
+print ("Print the length of the labels list")
+print(len(labels_list))
+print ("Print the length of the max predictions list")
+print(len(max_pred_list))
+print (max_pred)
+
+# Calculate the number of unique classes in your data
+num_classes = len(np.unique(labels_list))
+
+# Create histograms for positive and negative class scores
+positive_scores = []
+negative_scores = []
+
+for i in range(len(labels_list)):
+    pred_score = max_pred_list [i]
+    if labels_list[i] == pred_list[i]:
+        positive_scores.append(pred_score)
+    else:
+        negative_scores.append(pred_score)
+
+# Plot histograms
+num_bins = 50  # You can adjust this value based on your preference
+plt.figure(figsize=(10, 6))
+plt.hist(positive_scores, bins=num_bins, alpha=0.5, color='blue', label='Positive Class Scores')
+plt.hist(negative_scores, bins=num_bins, alpha=0.5, color='red', label='Negative Class Scores')
+plt.xlabel('Class Scores')
+plt.ylabel('Frequency')
+plt.title('Histogram of Positive and Negative Class Scores')
+plt.legend()
+# plt.show()
+plt.savefig('Histogram Scores')
 
 # this would just print the last batch as a batch sized tensor
 # print (labels)
@@ -236,3 +273,4 @@ existing_experiment.end()
 # # Log some example images 
 # for i in range(5):
 #   experiment.log_image(images[i], name="image"+str(i), image_channels="first")
+

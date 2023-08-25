@@ -288,7 +288,7 @@ def main():
     # number of epochs: 
     # resume = True # to update an existing experiment... or not
 
-    resume = True  # Set this to True if you want to resume an existing experiment
+    resume = False  # Set this to True if you want to resume an existing experiment
     if resume:
         with open("experiment_key.txt", "r") as file:
                 experiment_key = file.read().strip()
@@ -303,7 +303,7 @@ def main():
             api_key="6D79SKeAIuSjteySwQwqx96nq",
             project_name="cagedbird-classifier",
         )
-        experiment.set_name("a-resnet18_d-high_b-128_n-102_padded_images_random_flipping")
+        experiment.set_name("a-resnet18_d-high_b-128_n-102_padded_images_flipping_sharpen")
         # Get the experiment key
         experiment_key = experiment.get_key()
 
@@ -371,7 +371,7 @@ def main():
     # print(len(dl_val))
 
     # initialize model
-    model, current_epoch = load_model(cfg, load_latest_version=True)
+    model, current_epoch = load_model(cfg) # load_latest_version=True
 
     # set up model optimizer
     optim = setup_optimizer(cfg, model)

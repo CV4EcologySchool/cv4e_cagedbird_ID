@@ -15,7 +15,7 @@
 import os
 import json
 from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip
+from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip,RandomAdjustSharpness
 from PIL import Image
 import math
 
@@ -61,10 +61,14 @@ class CTDataset(Dataset):
                 img = padder(img)
 
                 return img
+            
+        # https://stackoverflow.com/questions/76064717/pytorch-resize-specific-dimension-while-keeping-aspect-ratio
+        # for half of the resize c
 
         self.transform = Compose([
             FixedHeightResize(224),
             RandomHorizontalFlip(p=0.5),
+            RandomAdjustSharpness(sharpness_factor=2, p=0.5),
             ToTensor(),
         ])
         # the tensor format is channels, height, width
