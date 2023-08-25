@@ -13,7 +13,8 @@ from tqdm import trange
 
 # COMET WARNING: To get all data logged automatically, import comet_ml before the following modules: torch.
 import comet_ml
-
+from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve, ConfusionMatrixDisplay
+from sklearn.preprocessing import label_binarize
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -163,8 +164,8 @@ def train(cfg, dataLoader, model, optimizer):
         oa_total += oa.item()
 
         # auprc preparation
-        pred_list.extend(list(pred_label))
-        labels_list.extend(list(labels))
+        pred_list.extend(list(pred_label.detach().cpu().numpy()))
+        labels_list.extend(list(labels.detach().cpu().numpy()))
 
         progressBar.set_description(
             '[Train] Loss: {:.2f}; OA: {:.2f}%'.format(
@@ -215,6 +216,10 @@ def validate(cfg, dataLoader, model):
     # iterate over dataLoader
     progressBar = trange(len(dataLoader))
     
+    # initialise predictions and labels lists
+    labels_list = []
+    pred_list = []
+
     with torch.no_grad():               # don't calculate intermediate gradient steps: we don't need them, so this saves memory and is faster
         for idx, (data, labels) in enumerate(dataLoader):
 
@@ -235,8 +240,8 @@ def validate(cfg, dataLoader, model):
             oa_total += oa.item()
             
             # auprc preparation
-            pred_list.extend(list(pred_label))
-            labels_list.extend(list(labels))
+            pred_list.extend(list(pred_label.detach().cpu().numpy()))
+            labels_list.extend(list(labels.detach().cpu().numpy()))
 
             progressBar.set_description(
                 '[Val ] Loss: {:.2f}; OA: {:.2f}%'.format(
@@ -283,38 +288,24 @@ def main():
     # number of epochs: 
     # resume = True # to update an existing experiment... or not
 
+    resume = True  # Set this to True if you want to resume an existing experiment
+    if resume:
+        with open("experiment_key.txt", "r") as file:
+                experiment_key = file.read().strip()
+        experiment = comet_ml.ExistingExperiment(
+            api_key="6D79SKeAIuSjteySwQwqx96nq",
+            project_name="cagedbird-classifier",
+            previous_experiment=experiment_key,
+        )
 
-# resume = True  # Set this to True if you want to resume an existing experiment
-
-# if resume:
-#     experiment_key = "YOUR_EXISTING_EXPERIMENT_KEY"  # Replace with your actual experiment key
-#     experiment = comet_ml.ExistingExperiment(
-#         api_key="YOUR_API_KEY",
-#         previous_experiment=experiment_key,
-#     )
-# else:
-#     experiment = comet_ml.Experiment(
-#         api_key="YOUR_API_KEY",
-#         project_name="cagedbird-classifier",
-#     )
-#     experiment.set_name("a-resnet18_d-high_b-128_n-100_padded_images_random_flipping")
-
-
-#     if resume:
-#         experiment = comet_ml.ExistingExperiment(
-#             api_key="6D79SKeAIuSjteySwQwqx96nq",
-#             project_name="cagedbird-classifier",
-#         )
-
-#     else:
-#         experiment = comet_ml.Experiment(
-#             api_key="6D79SKeAIuSjteySwQwqx96nq",
-#             project_name="cagedbird-classifier",
-#         )
-#         experiment.set_name("a-resnet18_d-high_b-128_n-100_padded_images_random_flipping")
-
-    # # Get the experiment key
-    #     experiment_key = experiment.get_key()
+    else:
+        experiment = comet_ml.Experiment(
+            api_key="6D79SKeAIuSjteySwQwqx96nq",
+            project_name="cagedbird-classifier",
+        )
+        experiment.set_name("a-resnet18_d-high_b-128_n-102_padded_images_random_flipping")
+        # Get the experiment key
+        experiment_key = experiment.get_key()
 
 # your model training or evaluation code
 
@@ -380,7 +371,7 @@ def main():
     # print(len(dl_val))
 
     # initialize model
-    model, current_epoch = load_model(cfg)
+    model, current_epoch = load_model(cfg, load_latest_version=True)
 
     # set up model optimizer
     optim = setup_optimizer(cfg, model)
@@ -405,14 +396,17 @@ def main():
             'mAP_val': mAP_val
         }
 
-        # Log loss metrics in the same plot
-        experiment.log_metric("Loss Metrics", [('Training loss', loss_train),('Validation loss', loss_val),], step=current_epoch)
+        # # Log loss metrics in the same plot
+        # experiment.log_metric("Loss Metrics", [('Training loss', loss_train),('Validation loss', loss_val),], step=current_epoch)
 
-        # Group accuracy metrics in a plot
-        experiment.log_metric("Accuracy Metrics", [('Training OA accuracy', oa_train),('Validation OA accuracy', oa_val),], step=current_epoch)
+        # # Group accuracy metrics in a plot
+        # experiment.log_metric("Accuracy Metrics", [('Training OA accuracy', oa_train),('Validation OA accuracy', oa_val),], step=current_epoch)
 
-        # Group mAP metrics in a plot
-        experiment.log_metric("mAP Metrics", [('Training mAP', mAP_train),('Validation mAP', mAP_val),], step=current_epoch)
+        # # Group mAP metrics in a plot
+        # experiment.log_metric("mAP Metrics", [('Training mAP', mAP_train),('Validation mAP', mAP_val),], step=current_epoch)
+
+        experiment.log_metrics(stats, step=current_epoch)
+
 
          # Log hyperparameters like the learning rate and the batch size
         for param_name, param_value in cfg.items():
