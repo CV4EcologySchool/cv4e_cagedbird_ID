@@ -203,23 +203,29 @@ threshold = 0.3  # You can adjust this threshold value
 confusion_sums = cm1.sum(axis=1) - np.diag(cm1)  # Subtract diagonal elements
 high_confusion_classes = np.where(confusion_sums > threshold)[0] # Set your own threshold
 
-# fig, axes = plt.subplots(nrows=len(high_confusion_classes), ncols=3, figsize=(12, 8))
-fig, axes = plt.subplots(nrows=len(high_confusion_classes), ncols=10, figsize=(100, 100))  # Increase the height
+# ...
+fig, axes = plt.subplots(nrows=len(high_confusion_classes), ncols=3, figsize=(100, 100))
 
 for i, class_idx in enumerate(high_confusion_classes):
-    class_samples = np.where(labels_list == class_idx)[0]
-    sample_indices = np.random.choice(class_samples, size=1, replace=False)
+    class_samples = np.where((labels_list == class_idx) & (labels_list != pred_list))[0]
+
+    if len(class_samples) >= 3:
+        sample_indices = np.random.choice(class_samples, size=3, replace=False)
+    else:
+        # If there are fewer than 3 samples, repeat the available samples
+        sample_indices = class_samples
 
     for j, sample_idx in enumerate(sample_indices):
         ax = axes[i, j]
         ax.imshow(inputs_list[sample_idx].transpose(1, 2, 0))
         ax.set_title(f"True: {class_mapping[labels_list[sample_idx]]}\nPred: {class_mapping[pred_list[sample_idx]]}")
-        ax.axis('off')
+        ax.axis('off')  # Turn off axes
+        ax.set_visible(False)  
 
 plt.tight_layout()
+plt.subplots_adjust(wspace=0.2, hspace=0.5)  # Adjust spacing between subplots
 plt.show()
 plt.savefig('Sample Of Bad Classes.png')
-
 
 existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
 existing_experiment.end()
@@ -293,4 +299,3 @@ existing_experiment.end()
 # # Log some example images 
 # for i in range(5):
 #   experiment.log_image(images[i], name="image"+str(i), image_channels="first")
-

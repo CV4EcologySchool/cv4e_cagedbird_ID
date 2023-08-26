@@ -1,0 +1,16 @@
+api_key: 6D79SKeAIuSjteySwQwqx96nq
+batch_size: 128
+data_root: /home/sicily/cv4e_cagedbird_ID/data
+device: cuda
+experiment_name: a-resnet18_d-high_b-128_n-102_padded_images_flipping_sharpen
+image_size:
+- 224
+- 224
+learning_rate: 0.005
+num_classes: 29
+num_epochs: 102
+num_workers: 4
+parameter: null
+project_name: cagedbird-classifier
+seed: 32678456782
+weight_decay: 0.001

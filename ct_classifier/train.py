@@ -102,7 +102,11 @@ def setup_optimizer(cfg, model):
     optimizer = SGD(model.parameters(),
                     lr=cfg['learning_rate'],
                     weight_decay=cfg['weight_decay'])
-    return optimizer
+
+   # Define the learning rate scheduler based on the provided step_size and gamma
+    scheduler = lr_scheduler.StepLR(optimizer, step_size=cfg['scheduler_step_size'], gamma=cfg['scheduler_gamma'])
+
+    return optimizer, scheduler
 
 
 
@@ -380,7 +384,7 @@ def main():
     model, current_epoch = load_model(cfg) # load_latest_version=True
 
     # set up model optimizer
-    optim = setup_optimizer(cfg, model)
+    optim, scheduler = setup_optimizer(cfg, model)
 
     # we have everything now: data loaders, model, optimizer; let's do the epochs!
     numEpochs = cfg['num_epochs']
@@ -419,6 +423,9 @@ def main():
             experiment.log_parameter(param_name, param_value)
 
         save_model(cfg, current_epoch, model, stats)
+        
+        # Scheduler step to save
+        scheduler.step()
 
         # Print the experiment key to load in the evaluation file
         print("Experiment Key:", experiment_key)
