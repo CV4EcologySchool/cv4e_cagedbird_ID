@@ -86,8 +86,10 @@ def save_model(cfg, epoch, model, stats):
     torch.save(stats, open(f'model_states/{epoch}.pt', 'wb'))
     
     # also save config file if not present
-    cfpath.append("/experiment_name")
-    cfpath = 'model_states/config.yaml'
+    # Construct the full path using os.path.join
+    # cfpath = 'model_states/config.yaml'
+    # cfpath = os.path.join(cfpath, cfg["experiment_name"])
+    cfpath = f'{config}_{cfg["experiment_name"]}.yaml'
     if not os.path.exists(cfpath):
         with open(cfpath, 'w') as f:
             yaml.dump(cfg, f)
@@ -289,6 +291,22 @@ def main():
     # number of epochs: 
     # resume = True # to update an existing experiment... or not
 
+# your model training or evaluation code
+
+# Metrics from this training run will now be
+# available in the Comet UI
+
+    # Argument parser for command-line arguments:
+    # python ct_classifier/train.py --config configs/exp_resnet18.yaml
+    parser = argparse.ArgumentParser(description='Train deep learning model.')
+    parser.add_argument('--config', help='Path to config file', default='configs/exp_resnet18.yaml')
+    args = parser.parse_args()
+
+    # load config
+    print(f'Using config "{args.config}"')
+    cfg = yaml.safe_load(open(args.config, 'r'))
+
+    
     resume = False  # Set this to True if you want to resume an existing experiment
     if resume:
         with open("experiment_key.txt", "r") as file:
@@ -309,20 +327,6 @@ def main():
         # Get the experiment key
         experiment_key = experiment.get_key()
 
-# your model training or evaluation code
-
-# Metrics from this training run will now be
-# available in the Comet UI
-
-    # Argument parser for command-line arguments:
-    # python ct_classifier/train.py --config configs/exp_resnet18.yaml
-    parser = argparse.ArgumentParser(description='Train deep learning model.')
-    parser.add_argument('--config', help='Path to config file', default='configs/exp_resnet18.yaml')
-    args = parser.parse_args()
-
-    # load config
-    print(f'Using config "{args.config}"')
-    cfg = yaml.safe_load(open(args.config, 'r'))
      
     # this is the yaml one loaded as cfg
     # init random number generator seed (set at the start)
