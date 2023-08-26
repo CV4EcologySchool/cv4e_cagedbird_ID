@@ -17,6 +17,7 @@ from sklearn.metrics import confusion_matrix, average_precision_score, precision
 from sklearn.preprocessing import label_binarize
 import torch
 import torch.nn as nn
+from torch.optim import lr_scheduler
 from torch.utils.data import DataLoader
 from torch.optim import SGD
 
@@ -89,7 +90,7 @@ def save_model(cfg, epoch, model, stats):
     # Construct the full path using os.path.join
     # cfpath = 'model_states/config.yaml'
     # cfpath = os.path.join(cfpath, cfg["experiment_name"])
-    cfpath = f'{config}_{cfg["experiment_name"]}.yaml'
+    cfpath = f'{"config"}_{cfg["experiment_name"]}.yaml'
     if not os.path.exists(cfpath):
         with open(cfpath, 'w') as f:
             yaml.dump(cfg, f)
@@ -424,8 +425,13 @@ def main():
 
         save_model(cfg, current_epoch, model, stats)
         
-        # Scheduler step to save
+        # Scheduler step to save, which is at the end of the training loop basically
         scheduler.step()
+        last_lr = scheduler.get_last_lr()
+
+         # Log learning rate
+        experiment.log_metric("learning_rate", last_lr[0], step=current_epoch)
+
 
         # Print the experiment key to load in the evaluation file
         print("Experiment Key:", experiment_key)

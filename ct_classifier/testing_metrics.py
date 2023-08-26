@@ -203,29 +203,54 @@ threshold = 0.3  # You can adjust this threshold value
 confusion_sums = cm1.sum(axis=1) - np.diag(cm1)  # Subtract diagonal elements
 high_confusion_classes = np.where(confusion_sums > threshold)[0] # Set your own threshold
 
-# ...
-fig, axes = plt.subplots(nrows=len(high_confusion_classes), ncols=3, figsize=(100, 100))
+# Create a custom grid layout
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Calculate high confusion classes
+confusion_sums = cm1.sum(axis=1) - np.diag(cm1)
+high_confusion_classes = np.where(confusion_sums > threshold)[0]
+
+# Create a custom grid layout
+num_rows = len(high_confusion_classes)
+num_columns = 5  # Number of columns for the grid
+fig_width = 15  # Adjust the width of the figure
+
+# Calculate the number of images per row and per column
+images_per_row = min(num_columns, len(high_confusion_classes))
+images_per_col = -(-len(high_confusion_classes) // num_columns)  # Ceiling division
+
+fig, axes = plt.subplots(nrows=images_per_col, ncols=images_per_row, figsize=(fig_width, fig_width / images_per_row * images_per_col))
 
 for i, class_idx in enumerate(high_confusion_classes):
     class_samples = np.where((labels_list == class_idx) & (labels_list != pred_list))[0]
 
-    if len(class_samples) >= 3:
-        sample_indices = np.random.choice(class_samples, size=3, replace=False)
+    if len(class_samples) >= images_per_row:
+        sample_indices = np.random.choice(class_samples, size=images_per_row, replace=False)
     else:
-        # If there are fewer than 3 samples, repeat the available samples
         sample_indices = class_samples
 
     for j, sample_idx in enumerate(sample_indices):
-        ax = axes[i, j]
-        ax.imshow(inputs_list[sample_idx].transpose(1, 2, 0))
-        ax.set_title(f"True: {class_mapping[labels_list[sample_idx]]}\nPred: {class_mapping[pred_list[sample_idx]]}")
+        ax = axes[i // images_per_row, j % images_per_row]
+        image = inputs_list[sample_idx].transpose(1, 2, 0)
+        true_label = class_mapping[labels_list[sample_idx]]
+        pred_label = class_mapping[pred_list[sample_idx]]
+
+        ax.imshow(image)
+        ax.text(0.5, -0.1, f"True: {true_label}", fontsize=8, color='black', ha='center')
+        ax.text(0.5, -0.25, f"Pred: {pred_label}", fontsize=8, color='red', ha='center')
         ax.axis('off')  # Turn off axes
-        ax.set_visible(False)  
+
+# Remove any empty subplots
+for i in range(len(high_confusion_classes), images_per_col):
+    for j in range(images_per_row):
+        axes[i, j].axis('off')
 
 plt.tight_layout()
-plt.subplots_adjust(wspace=0.2, hspace=0.5)  # Adjust spacing between subplots
 plt.show()
 plt.savefig('Sample Of Bad Classes.png')
+
+
 
 existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
 existing_experiment.end()

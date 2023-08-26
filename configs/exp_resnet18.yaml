@@ -13,13 +13,15 @@ num_classes: 29
 
 # training hyperparameters
 image_size: [224, 224] # [224, 224] keep it as [224] or [224, ] if you want to keep the aspect ratio the same
-num_epochs: 102 # 200, dataset is currently unbalanced, wa 10 and then 20
+num_epochs: 104 # 200, dataset is currently unbalanced, wa 10 and then 20
 batch_size: 128
-learning_rate: 0.005 # was 0.001 before (for ALL previous experiments)
+learning_rate: 0.005 # was 0.001 before (for ALL previous experiments) so multiply lr by 10 to see if you can get the val to plateau earlier than 100 epochs, reduce LR on plateau
 parameter: 
 weight_decay: 0.001
-scheduler_step_size: 
-scheduler_gamma: 
+scheduler_step_size: 10
+# the number of epochs when the lr updates
+scheduler_gamma: 0.5
+# if gamma: 1 it will times this by the lr, so it is the same as using no scheduling
 
 # Comet ML experiment saving details
 experiment_name: a-resnet18_d-high_b-128_n-102_padded_images_flipping_sharpen
