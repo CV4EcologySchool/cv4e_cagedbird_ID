@@ -13,6 +13,7 @@ import pickle
 from train import create_dataloader, load_model # experiment should add the confusion matrix to the cometML experiment    # NOTE: since we're using these functions across files, it could make sense to put them in e.g. a "util.py" script.
 from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve, ConfusionMatrixDisplay
 from sklearn.preprocessing import label_binarize
+import torch.nn.functional as functional  # Import functional
 
 
 from util import * # To import the init seed from the util.py file in the same folder named ct_classifier
@@ -108,32 +109,42 @@ plt.legend()
 # plt.show()
 plt.savefig('Histogram Scores')
 
-# try plotting them per class
-# Create a dictionary to store scores for each class
-class_scores = {class_label: [] for class_label in range(cfg['num_classes'])}
+# Initialize lists to hold scores for each class
+class_scores = [[] for _ in range(num_classes)]
 
-# Iterate through the validation data
-for inputs, labels in dl_val:
-    predictions = model(inputs)
-    max_pred = predictions.max(dim=1).values
-    
-    for i in range(len(labels)):
-        class_label = labels[i].item()
-        class_scores[class_label].append(max_pred[i].item())
+for i in range(len(labels_list)):
+    # pred_score = max_pred_list[i].detach().numpy()
+    softmax_scores = functional.softmax(max_pred_list[i], dim=0).detach().numpy()
+    class_label = labels_list[i].item()  # Convert tensor to Python scalar
+    class_scores[class_label].append(pred_score)
 
-# Plot histograms for each class
+# Create subplots for histograms
 num_bins = 50  # You can adjust this value based on your preference
-plt.figure(figsize=(10, 6))
+num_rows = (num_classes + 2) // 3  # Adjust the number of rows based on the number of classes
+fig, axes = plt.subplots(num_rows, 3, figsize=(15, 5 * num_rows))
+fig.subplots_adjust(hspace=0.5)  # Adjust vertical spacing
 
-for class_label, scores in class_scores.items():
-    plt.hist(scores, bins=num_bins, alpha=0.5, label=f'Class {class_label} Scores')
+for class_label, scores in enumerate(class_scores):
+    row = class_label // 3
+    col = class_label % 3
+    ax = axes[row, col]
+    
+    ax.hist(scores, bins=num_bins, alpha=0.5)
+    ax.set_title(f'Class {class_label}') #this just plots Class_Name_0
+    # ax.set_title(f'Class: {class_names[class_label]}')  # Set the title to the class name
+    ax.set_xlabel('Logit Scores') # or Softmax scores
+    ax.set_ylabel('Frequency')
 
-plt.xlabel('Class Scores')
-plt.ylabel('Frequency')
-plt.title('Histogram of Class Scores')
-plt.legend()
+# Remove empty subplots if there are fewer classes than rows*columns
+for class_label in range(num_classes, num_rows * 3):
+    row = class_label // 3
+    col = class_label % 3
+    fig.delaxes(axes[row, col])
+
+plt.tight_layout()
 # plt.show()
-plt.savefig('Histogram_Scores_by_Class')
+plt.savefig('Softmax_Scores_Per_Class_Panel.png')
+
 
 
 # this would just print the last batch as a batch sized tensor
@@ -228,13 +239,6 @@ cm1 = confusion_matrix(labels_list, pred_list)
 
 threshold = 0.3  # You can adjust this threshold value
 
-confusion_sums = cm1.sum(axis=1) - np.diag(cm1)  # Subtract diagonal elements
-high_confusion_classes = np.where(confusion_sums > threshold)[0] # Set your own threshold
-
-# Create a custom grid layout
-import matplotlib.pyplot as plt
-import numpy as np
-
 # Calculate high confusion classes
 confusion_sums = cm1.sum(axis=1) - np.diag(cm1)
 high_confusion_classes = np.where(confusion_sums > threshold)[0]
@@ -277,7 +281,6 @@ for i in range(len(high_confusion_classes), images_per_col):
 plt.tight_layout()
 plt.show()
 plt.savefig('Sample Of Bad Classes.png')
-
 
 
 existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
