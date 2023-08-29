@@ -180,7 +180,7 @@ for label in labels_list:
 
 unique_names_label_list = []
 
-for i in range (29):
+for i in range (cfg['num_classes']): # change from range (29) to range(cfg['num_classes'])
     name = class_mapping [i]
     unique_names_label_list.append(name)
 
@@ -189,7 +189,7 @@ for predictions in pred_list:
     name = class_mapping [predictions] # each "0" and then that 0 in every labe to 'Eurasian jay'
     names_pred_list.append(name)
 
-for i in range (29):
+for i in range (cfg['num_classes']):
     name = class_mapping [i]
     unique_names_label_list.append(name)
 
