@@ -72,15 +72,21 @@ class CTDataset(Dataset):
             ToTensor(),
         ])
         # the tensor format is channels, height, width
+
+        # RandomShadow
+        # CutOut or RandomErasing(p=0.5)
+        # GaussianBlur(5),
+
         
         # index data into list
         self.data = []
 
-        # git a annotation file
+        # get a annotation file
         annoPath = os.path.join(
             self.data_root,
             'high',
-            'training.json' if self.split=='train' else 'val.json' # was formerly: training_18_08.json
+            # 'training.json' if self.split=='train' else 'val.json' # was formerly: training_18_08.json
+            self.split+'.json' # now it will look for any file that you set as the split, so you just have to enter the filename and it will add the .json
         )
 
         # print(annoPath)
