@@ -8,9 +8,7 @@ import numpy as np
 import math
 
 root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
-output_train_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/training.json"
-output_upsampling_path = "/home/sicily/cv4e_cagedbird_ID/data/high/upsampling.json"
-output_val_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/val.json"
+output_upsampling_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/upsampling.json"
 
 # Load COCO annotations from a JSON file
 with open(os.path.join(root_directory, "annotations_test.json"), 'r') as coco_file:
@@ -25,6 +23,27 @@ shuffled_images, shuffled_annotations = zip(*combined_data)
 
 # Calculate the index to split at (80% of the data)
 split_index = int(len(shuffled_images) * 0.8)
+
+# train_data = shuffled_images[:split_index]
+# validation_test_data = shuffled_images[split_index:]
+
+
+# Create a mapping of old category IDs to new category IDs
+# category_id_mapping = {category["id"]: idx for idx, category in enumerate(coco_annotations["categories"])}
+
+
+# Update annotation category IDs to match shuffled annotations
+# shuffled_annotations = list(shuffled_annotations)  # Convert to list to modify
+# for annotation in shuffled_annotations:
+#     old_category_id = annotation["category_id"]
+#     annotation["category_id"] = category_id_mapping[old_category_id]
+
+
+# make a JSON to upsample the rarer classes / Make where I will store this .json
+
+# Create the subset training data in a list or a dictionary
+# Create upsampled training data
+
 
 # Create training dataset
 training_data = {
@@ -62,8 +81,10 @@ upsampled_training_data = {
     "categories": training_data["categories"],
     "annotations": []
 }
+# upsampled_training_data = []
 
 # Now, upsampled_training_data contains the upsampled dataset
+
 for category in training_data["categories"]: 
     category_id = category["id"]
     category_count = category_image_counts[category_id]
@@ -86,11 +107,12 @@ for category in training_data["categories"]:
     upsampled_training_data["images"].extend(upsampled_images)
     upsampled_training_data["annotations"].extend(upsampled_annotations)
 
-# use this to check the number of categories after making your list
+# use this to check the number of categories afteer making your list
 # Count the number of images per category
 category_image_counts_upsampling = {category["id"]: 0 for category in upsampled_training_data["categories"]}
 for annotation in upsampled_training_data["annotations"]:
     category_image_counts_upsampling[annotation["category_id"]] += 1
+
 
 # Print summaries for each class
 for category_id, count in category_image_counts_upsampling.items():
@@ -100,32 +122,7 @@ for category_id, count in category_image_counts_upsampling.items():
     )
     print(f"{category_name}: {count} images")
 
-# Create validation dataset
-validation_data = {
-    "images": shuffled_images[split_index:],
-    "categories": coco_annotations["categories"],  # Include categories here
-    "annotations": shuffled_annotations[split_index:]
-}
 
-# Save training data to a new JSON file
-with open(output_train_json_path, 'w') as output_train_json_file:
-    json.dump(training_data, output_train_json_file)
-
-# Save validation data to a new JSON file
-with open(output_val_json_path, 'w') as output_validation_json_file:
-    json.dump(validation_data, output_validation_json_file)
-
-# Save upsampling data to a new JSON file
-with open(output_upsampling_path, 'w') as output_upsampling_json_file:
-    json.dump(upsampled_training_data, output_upsampling_json_file)
-
-class_mapping = {} # because it is a dictionary
-
-for idx, item in enumerate(training_data["categories"]):
-    item["id"]
-    item["name"]
-    class_mapping[item["id"]] = item["name"]  # Keys need to be strings and there are strings in the name
-    class_mapping
-
-with open('./ct_classifier/class_mapping.pickle', 'wb') as f:
-    pickle.dump(class_mapping, f)
+# Save upsampled data to a new JSON file
+with open(output_upsampling_json_path, 'w') as upsampling_json_file:
+    json.dump(upsampled_training_data, upsampling_json_file)
