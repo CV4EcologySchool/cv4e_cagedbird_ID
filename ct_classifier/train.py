@@ -450,13 +450,16 @@ def main():
         for param_name, param_value in cfg.items():
             experiment.log_parameter(param_name, param_value)
 
+        # Log the last_lr value as a hyperparameter, which you might only need if you are scheduling
+        experiment.log_parameter("last_lr", last_lr)
+
         save_model(cfg, current_epoch, model, stats)
         
         # Scheduler step to save, which is at the end of the training loop basically
         scheduler.step()
         last_lr = scheduler.get_last_lr()
 
-         # Log learning rate
+         # Log learning rate, if you want to see where the steps are for example during training
         experiment.log_metric("learning_rate", last_lr[0], step=current_epoch)
 
 
