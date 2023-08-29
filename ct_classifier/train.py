@@ -57,17 +57,31 @@ def load_model(cfg,load_latest_version=False):
     '''
     model_instance = CustomResNet18(cfg['num_classes'])         # create an object instance of our CustomResNet18 class
 
+    # # load latest model state - how it used to be traded
+    # model_states = glob.glob('model_states/*.pt')
+
     # load latest model state
-    model_states = glob.glob('model_states/*.pt')
+    experiment_folder = os.path.join('all_model_states', cfg["experiment_name"])
+    model_states = glob.glob(os.path.join(experiment_folder, '*.pt'))
+
     #model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
-    if len(model_states)>0 and load_latest_version==True:
-        # at least one save state found; get latest
-        model_epochs = [int(m.replace('model_states/','').replace('.pt','')) for m in model_states]
-        start_epoch = max(model_epochs) # The highest or latest epoch that the model hsa run to
+    if len(model_states) > 0 and load_latest_version==True:
+        # # at least one save state found; get latest
+        # model_epochs = [int(m.replace('modetl_states/','').replace('.pt','')) for m in model_states]
+        # start_epoch = max(model_epochs) # The highest or latest epoch that the model hsa run to
+        # # load state dict and apply weights to model
+        # print(f'Resuming from epoch {start_epoch}')
+        # state = torch.load(open(f'model_states/{start_epoch}.pt', 'rb'), map_location='cpu')
+        # model_instance.load_state_dict(state['model'])
+           # at least one save state found; get latest
+        # these lines have now been replaced with the below code
+        model_epochs = [int(os.path.basename(m).replace('.pt', '')) for m in model_states]
+        start_epoch = max(model_epochs)  # The highest or latest epoch that the model has run to
         # load state dict and apply weights to model
         print(f'Resuming from epoch {start_epoch}')
-        state = torch.load(open(f'model_states/{start_epoch}.pt', 'rb'), map_location='cpu')
+        state = torch.load(open(os.path.join(experiment_folder, f'{start_epoch}.pt'), 'rb'), map_location='cpu')
         model_instance.load_state_dict(state['model'])
+
 
     else:
         # no save state found; start anew
@@ -78,21 +92,34 @@ def load_model(cfg,load_latest_version=False):
 
 def save_model(cfg, epoch, model, stats):
     # make sure save directory exists; create if not
-    os.makedirs('model_states', exist_ok=True)
+    main_folder = 'all_model_states'
+
+    # Create a subfolder for the current experiment
+    experiment_folder = os.path.join(main_folder, cfg["experiment_name"])
+    os.makedirs(experiment_folder, exist_ok=True)
+    # os.makedirs('model_states', exist_ok=True)
 
     # get model parameters and add to stats...
     stats['model'] = model.state_dict()
 
     # ...and save
-    torch.save(stats, open(f'model_states/{epoch}.pt', 'wb'))
+    # torch.save(stats, open(f'model_states/{epoch}.pt', 'wb'))
+    stats_file = os.path.join(experiment_folder, f'{epoch}.pt')
+    torch.save(stats, open(stats_file, 'wb'))
     
     # also save config file if not present
     # Construct the full path using os.path.join
     # cfpath = 'model_states/config.yaml'
     # cfpath = os.path.join(cfpath, cfg["experiment_name"])
-    cfpath = f'{"config"}_{cfg["experiment_name"]}.yaml'
-    if not os.path.exists(cfpath):
-        with open(cfpath, 'w') as f:
+    # cfpath = f'{"config"}_{cfg["experiment_name"]}.yaml'
+    # if not os.path.exists(cfpath):
+    #     with open(cfpath, 'w') as f:
+    #         yaml.dump(cfg, f)
+
+     # Save config file if not present
+    config_file = os.path.join(experiment_folder, f'config_{cfg["experiment_name"]}.yaml')
+    if not os.path.exists(config_file):
+        with open(config_file, 'w') as f:
             yaml.dump(cfg, f)
 
 def setup_optimizer(cfg, model):
@@ -344,7 +371,7 @@ def main():
         cfg['device'] = 'cpu'
 
     # initialize data loaders for training and validation set
-    dl_train = create_dataloader(cfg, split='train')
+    dl_train = create_dataloader(cfg, split='upsampling') # was just train before
     sample_batch = next(iter(dl_train))
     inputs, labels = sample_batch
     print (labels)
