@@ -8,7 +8,7 @@ import numpy as np
 import math
 
 root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
-output_train_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/training.json"
+output_train_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/train.json"
 output_upsampling_path = "/home/sicily/cv4e_cagedbird_ID/data/high/upsampling.json"
 output_val_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/val.json"
 
