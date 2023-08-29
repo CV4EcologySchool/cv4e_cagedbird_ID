@@ -80,7 +80,7 @@ class CTDataset(Dataset):
         annoPath = os.path.join(
             self.data_root,
             'high',
-            'training_18_08.json' if self.split=='train' else 'val_18_08.json'
+            'training.json' if self.split=='train' else 'val.json' # was formerly: training_18_08.json
         )
 
         # print(annoPath)
