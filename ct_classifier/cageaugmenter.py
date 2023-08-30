@@ -50,14 +50,26 @@ def rotatedRectWithMaxArea(w, h, angle):
 
 
 #set parameters
-resolution = [1000,1000]
+resolution = [1000, 1000]
 num_bars_x = 4
 num_bars_y = 6
-bar_radius = 20
-rotate = -10
 kernel = [30, 30]
 mask_color = [181, 148, 16]
 color_alpha = .3
+
+# Parameters that we will randomise
+# Generate random values for bar radius, color, and rotation
+bar_radius_range = [10, 30]  # You can adjust the range as needed
+bar_radius = random.uniform(*bar_radius_range)
+
+# Random color
+random_color = [random.randint(0, 255) for _ in range(3)]
+mask_color = random_color
+rotate_range = [-20, 20]  # Rotation range in degrees
+rotate = math.radians(random.uniform(*rotate_range))
+
+# Insert this code snippet in the appropriate place before creating the mask. This will allow you to generate random 
+# values for the bar radius, color, and rotation each time the script is run. Adjust the range values as needed for your desired level of randomness.
 
 #create mask
 bar_pos_x = [int(i) for i in np.linspace(0, resolution[0], num_bars_x)]
@@ -81,8 +93,7 @@ plt.imshow(np.array(mask))
 crop_size = rotatedRectWithMaxArea(mask.shape[0], mask.shape[1], rotate)
 x_boundary = int((mask.shape[0]-crop_size[0])/2)
 y_boundary = int((mask.shape[1]-crop_size[1])/2)
-mask = mask[x_boundary:-x_boundary,
-            y_boundary:-y_boundary]
+mask = mask[x_boundary:-x_boundary, y_boundary:-y_boundary]
 
 #resize and tile
 mask = cv2.resize(mask, im.size)
@@ -102,29 +113,6 @@ plt.axis('off')
 plt.savefig('test_bluethroat.jpg')
 
 
-###### resolution = [1000, 1000]
-num_bars_x = 4
-num_bars_y = 6
-
-# Generate random values for bar radius, color, and rotation
-bar_radius_range = [10, 30]  # You can adjust the range as needed
-bar_radius = random.uniform(*bar_radius_range)
-
-# Random color
-random_color = [random.randint(0, 255) for _ in range(3)]
-mask_color = random_color
-
-rotate_range = [-20, 20]  # Rotation range in degrees
-rotate = math.radians(random.uniform(*rotate_range))
-
-kernel = [30, 30]
-mask_color = [181, 148, 16]
-color_alpha = .3
-
-# ...
-Insert this code snippet in the appropriate place before creating the mask. This will allow you to generate random values for the bar radius, color, and rotation each time the script is run. Adjust the range values as needed for your desired level of randomness.
-
-
-
-
-
+padder = Pad(padding)
+img = padder(img)
+return img

@@ -62,6 +62,7 @@ class CTDataset(Dataset):
 
                 return img
             
+        
         # https://stackoverflow.com/questions/76064717/pytorch-resize-specific-dimension-while-keeping-aspect-ratio
         # for half of the resize function
 
