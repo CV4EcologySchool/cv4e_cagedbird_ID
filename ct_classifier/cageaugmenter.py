@@ -100,3 +100,31 @@ plt.imshow((im*tiled_mask+color_mask).astype(np.int64))
 plt.axis('off')
 # plt.show()
 plt.savefig('test_bluethroat.jpg')
+
+
+###### resolution = [1000, 1000]
+num_bars_x = 4
+num_bars_y = 6
+
+# Generate random values for bar radius, color, and rotation
+bar_radius_range = [10, 30]  # You can adjust the range as needed
+bar_radius = random.uniform(*bar_radius_range)
+
+# Random color
+random_color = [random.randint(0, 255) for _ in range(3)]
+mask_color = random_color
+
+rotate_range = [-20, 20]  # Rotation range in degrees
+rotate = math.radians(random.uniform(*rotate_range))
+
+kernel = [30, 30]
+mask_color = [181, 148, 16]
+color_alpha = .3
+
+# ...
+Insert this code snippet in the appropriate place before creating the mask. This will allow you to generate random values for the bar radius, color, and rotation each time the script is run. Adjust the range values as needed for your desired level of randomness.
+
+
+
+
+
