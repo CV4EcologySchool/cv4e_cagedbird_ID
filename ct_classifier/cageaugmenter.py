@@ -57,8 +57,7 @@ kernel = [30, 30]
 mask_color = [181, 148, 16]
 color_alpha = .3
 
-# Parameters that we will randomise
-# Generate random values for bar radius, color, and rotation
+# Parameters that we will randomise, generate random values for bar radius, color, and rotation
 bar_radius_range = [10, 30]  # You can adjust the range as needed
 bar_radius = random.uniform(*bar_radius_range)
 
@@ -112,7 +111,10 @@ plt.axis('off')
 # plt.show()
 plt.savefig('test_bluethroat.jpg')
 
-
-padder = Pad(padding)
-img = padder(img)
+# How I want to call it
+rotatedRectWithMaxArea 
+augmenter = CageAugmenter(padding)
+img = augmenter (img)
 return img
+
+
