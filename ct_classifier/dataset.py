@@ -118,7 +118,7 @@ class CTDataset(Dataset):
                 # # Random color
                 # random_color = [random.randint(0, 255) for _ in range(3)]
                 # mask_color = random_color
-                # rotate_range = [-20, 20]  # Rotation range in degrees
+                # rotate_range = [-10, 20]  # Rotation range in degrees
                 # rotate = math.radians(random.uniform(*rotate_range))
 
                 # add the parameters that you want to randomise
@@ -130,8 +130,14 @@ class CTDataset(Dataset):
                 random_color = [random.randint(0, 255) for _ in range(3)]
                 mask_color = random_color
 
-                rotate_range = [-20, 20]
-                rotate = math.radians(random.uniform(*self.rotate_range))
+                rotate_range = [-10, 10]
+                # rotate = math.radians(random.uniform(*self.rotate_range))
+                
+                try:
+                    rotate = math.radians(random.uniform(*rotate_range)) 
+                except ValueError:
+                # retry with new value
+                    rotate = math.radians(random.uniform(*rotate_range))
 
                 # Create mask
                 bar_pos_x = [int(i) for i in np.linspace(0, self.resolution[0], self.num_bars_x)]
@@ -139,9 +145,10 @@ class CTDataset(Dataset):
                 bar_locs_x = []
                 bar_locs_y = []
                 for i in bar_pos_x:
-                    bar_locs_x.extend([j for j in range(max(0, i - bar_radius), min(i + bar_radius, self.resolution[0]))])
+                    # int will round down, could use ceil or round
+                    bar_locs_x.extend([j for j in range(int(max(0, i - bar_radius)), int(min(i + bar_radius, self.resolution[0])))])
                 for i in bar_pos_y:
-                    bar_locs_y.extend([j for j in range(max(0, i - bar_radius), min(i + bar_radius, self.resolution[1]))])
+                    bar_locs_y.extend([j for j in range(int(max(0, i - bar_radius)), int(min(i + bar_radius, self.resolution[1])))])
                 mask = np.ones(self.resolution)
                 for i in range(self.resolution[0]):
                     for j in range(self.resolution[1]):
