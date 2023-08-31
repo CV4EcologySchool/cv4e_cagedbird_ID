@@ -19,4 +19,9 @@ delete_backup_folders.py
 
 - visualisation_training.py and visualisation_validation.py is what prints the distribution of data across classes in both the training and validation sets, by loading the training and validation .jsons for visualisation
 - configs folder contains the default config .yaml which has most of the hyperparameters and CometML logging details
-- in the 'all_model_states' = these are currently in the .gitignore file, but there is now a folder which is renamed with whatever experiment name is in the default config file, so you now have individual folders per experiment, with a config file also named a
+- in the 'all_model_states' = these are currently in the .gitignore file, but there is now a folder which is renamed with whatever experiment name is in the default config file, so you now have individual folders per experiment, with a config file also named with the same experiment name
+
+- scripts file not really being used by me
+
+- ct_classifier
+- contains most if not all of the training code and dataset structure and information
