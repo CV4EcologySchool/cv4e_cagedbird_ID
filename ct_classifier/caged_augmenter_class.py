@@ -8,19 +8,22 @@ from torchvision.transforms import functional as F
 from torchvision.transforms import Pad
 
 class CageAugmenter: 
-    def __init__(self): # what stays fixed
+    def __init__(self): # what stays fixed - but we don't add size? since we will copy paste images, do I nee
+        # to list the self.resolution
         self.resolution = [1000, 1000]
         self.num_bars_x = 4
         self.num_bars_y = 6
         self.kernel = [30, 30]
         self.color_alpha = 0.3
     
-    def __call__(self, img): # def rotatedRectWithMaxArea(self, w, h, angle):
+    def __call__(self, img, angle): # def rotatedRectWithMaxArea(self, w, h, angle):
         """
         Given a rectangle of size wxh that has been rotated by 'angle' (in
         radians), computes the width and height of the largest possible
         axis-aligned rectangle (maximal area) within the rotated rectangle.
         """
+        w,h = img.size
+
         if w <= 0 or h <= 0:
             return 0,0
 
@@ -42,9 +45,8 @@ class CageAugmenter:
 
         return int(wr),int(hr)
     
-
-    def apply(self, im):
-        self.im = im
+    def apply(self, img):
+        self.img = img
         # Parameters that you randomize
         self.bar_radius_range = [10, 30]
         self.bar_radius = random.uniform(*self.bar_radius_range)
@@ -56,7 +58,6 @@ class CageAugmenter:
         self.rotate = math.radians(random.uniform(*self.rotate_range))
 
             # How I want to call it
-    rotatedRectWithMaxArea 
-    augmenter = CageAugmenter(padding)
+    augmenter = CageAugmenter(?)
     img = augmenter (img)
-    return img ?
+    return img 

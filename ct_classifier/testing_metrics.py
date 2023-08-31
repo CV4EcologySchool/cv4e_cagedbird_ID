@@ -43,6 +43,7 @@ dl_val = create_dataloader (cfg, split='val') # Or it could be with test, and th
 # load model - should load the saved model at the last checkpoint
 model, start_epoch = load_model(cfg, load_latest_version=True)
 print(start_epoch)
+
 # # Display the images
 # fig1 = plt.figure(figsize=(12, 8))
 # for idx in range(12):

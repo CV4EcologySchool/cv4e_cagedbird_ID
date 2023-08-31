@@ -61,7 +61,7 @@ def load_model(cfg,load_latest_version=False):
     # model_states = glob.glob('model_states/*.pt')
 
     # load latest model state
-    experiment_folder = os.path.join('all_model_states', cfg["experiment_name"])
+    experiment_folder = os.path.join('all_model_states', cfg['experiment_name'])
     model_states = glob.glob(os.path.join(experiment_folder, '*.pt'))
 
     #model_states = [] # Sets it to 0, and not see any checkpoint files: Hey this has been changed during training since we are not ready to resume
@@ -371,7 +371,7 @@ def main():
         cfg['device'] = 'cpu'
 
     # initialize data loaders for training and validation set
-    dl_train = create_dataloader(cfg, split='upsampling') # was just train before
+    dl_train = create_dataloader(cfg, split='train') # was just train before, or upsampling
     sample_batch = next(iter(dl_train))
     inputs, labels = sample_batch
     print (labels)
@@ -450,9 +450,6 @@ def main():
         for param_name, param_value in cfg.items():
             experiment.log_parameter(param_name, param_value)
 
-        # Log the last_lr value as a hyperparameter, which you might only need if you are scheduling
-        experiment.log_parameter("last_lr", last_lr)
-
         save_model(cfg, current_epoch, model, stats)
         
         # Scheduler step to save, which is at the end of the training loop basically
@@ -461,7 +458,8 @@ def main():
 
          # Log learning rate, if you want to see where the steps are for example during training
         experiment.log_metric("learning_rate", last_lr[0], step=current_epoch)
-
+         # Log the last_lr value as a hyperparameter, which you might only need if you are scheduling
+        experiment.log_parameter("last_lr", last_lr)
 
         # Print the experiment key to load in the evaluation file
         print("Experiment Key:", experiment_key)
@@ -471,7 +469,6 @@ def main():
             file.write(experiment_key)
 
         # experiment.end()
-
 
 if __name__ == '__main__':
     # This block only gets executed if you call the "train.py" script directly

@@ -101,9 +101,10 @@ tiled_mask = np.tile(np.expand_dims(mask, 2), (1,1,3))
 inv_mask = 1-tiled_mask
 color = [color_alpha * i for i in mask_color]
 color_mask = color * inv_mask
+new_img = im*tiled_mask+color_mask
 
 #apply to image
-plt.imshow((im*tiled_mask+color_mask).astype(np.int64))
+plt.imshow((new_img).astype(np.int64))
 plt.axis('off')
 # plt.show()
 plt.savefig('test_bluethroat.jpg')
