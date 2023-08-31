@@ -82,7 +82,6 @@ def load_model(cfg,load_latest_version=False):
         state = torch.load(open(os.path.join(experiment_folder, f'{start_epoch}.pt'), 'rb'), map_location='cpu')
         model_instance.load_state_dict(state['model'])
 
-
     else:
         # no save state found; start anew
         print('Starting new model')
@@ -102,7 +101,6 @@ def save_model(cfg, epoch, model, stats):
     # get model parameters and add to stats...
     stats['model'] = model.state_dict()
 
-    # ...and save
     # torch.save(stats, open(f'model_states/{epoch}.pt', 'wb'))
     stats_file = os.path.join(experiment_folder, f'{epoch}.pt')
     torch.save(stats, open(stats_file, 'wb'))
@@ -135,8 +133,6 @@ def setup_optimizer(cfg, model):
     scheduler = lr_scheduler.StepLR(optimizer, step_size=cfg['scheduler_step_size'], gamma=cfg['scheduler_gamma'])
 
     return optimizer, scheduler
-
-
 
 def train(cfg, dataLoader, model, optimizer):
     '''
@@ -221,7 +217,6 @@ def train(cfg, dataLoader, model, optimizer):
     auprc = average_precision_score(one_hot_labels, one_hot_preds,average=None)
     mAP_train = np.mean(auprc)
 
-
     # end of epoch; finalize
     progressBar.close()
     loss_total /= len(dataLoader)           # shorthand notation for: loss_total = loss_total / len(dataLoader)
@@ -304,29 +299,7 @@ def validate(cfg, dataLoader, model):
 
     return loss_total, oa_total, mAP_val
 
-
-
 def main():
-
-    # For Comet to start tracking a training run,
-# just add these two lines at the top of
-# your training script:
-
-    # experiment = comet_ml.Experiment(
-    #     api_key="6D79SKeAIuSjteySwQwqx96nq",
-    #     project_name="cagedbird-classifier"
-    # )
-
-    # architecture name: 
-    # dataset type:_high
-    # batch size:
-    # number of epochs: 
-    # resume = True # to update an existing experiment... or not
-
-# your model training or evaluation code
-
-# Metrics from this training run will now be
-# available in the Comet UI
 
     # Argument parser for command-line arguments:
     # python ct_classifier/train.py --config configs/exp_resnet18.yaml
@@ -337,8 +310,7 @@ def main():
     # load config
     print(f'Using config "{args.config}"')
     cfg = yaml.safe_load(open(args.config, 'r'))
-
-    
+   
     resume = False  # Set this to True if you want to resume an existing experiment
     if resume:
         with open("experiment_key.txt", "r") as file:
@@ -376,7 +348,6 @@ def main():
     inputs, labels = sample_batch
     print (labels)
 
-
     # Display the images
     fig = plt.figure(figsize=(12, 8))
     for idx in range(12):
@@ -384,21 +355,9 @@ def main():
         # The imshow function is used to display the images, and the loop displays a sample of 12 images along with their corresponding labels
         ax.imshow(inputs[idx].permute(1, 2, 0)) # or is to transpose?
         ax.set_title(f"Label: {labels[idx]}")
-
-        # print("Print the image paths for the images that are being plotted")
-        # print (image_path(idx))
-        # image_name, _ = dataset.data[idx]  # Assuming dataset is the instance of your CustomDataset
-        # image_path = os.path.join(dl_train.data_root, 'high', image_name)
-        # print(f"Image Path: {image_path}")
-        # ax.set_title(f"Label: {labels[idx]}\nPath: {image_paths[idx]}") 
-
-   
     plt.tight_layout()
     # plt.show()
     plt.savefig("val_loader.png")
-
-
-    # Add a debugging breakpoint here
 
     dl_val = create_dataloader(cfg, split='val')
     print ("Length of training dataloader")
@@ -434,15 +393,6 @@ def main():
             'mAP_val': mAP_val
         }
 
-        # # Log loss metrics in the same plot
-        # experiment.log_metric("Loss Metrics", [('Training loss', loss_train),('Validation loss', loss_val),], step=current_epoch)
-
-        # # Group accuracy metrics in a plot
-        # experiment.log_metric("Accuracy Metrics", [('Training OA accuracy', oa_train),('Validation OA accuracy', oa_val),], step=current_epoch)
-
-        # # Group mAP metrics in a plot
-        # experiment.log_metric("mAP Metrics", [('Training mAP', mAP_train),('Validation mAP', mAP_val),], step=current_epoch)
-
         experiment.log_metrics(stats, step=current_epoch)
 
 
@@ -474,7 +424,3 @@ if __name__ == '__main__':
     # This block only gets executed if you call the "train.py" script directly
     # (i.e., "python ct_classifier/train.py").
     main()
-
-# CTDataset.__getitem__()
-# CTDataset.len ()
-# dataLoader.len()
