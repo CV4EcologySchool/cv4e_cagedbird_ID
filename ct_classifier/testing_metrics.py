@@ -224,6 +224,7 @@ for i in range (cfg['num_classes']):
 
 # Calculate the confusion matrix using scikit-learn
 cm1 = confusion_matrix(labels_list, pred_list)
+print (cm1)
 
 threshold = 0.3  # You can adjust this threshold value
 
@@ -261,6 +262,110 @@ plt.yticks(range(len(labels)), labels)
 
 # Save confusion matrix plot 
 plt.savefig('confusion_matrix.png')
+
+import itertools
+
+import json
+
+with open('cm.json') as f:
+    data = json.load(f)
+
+# labels = data['labels']
+
+# print(labels)
+
+target_names =[
+      "Eurasian_jay",
+      "Eurasian_siskin",
+      "Grey_Parrot",
+      "Hoopoe",
+      "bluethroat",
+      "bm_leafbird",
+      "bnoriole",
+      "bw_myna",
+      "cf_white_eye",
+      "chestnut_munia",
+      "common_myna",
+      "common_redpoll",
+      "crested_lark",
+      "fischers_lovebird",
+      "great_myna",
+      "hwamei",
+      "japanese_grosbeak",
+      "javan_pied_starling",
+      "marsh_tit",
+      "oriental_magpie_robin",
+      "oriental_skylark",
+      "red_billed_starling",
+      "swinhoes_whiteeye",
+      "yellow_bellied_tits",
+      "zebra_finch"
+    ]
+
+def plot_confusion_matrix(cm, classes, normalize=True, title='Confusion matrix', cmap=plt.cm.Oranges):#was Blues before, refer here for help: https://stackoverflow.com/questions/57043260/how-change-the-color-of-boxes-in-confusion-matrix-using-sklearn
+
+    """
+
+    This function prints and plots the confusion matrix.
+
+    Normalization can be applied by setting `normalize=True`.
+
+    """
+
+    plt.figure(figsize=(20,20)) #was (10,10) before
+
+
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+
+    plt.title(title)
+
+    plt.colorbar()
+
+
+
+    tick_marks = np.arange(len(classes))
+
+    plt.xticks(tick_marks, classes, rotation=90)
+
+    plt.yticks(tick_marks, classes)
+
+
+
+    if normalize:
+
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+        cm = np.around(cm, decimals=2)
+
+        cm[np.isnan(cm)] = 0.0
+
+        print("Normalized confusion matrix")
+
+    else:
+
+        print('Confusion matrix, without normalization')
+
+    thresh = cm.max() / 2.
+
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+
+        plt.text(j, i, cm[i, j],
+
+                 horizontalalignment="center",
+
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+
+    plt.ylabel('True label')
+
+    plt.xlabel('Predicted label')
+    
+plot_confusion_matrix(cm1, target_names, title='Confusion Matrix')
+
+# how to plot it: https://stackoverflow.com/questions/65317685/how-to-create-image-of-confusion-matrix-in-python
+plt.savefig("cfmdensenetnone.png", dpi=300) # dpi can control the resolution
 
 existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
 
