@@ -11,7 +11,7 @@ import yaml
 import pickle 
 
 from train import create_dataloader, load_model # experiment should add the confusion matrix to the cometML experiment    # NOTE: since we're using these functions across files, it could make sense to put them in e.g. a "util.py" script.
-from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve, ConfusionMatrixDisplay, plot_confusion_matrix
+from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve, ConfusionMatrixDisplay
 from sklearn.preprocessing import label_binarize
 import torch.nn.functional as functional  # Import functional
 
@@ -62,7 +62,6 @@ max_pred_list = []
 # Here the internal Dataloader in PyTorch base code, knows that when it gets a DataLoader class that it will iterate
 # through each item in the list rather than just generate a list for one batch in dl_val, so when we call dl_val
 # we can iterate over all batches whereas this will just do one batch from the validation dataset, as loaded by the dataloader
-# inputs, labels = next(iter(dl_val))
 
 for inputs, labels in dl_val:
     predictions = model(inputs) 
@@ -108,71 +107,64 @@ plt.title('Histogram of Positive and Negative Class Scores')
 plt.legend()
 # plt.show()
 plt.savefig('Histogram Scores')
-# ...
 
-# ...
+# Try out the plots per class
+# Calculate the number of unique classes in your data
+num_classes = len(np.unique(labels_list))
 
 # Initialize lists to hold scores for each class
-softmax_class_scores = [[] for _ in range(num_classes)]
-logit_class_scores = [[] for _ in range(num_classes)]
+class_logit_scores = [[] for _ in range(num_classes)]
+class_softmax_scores = [[] for _ in range(num_classes)]
 
 for i in range(len(labels_list)):
-    softmax_scores = functional.softmax(max_pred_list[i], dim=0).detach().numpy()
-    logit_scores = max_pred_list[i].detach().numpy()  # Get logit scores
-    
+    logit_scores = max_pred_list[i].detach().cpu().numpy()
+    softmax_scores = functional.softmax(max_pred_list[i], dim=0).detach().cpu().numpy()
     class_label = labels_list[i].item()
-    softmax_class_scores[class_label].append(softmax_scores)
-    logit_class_scores[class_label].append(logit_scores)
+    class_logit_scores[class_label].extend([logit_scores])  # Extend logit_scores as a list
+    
+    # Convert softmax_scores to a list only if it's a tensor with multiple elements
+    if softmax_scores.ndim > 0:
+        class_softmax_scores[class_label].extend(softmax_scores.tolist())
 
-# ...
 
-# Create subplots for softmax scores histograms
+# Create subplots for histograms of logit scores
 num_rows = (num_classes + 2) // 3
 fig, axes = plt.subplots(num_rows, 3, figsize=(15, 5 * num_rows))
 fig.subplots_adjust(hspace=0.5)
 
-for class_label, scores in enumerate(softmax_class_scores):
+for class_label, scores in enumerate(class_logit_scores):
     row = class_label // 3
     col = class_label % 3
     ax = axes[row, col]
     
-    for score_array in scores:
-        ax.hist(score_array, bins=num_bins, alpha=0.5)  # Plot softmax_scores array
-        
-    ax.set_title(f'Class {class_label}')
-    ax.set_xlabel('Softmax Scores')
-    ax.set_ylabel('Frequency')
-
-# ...
-
-plt.tight_layout()
-plt.savefig('Softmax_Scores_Per_Class_Panel.png')
-
-# ...
-
-# Create subplots for logit scores histograms
-fig, axes = plt.subplots(num_rows, 3, figsize=(15, 5 * num_rows))
-fig.subplots_adjust(hspace=0.5)
-
-for class_label, scores in enumerate(logit_class_scores):
-    row = class_label // 3
-    col = class_label % 3
-    ax = axes[row, col]
-    
-    for score_array in scores:
-        ax.hist(score_array, bins=num_bins, alpha=0.5)  # Plot logit_scores array
+    ax.hist(scores, bins=num_bins, alpha=0.5)  # Plot logit_scores array
         
     ax.set_title(f'Class {class_label}')
     ax.set_xlabel('Logit Scores')
     ax.set_ylabel('Frequency')
 
-# ...
-
+# Save the logit scores plot
 plt.tight_layout()
 plt.savefig('Logit_Scores_Per_Class_Panel.png')
 
-# this would just print the last batch as a batch sized tensor
-# print (labels)
+# Create subplots for histograms of softmax scores
+fig, axes = plt.subplots(num_rows, 3, figsize=(15, 5 * num_rows))
+fig.subplots_adjust(hspace=0.5)
+
+for class_label, scores in enumerate(class_softmax_scores):
+    row = class_label // 3
+    col = class_label % 3
+    ax = axes[row, col]
+    
+    ax.hist(scores, bins=num_bins, alpha=0.5)  # Plot softmax_scores array
+        
+    ax.set_title(f'Class {class_label}')
+    ax.set_xlabel('Softmax Scores')
+    ax.set_ylabel('Frequency')
+
+# Save the softmax scores plot
+plt.tight_layout()
+plt.savefig('Softmax_Scores_Per_Class_Panel.png')
 
 # Append wraps your item into a list, so you end up with a list of lists [[],[],[],[],[]]
 # Extend puts the list into a newer list, but putting it into brackets [.....]
@@ -188,7 +180,6 @@ print(len(labels_list))
 print("Print the length of the pred list")
 print (len(pred_list))
 
-
 # Use label_binarize to be multi-label like settings
 one_hot_labels = label_binarize(labels_list, classes=list(range(len(np.unique(labels_list))))) # this will index from 0-28 for 29 classes
 n_classes = one_hot_labels.shape[1]
@@ -201,41 +192,15 @@ n_classes = one_hot_preds.shape[1]
 auprc = average_precision_score(one_hot_labels, one_hot_preds,average=None)
 print ("The average precision score on the validation data")
 print (auprc)
-# print (pred_list)
 
-# For each class, for a multi-label or multi-class situation: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
-
-# precision = dict()
-# recall = dict()
-# n_classes = 29
-# average_precision = dict()
-# for i in range(n_classes):
-#     precision[i], recall[i], _ = precision_recall_curve(labels_list[:, i], pred_list[:, i])
-#     average_precision[i] = average_precision_score(labels_list[:, i], pred_list[:, i])
-
-# # A "micro-average": quantifying score on all classes jointly
-# precision["micro"], recall["micro"], _ = precision_recall_curve(
-#     labels_list.ravel(), pred_list.ravel()
-# )
-# average_precision["micro"] = average_precision_score(labels_list, pred_list, average="micro")
-
-# print ("Print the average precision score")
-# print (average_precision["micro"])
-# print (average_precision_score)
-
-
-# Use the experiment key to interact with Comet.ml or perform any other action
-
-
-# Map the class names to the labels
-
-# # Sample data containing class information
+# Save the class_maping in a pickle file
 
 with open('ct_classifier/class_mapping.pickle', 'rb') as f:
     class_mapping = pickle.load(f)
 
 print(class_mapping)
 
+# Intialise a list to store the names to get the unique lists
 names_label_list = []
 
 for label in labels_list:
@@ -309,96 +274,40 @@ plt.savefig('Sample Of Bad Classes.png')
 
 existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
 
-# Plot the confusion matrix using sklearn's plot_confusion_matrix locally
-# ...
+# Plot the confusion matrix using sklearn's plot_confusion_matrix locally /  Plot the confusion matrix using imshow
 
+# Assuming you have the confusion matrix 'cm1' and class labels 'unique_names_label_list' defined
+import numpy as np
+import matplotlib.pyplot as plt
 
+# Assuming you have the confusion matrix 'cm1' and class labels 'unique_names_label_list' defined
 
-# Plot the confusion matrix using imshow
 plt.figure(figsize=(10, 8))
 plt.imshow(cm1, interpolation='nearest', cmap=plt.cm.Blues)
-plt.title('Confusion Matrix')
+
+# Add colorbar
 plt.colorbar()
 
-# Set class labels as ticks
-plt.xticks(np.arange(len(unique_names_label_list)), unique_names_label_list, rotation=45)
-plt.yticks(np.arange(len(unique_names_label_list)), unique_names_label_list)
+# Set ticks for class labels
+tick_marks = np.arange(len(unique_names_label_list))
+plt.xticks(tick_marks, unique_names_label_list, rotation=45)
+plt.yticks(tick_marks, unique_names_label_list)
 
-# Ensure labels are properly shown
+# Fill in the cells with the values of the confusion matrix
+for i in range(len(unique_names_label_list)):
+    for j in range(len(unique_names_label_list)):
+        plt.text(j, i, format(cm1[i, j], 'd'), ha="center", va="center", color="white" if cm1[i, j] > cm1.max() / 2 else "black")
+
+plt.title('Confusion Matrix')
+plt.ylabel('True label')
+plt.xlabel('Predicted label')
 plt.tight_layout()
 
 # Save the confusion matrix plot
 plt.savefig(f'{cfg["experiment_name"]}_confusion_matrix.png')
+plt.show()
 
+
+existing_experiment.log_image(plt, name='confusion_matrix.png')
 
 existing_experiment.end()
-
-# you should just be able to log the confusion matrix again with another line with a diffe
-# AttributeError: 'numpy.ndarray' object has no attribute 'unique'
-# Try and plot the labels for each of the, add labels=labels (this will print),
-# we just want the labels that are there in our batch, so it should be labels=labels.unique - this will show the unique labels for the batch
-# 29 classes, which are currently mapped onto numbers as well; labels[0:28]
-
-# Start a new context for the second confusion matrix, we can use this if we are adding a plot to the same matrix, how do we add context to an experiment that
-# is already connected to another one 
-# with experiment.new_context("Confusion Matrix 2"):
-
-# cm2 = confusion_matrix(labels1, predictions1)# Your second confusion matrix data
-# experiment.log_confusion_matrix(matrix=cm2, title="Confusion Matrix 2")
-
-# if __name__ == '__main__':
-#     # This block only gets executed if you call the "testing_metrics.py" script directly
-#     # (i.e., "python ct_classifier/testing_metrics.py").
-#     main()
-
-
-# histograms
-
-# import torch
-
-# # Model predictions
-# probs = model(test_images)  
-
-# # Ground truth labels
-# test_labels = ... 
-
-# # Get index of correct class 
-# correct_class = test_labels.argmax(dim=1)
-
-# # Get predicted probabilities for correct class
-# predicted_probs = probs[torch.arange(len(probs)), correct_class]
-
-# plt.hist(predicted_probs.numpy(), bins=20)
-
-
-# other cometML code to show the images with the confusion_matrix, but we want to show an example of how to log a confusion matrix with images using CometML,
-#     # by loading the whole batch
-
-
-#     from comet_ml import Experiment
-# import matplotlib.pyplot as plt
-
-# # Start Comet experiment
-# experiment = Experiment(project_name="confusion-matrix")
-
-# # Get predictions and images
-# preds = model.predict(x_test)
-# images = x_test 
-
-# # Calculate confusion matrix
-# from sklearn.metrics import confusion_matrix
-# cm = confusion_matrix(y_test, preds)
-
-# # Plot confusion matrix
-# plt.figure()
-# plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-# plt.title("Confusion Matrix")
-# plt.colorbar()
-# plt.tight_layout()
-
-# # Log confusion matrix plot
-# experiment.log_figure(figure=plt, figure_name="confusion-matrix.png") 
-
-# # Log some example images 
-# for i in range(5):
-#   experiment.log_image(images[i], name="image"+str(i), image_channels="first")
