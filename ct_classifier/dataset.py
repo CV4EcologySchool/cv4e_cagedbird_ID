@@ -93,96 +93,96 @@ class CTDataset(Dataset):
 
                 return img
 
-        class CageAugmenter: 
-            def __init__(self): # what stays fixed - but we don't add size? since we will copy paste images, do I nee
-                # to list the self.resolution
-                self.resolution = [1000, 1000]
-                self.num_bars_x = 4
-                self.num_bars_y = 6
-                self.kernel = [30, 30]
-                self.color_alpha = 0.3
+        # class CageAugmenter: 
+        #     def __init__(self): # what stays fixed - but we don't add size? since we will copy paste images, do I nee
+        #         # to list the self.resolution
+        #         self.resolution = [1000, 1000]
+        #         self.num_bars_x = 4
+        #         self.num_bars_y = 6
+        #         self.kernel = [30, 30]
+        #         self.color_alpha = 0.3
 
-            def __call__(self, img):
-                # #set parameters
-                # resolution = [1000, 1000]
-                # num_bars_x = 4
-                # num_bars_y = 6
-                # kernel = [30, 30]
-                # mask_color = [181, 148, 16]
-                # color_alpha = .3
+        #     def __call__(self, img):
+        #         # #set parameters
+        #         # resolution = [1000, 1000]
+        #         # num_bars_x = 4
+        #         # num_bars_y = 6
+        #         # kernel = [30, 30]
+        #         # mask_color = [181, 148, 16]
+        #         # color_alpha = .3
 
-                # # Parameters that we will randomise, generate random values for bar radius, color, and rotation
-                # bar_radius_range = [10, 30]  # You can adjust the range as needed
-                # bar_radius = random.uniform(*bar_radius_range)
+        #         # # Parameters that we will randomise, generate random values for bar radius, color, and rotation
+        #         # bar_radius_range = [10, 30]  # You can adjust the range as needed
+        #         # bar_radius = random.uniform(*bar_radius_range)
 
-                # # Random color
-                # random_color = [random.randint(0, 255) for _ in range(3)]
-                # mask_color = random_color
-                # rotate_range = [-10, 20]  # Rotation range in degrees
-                # rotate = math.radians(random.uniform(*rotate_range))
+        #         # # Random color
+        #         # random_color = [random.randint(0, 255) for _ in range(3)]
+        #         # mask_color = random_color
+        #         # rotate_range = [-10, 20]  # Rotation range in degrees
+        #         # rotate = math.radians(random.uniform(*rotate_range))
 
-                # add the parameters that you want to randomise
-                img = img
-                # Parameters that you randomize
-                bar_radius_range = [10, 30]
-                bar_radius = random.uniform(*bar_radius_range)
+        #         # add the parameters that you want to randomise
+        #         img = img
+        #         # Parameters that you randomize
+        #         bar_radius_range = [10, 30]
+        #         bar_radius = random.uniform(*bar_radius_range)
 
-                random_color = [random.randint(0, 255) for _ in range(3)]
-                mask_color = random_color
+        #         random_color = [random.randint(0, 255) for _ in range(3)]
+        #         mask_color = random_color
 
-                rotate_range = [-10, 10]
-                # rotate = math.radians(random.uniform(*self.rotate_range))
+        #         rotate_range = [-10, 10]
+        #         rotate = math.radians(random.uniform(rotate_range))
                 
-                try:
-                    rotate = math.radians(random.uniform(*rotate_range)) 
-                except ValueError:
-                # retry with new value
-                    rotate = math.radians(random.uniform(*rotate_range))
+        #         # try:
+        #         #     rotate = math.radians(random.uniform(*rotate_range)) 
+        #         # except ValueError:
+        #         # # retry with new value
+        #         #     rotate = math.radians(random.uniform(*rotate_range))
 
-                # Create mask
-                bar_pos_x = [int(i) for i in np.linspace(0, self.resolution[0], self.num_bars_x)]
-                bar_pos_y = [int(i) for i in np.linspace(0, self.resolution[1], self.num_bars_y)]
-                bar_locs_x = []
-                bar_locs_y = []
-                for i in bar_pos_x:
-                    # int will round down, could use ceil or round
-                    bar_locs_x.extend([j for j in range(int(max(0, i - bar_radius)), int(min(i + bar_radius, self.resolution[0])))])
-                for i in bar_pos_y:
-                    bar_locs_y.extend([j for j in range(int(max(0, i - bar_radius)), int(min(i + bar_radius, self.resolution[1])))])
-                mask = np.ones(self.resolution)
-                for i in range(self.resolution[0]):
-                    for j in range(self.resolution[1]):
-                        if i in bar_locs_x or j in bar_locs_y:
-                            mask[i, j] = 0
-                            mask = cv2.blur(mask, self.kernel, cv2.BORDER_DEFAULT)
-                            mask = np.array(Image.fromarray(mask).rotate(rotate))
+        #         # Create mask
+        #         bar_pos_x = [int(i) for i in np.linspace(0, self.resolution[0], self.num_bars_x)]
+        #         bar_pos_y = [int(i) for i in np.linspace(0, self.resolution[1], self.num_bars_y)]
+        #         bar_locs_x = []
+        #         bar_locs_y = []
+        #         for i in bar_pos_x:
+        #             # int will round down, could use ceil or round
+        #             bar_locs_x.extend([j for j in range(int(max(0, i - bar_radius)), int(min(i + bar_radius, self.resolution[0])))])
+        #         for i in bar_pos_y:
+        #             bar_locs_y.extend([j for j in range(int(max(0, i - bar_radius)), int(min(i + bar_radius, self.resolution[1])))])
+        #         mask = np.ones(self.resolution)
+        #         for i in range(self.resolution[0]):
+        #             for j in range(self.resolution[1]):
+        #                 if i in bar_locs_x or j in bar_locs_y:
+        #                     mask[i, j] = 0
+        #                     mask = cv2.blur(mask, self.kernel, cv2.BORDER_DEFAULT)
+        #                     mask = np.array(Image.fromarray(mask).rotate(rotate))
 
-                # taking a center crop to remove the rotation artifacts
-                plt.imshow(np.array(mask))
-                crop_size = rotatedRectWithMaxArea(mask.shape[0], mask.shape[1], rotate)
-                x_boundary = int((mask.shape[0]-crop_size[0])/2)
-                y_boundary = int((mask.shape[1]-crop_size[1])/2)
-                mask = mask[x_boundary:-x_boundary, y_boundary:-y_boundary]
+        #         # taking a center crop to remove the rotation artifacts
+        #         plt.imshow(np.array(mask))
+        #         crop_size = rotatedRectWithMaxArea(mask.shape[0], mask.shape[1], rotate)
+        #         x_boundary = int((mask.shape[0]-crop_size[0])/2)
+        #         y_boundary = int((mask.shape[1]-crop_size[1])/2)
+        #         mask = mask[x_boundary:-x_boundary, y_boundary:-y_boundary]
 
-                # resize and tile
-                mask = cv2.resize(mask, img.size)
-                np.expand_dims(mask, 2).shape
-                np.tile(np.expand_dims(mask, 2), (1,1,3)).shape
-                tiled_mask = np.tile(np.expand_dims(mask, 2), (1,1,3))
+        #         # resize and tile
+        #         mask = cv2.resize(mask, img.size)
+        #         np.expand_dims(mask, 2).shape
+        #         np.tile(np.expand_dims(mask, 2), (1,1,3)).shape
+        #         tiled_mask = np.tile(np.expand_dims(mask, 2), (1,1,3))
 
-                #add bar color
-                inv_mask = 1-tiled_mask
-                color = [self.color_alpha * i for i in mask_color]
-                color_mask = color * inv_mask
-                new_img = img*tiled_mask+color_mask
-                return new_img 
+        #         #add bar color
+        #         inv_mask = 1-tiled_mask
+        #         color = [self.color_alpha * i for i in mask_color]
+        #         color_mask = color * inv_mask
+        #         new_img = img*tiled_mask+color_mask
+        #         return new_img 
 
     #     # https://stackoverflow.com/questions/76064717/pytorch-resize-specific-dimension-while-keeping-aspect-ratio
     #     # for half of the resize function
 
         self.transform = Compose([
             FixedHeightResize(224),
-            CageAugmenter(),
+            # CageAugmenter(),
             # GaussianBlur(5),
             # RandomHorizontalFlip(p=0.5),
             #RandomAdjustSharpness(sharpness_factor=2, p=0.5),
