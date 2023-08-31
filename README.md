@@ -1,4 +1,5 @@
 **Multi-class, single target classification of birds sold in wildlife marketplaces**
+- as a general thing - if you are altering or moving any data it is better to make a copy first, so you are making sure that you are not altering the original data and file/folder structure
 
 * Structure of data and labels
   * images of bird species from different sensors are stored in folders under data_root/high, there is one bird per image (*single target*)
@@ -17,3 +18,5 @@ delete_backup_folders.py
 - delete_files.py - this was used to delete files with _random in the file name when these were incorrectly copied to the wrong folder at the beginning - this code could be used to remove images from sources that might not be relevant (i.e. from a certain sensor if hte image is labelled with species_name_sensor_source.fileextension
 
 - visualisation_training.py and visualisation_validation.py is what prints the distribution of data across classes in both the training and validation sets, by loading the training and validation .jsons for visualisation
+- configs folder contains the default config .yaml which has most of the hyperparameters and CometML logging details
+- in the 'all_model_states' = these are currently in the .gitignore file, but there is now a folder which is renamed with whatever experiment name is in the default config file, so you now have individual folders per experiment, with a config file also named a
