@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # show what the defaults were for those augmentations 
 
 # Example mAP values (replace these with your actual data)
-methods = ['No Aug', 'Blur', 'Horizontal Flipping', 'Random Sharpness', 'All Aug Unbalanced', 'All Aug Umpsampled']
+methods = ['No Aug Unbalanced', 'Blur Unbalanced', 'Horizontal Flipping Unbalanced', 'Random Sharpness Unbalanced', 'All Aug Unbalanced', 'All Aug Umpsampled']
 # method A BLUR: train = 0.9935017680370775, val =0.7645522951549639
 # flipping : train = 0.9803945972730336, val = 0.8155913197540258
 # sharpness: train = 0.9957616060035979, val = 0.7625355412613961
