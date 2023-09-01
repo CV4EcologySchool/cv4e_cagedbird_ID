@@ -169,34 +169,61 @@ for i in range (cfg['num_classes']):
 
 # print (names_label_list)
 
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.metrics import confusion_matrix
+
+# Assuming you have defined labels_list, pred_list, inputs_list, and class_mapping
+
 # Calculate the confusion matrix using scikit-learn
 cm1 = confusion_matrix(labels_list, pred_list)
-print (cm1)
+print(cm1)
 
 threshold = 0.3  # You can adjust this threshold value
 
 # Calculate high confusion classes
 confusion_sums = cm1.sum(axis=1) - np.diag(cm1)
 high_confusion_classes = np.where(confusion_sums > threshold)[0]
+print(high_confusion_classes)
 
+# Create a custom grid layout
+num_rows = len(high_confusion_classes)
+num_columns = 5  # Number of columns for the grid
+fig_width = 15  # Adjust the width of the figure
 
-# # Sample 9 random images from high confusion classes with mispredictions
-# random_images = np.random.choice(np.where(np.isin(labels_list, high_confusion_classes) & (labels_list != pred_list))[0], size=9, replace=False)
+# Calculate the number of images per row and per column
+images_per_row = min(num_columns, len(high_confusion_classes))
+images_per_col = -(-len(high_confusion_classes) // num_columns)  # Ceiling division
 
-# # Plot
-# fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(8, 8), gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
+fig, axes = plt.subplots(nrows=images_per_col, ncols=images_per_row, figsize=(fig_width, fig_width / images_per_row * images_per_col))
 
-# for i, idx in enumerate(random_images):
-#     ax = axes[i // 3, i % 3]
-#     image = inputs_list[idx]  # Use inputs_list instead of images
-#     true_label = class_mapping[names_label_list[idx]]
-#     pred_label = class_mapping[names_pred_list[idx]]
-    
-#     ax.imshow(image.permute(1, 2, 0))  # Transpose the image dimensions
-#     ax.set_title(f"True: {true_label}\nPred: {pred_label}")
-#     ax.axis('off')
+for i, class_idx in enumerate(high_confusion_classes):
+    class_samples = np.where((labels_list == class_idx) & (labels_list != pred_list))[0]
+    if len(class_samples) >= images_per_row:
+        sample_indices = np.random.choice(class_samples, size=images_per_row, replace=False)
+    else:
+        # If there are fewer than 3 samples, repeat the available samples
+        sample_indices = class_samples
 
-# plt.savefig('Sample_Of_Bad_Classes.png')  # Save the plot as a PNG file
+    for j, sample_idx in enumerate(sample_indices):
+        ax = axes[i // images_per_row, j % images_per_row]
+        image = inputs_list[sample_idx].transpose(1, 2, 0)
+        true_label = class_mapping[labels_list[sample_idx]]
+        pred_label = class_mapping[pred_list[sample_idx]]
+
+        ax.imshow(image)
+        ax.text(0.5, -0.1, f"True: {true_label}", fontsize=8, color='black', ha='center')
+        ax.text(0.5, -0.25, f"Pred: {pred_label}", fontsize=8, color='red', ha='center')
+
+        ax.axis('off')  # Turn off axes
+
+# Remove any empty subplots
+for i in range(len(high_confusion_classes), images_per_col):
+    for j in range(images_per_row):
+        axes[i, j].axis('off')
+
+plt.tight_layout()
+plt.savefig('Sample Of Bad Classes.png')
 
 labels = unique_names_label_list
 
