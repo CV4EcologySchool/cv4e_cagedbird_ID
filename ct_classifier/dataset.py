@@ -186,9 +186,9 @@ class CTDataset(Dataset):
         self.transform = Compose([
             FixedHeightResize(224),
             #CageAugmenter(),
-            # GaussianBlur(5),
-            # RandomHorizontalFlip(p=0.5),
-            #RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+            GaussianBlur(5),
+            RandomHorizontalFlip(p=0.5),
+            RandomAdjustSharpness(sharpness_factor=2, p=0.5),
             ToTensor(),
         ])
         # the tensor format is channels, height, width
