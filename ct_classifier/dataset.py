@@ -123,6 +123,9 @@ class CTDataset(Dataset):
 
         #         # add the parameters that you want to randomise
         #         img = img
+        #         print ("print image path and size")
+        #         print(img)
+        #         print(img.size)
         #         # Parameters that you randomize
         #         bar_radius_range = [10, 30]
         #         bar_radius = random.uniform(*bar_radius_range)
@@ -131,7 +134,7 @@ class CTDataset(Dataset):
         #         mask_color = random_color
 
         #         rotate_range = [-10, 10]
-        #         rotate = math.radians(random.uniform(rotate_range))
+        #         rotate = math.radians(random.uniform(rotate_range[0], rotate_range[1]))
                 
         #         # try:
         #         #     rotate = math.radians(random.uniform(*rotate_range)) 
@@ -158,7 +161,7 @@ class CTDataset(Dataset):
         #                     mask = np.array(Image.fromarray(mask).rotate(rotate))
 
         #         # taking a center crop to remove the rotation artifacts
-        #         plt.imshow(np.array(mask))
+        #         # plt.imshow(np.array(mask))
         #         crop_size = rotatedRectWithMaxArea(mask.shape[0], mask.shape[1], rotate)
         #         x_boundary = int((mask.shape[0]-crop_size[0])/2)
         #         y_boundary = int((mask.shape[1]-crop_size[1])/2)
@@ -182,7 +185,7 @@ class CTDataset(Dataset):
 
         self.transform = Compose([
             FixedHeightResize(224),
-            # CageAugmenter(),
+            #CageAugmenter(),
             # GaussianBlur(5),
             # RandomHorizontalFlip(p=0.5),
             #RandomAdjustSharpness(sharpness_factor=2, p=0.5),
