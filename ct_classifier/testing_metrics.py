@@ -107,7 +107,7 @@ plt.ylabel('Frequency')
 plt.title('Histogram of Positive and Negative Class Scores')
 plt.legend()
 # plt.show()
-plt.savefig('Histogram Scores Unbalanced.png', dpi = 600)
+plt.savefig('Histogram Scores Upsampling.png', dpi = 600)
 
 # Try out the plots per class
 # Calculate the number of unique classes in your data
@@ -226,7 +226,7 @@ for i in range(len(high_confusion_classes), images_per_col):
 
 plt.tight_layout()
 
-plt.savefig('Sample Of Bad Classes for Unbalanced Data.png', dpi=600)
+plt.savefig('Sample Of Bad Classes for Upsampled Data.png', dpi=600)
 
 
 labels = unique_names_label_list
@@ -337,7 +337,7 @@ def plot_confusion_matrix(cm, classes, normalize=True, title='Confusion matrix',
 plot_confusion_matrix(cm1, target_names, title='Confusion Matrix')
 
 # how to plot it: https://stackoverflow.com/questions/65317685/how-to-create-image-of-confusion-matrix-in-python
-plt.savefig("cm_unbalanced.png", dpi=500) # dpi can control the resolution
+plt.savefig("cm_upsampled.png", dpi=500) # dpi can control the resolution
 
 existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
 
