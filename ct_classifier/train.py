@@ -343,7 +343,7 @@ def main():
         cfg['device'] = 'cpu'
 
     # initialize data loaders for training and validation set
-    dl_train = create_dataloader(cfg, split='upsampling') # was just train before, or upsampling
+    dl_train = create_dataloader(cfg, split='train') # was just train before, or upsampling
     sample_batch = next(iter(dl_train))
     inputs, labels = sample_batch
     print (labels)

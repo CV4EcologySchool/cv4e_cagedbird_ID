@@ -109,62 +109,9 @@ plt.legend()
 # plt.show()
 plt.savefig('Histogram Scores')
 
-# # Try out the plots per class
-# # Calculate the number of unique classes in your data
+# Try out the plots per class
+# Calculate the number of unique classes in your data
 # num_classes = len(np.unique(labels_list))
-
-# # Initialize lists to hold scores for each class
-# class_logit_scores = [[] for _ in range(num_classes)]
-# class_softmax_scores = [[] for _ in range(num_classes)]
-
-# for i in range(len(labels_list)):
-#     logit_scores = max_pred_list[i].detach().cpu().numpy()
-#     softmax_scores = functional.softmax(max_pred_list[i], dim=0).detach().cpu().numpy()
-#     class_label = labels_list[i].item()
-#     class_logit_scores[class_label].extend([logit_scores])  # Extend logit_scores as a list
-    
-#     # Convert softmax_scores to a list only if it's a tensor with multiple elements
-#     if softmax_scores.ndim > 0:
-#         class_softmax_scores[class_label].extend(softmax_scores.tolist())
-
-# # Create subplots for histograms of logit scores
-# num_rows = (num_classes + 2) // 3
-# fig, axes = plt.subplots(num_rows, 3, figsize=(15, 5 * num_rows))
-# fig.subplots_adjust(hspace=0.5)
-
-# for class_label, scores in enumerate(class_logit_scores):
-#     row = class_label // 3
-#     col = class_label % 3
-#     ax = axes[row, col]
-    
-#     ax.hist(scores, bins=num_bins, alpha=0.5)  # Plot logit_scores array
-        
-#     ax.set_title(f'Class {class_label}')
-#     ax.set_xlabel('Logit Scores')
-#     ax.set_ylabel('Frequency')
-
-# # Save the logit scores plot
-# plt.tight_layout()
-# plt.savefig('Logit_Scores_Per_Class_Panel.png')
-
-# # Create subplots for histograms of softmax scores
-# fig, axes = plt.subplots(num_rows, 3, figsize=(15, 5 * num_rows))
-# fig.subplots_adjust(hspace=0.5)
-
-# for class_label, scores in enumerate(class_softmax_scores):
-#     row = class_label // 3
-#     col = class_label % 3
-#     ax = axes[row, col]
-    
-#     ax.hist(scores, bins=num_bins, alpha=0.5)  # Plot softmax_scores array
-        
-#     ax.set_title(f'Class {class_label}')
-#     ax.set_xlabel('Softmax Scores')
-#     ax.set_ylabel('Frequency')
-
-# # Save the softmax scores plot
-# plt.tight_layout()
-# plt.savefig('Softmax_Scores_Per_Class_Panel.png')
 
 # Append wraps your item into a list, so you end up with a list of lists [[],[],[],[],[]]
 # Extend puts the list into a newer list, but putting it into brackets [.....]
@@ -232,36 +179,26 @@ threshold = 0.3  # You can adjust this threshold value
 confusion_sums = cm1.sum(axis=1) - np.diag(cm1)
 high_confusion_classes = np.where(confusion_sums > threshold)[0]
 
-# # Sample 9 random images 
-# random_images = np.random.choice(np.where((true_labels[idx] in high_confusion_classes) & 
-#                                           (true_labels[idx] != pred_labels[idx])), size=9, replace=False)
+
+# # Sample 9 random images from high confusion classes with mispredictions
+# random_images = np.random.choice(np.where(np.isin(labels_list, high_confusion_classes) & (labels_list != pred_list))[0], size=9, replace=False)
 
 # # Plot
-# fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(8, 8), 
-#                          gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
+# fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(8, 8), gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
 
 # for i, idx in enumerate(random_images):
-#     ax = axes[i//3, i%3]
-#     image = images[idx] 
-#     true_label = true_labels[idx]
-#     pred_label = pred_labels[idx]
+#     ax = axes[i // 3, i % 3]
+#     image = inputs_list[idx]  # Use inputs_list instead of images
+#     true_label = class_mapping[names_label_list[idx]]
+#     pred_label = class_mapping[names_pred_list[idx]]
     
-#     ax.imshow(image, cmap='gray')
+#     ax.imshow(image.permute(1, 2, 0))  # Transpose the image dimensions
 #     ax.set_title(f"True: {true_label}\nPred: {pred_label}")
 #     ax.axis('off')
-# plt.savefig('Sample Of Bad Classes.png')
+
+# plt.savefig('Sample_Of_Bad_Classes.png')  # Save the plot as a PNG file
 
 labels = unique_names_label_list
-
-plt.imshow(cm1, interpolation='nearest')
-plt.title('Confusion matrix')
-plt.ylabel('True label')
-plt.xlabel('Predicted label')
-plt.xticks(range(len(labels)), labels)  
-plt.yticks(range(len(labels)), labels)
-
-# Save confusion matrix plot 
-plt.savefig('confusion_matrix.png')
 
 import itertools
 
@@ -290,6 +227,7 @@ target_names =[
       "crested_lark",
       "fischers_lovebird",
       "great_myna",
+      "hill_mynas",
       "hwamei",
       "japanese_grosbeak",
       "javan_pied_starling",
@@ -297,8 +235,11 @@ target_names =[
       "oriental_magpie_robin",
       "oriental_skylark",
       "red_billed_starling",
+      "red whiskered_bulbul",
+      "siberian_rubythroat",
       "swinhoes_whiteeye",
       "yellow_bellied_tits",
+      "zebra dove",
       "zebra_finch"
     ]
 
@@ -365,7 +306,7 @@ def plot_confusion_matrix(cm, classes, normalize=True, title='Confusion matrix',
 plot_confusion_matrix(cm1, target_names, title='Confusion Matrix')
 
 # how to plot it: https://stackoverflow.com/questions/65317685/how-to-create-image-of-confusion-matrix-in-python
-plt.savefig("cfmdensenetnone.png", dpi=300) # dpi can control the resolution
+plt.savefig("cm_upsampling.png", dpi=500) # dpi can control the resolution
 
 existing_experiment.log_confusion_matrix(matrix=cm1, title="Confusion Matrix 1", labels=unique_names_label_list) # images=inputs,
 

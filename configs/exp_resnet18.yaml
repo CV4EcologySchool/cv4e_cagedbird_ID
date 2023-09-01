@@ -24,7 +24,7 @@ scheduler_gamma: 1  # 0.5 before
 # if gamma: 1 it will times this by the lr, so it is the same as using no scheduling
 
 # Comet ML experiment saving details
-experiment_name: a-resnet18_d-checked_b-128_n-100_padded_images_upsampling
+experiment_name: a-resnet18_d-checked_b-128_n-100_padded_images_unbalanced
 # add the scheduler step
 project_name: cagedbird-classifier
 api_key: 6D79SKeAIuSjteySwQwqx96nq
