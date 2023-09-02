@@ -21,7 +21,21 @@ delete_backup_folders.py
 - configs folder contains the default config .yaml which has most of the hyperparameters and CometML logging details
 - in the 'all_model_states' = these are currently in the .gitignore file, but there is now a folder which is renamed with whatever experiment name is in the default config file, so you now have individual folders per experiment, with a config file also named with the same experiment name
 
-- scripts file not really being used by me
+- scripts folder not really being used by me
 
 - ct_classifier
 - contains most if not all of the training code and dataset structure and information
+-   the class_mapping.pickle is a list of all the class_names, it is generated in the json_generate_80_20.py file from the preprocesing folder
+-   dataset.py file: contains the FixedHeightResize class which does the padding on the model
+-   also performs the other transformations on the images like the augmentations
+
+-   testing metrics
+-   evaluation metrics on the val set
+-   histogram scores for upsampling, plotting the average precision on the val data
+-   - plot the confusion matrix
+    - plot the species that were high confusion, so any overall score of less than 0.7, we showed a brief sample to see what species were getting confused with each other
+-   the train.py file contains the definitions for the dataloaders, loading the model (whether starting from model epoch 0 or retraining from an already saved model). You can either load the training data in the .json or upsampling data (in the dl_train dataloader)
+    - the training loop is defined as a while loop
+    - it defines the statistics you want to measure
+    - it also initialises the CometML experiments
+ 
