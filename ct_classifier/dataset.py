@@ -15,7 +15,7 @@
 import os
 import json
 from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip,RandomAdjustSharpness, GaussianBlur
+from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip,RandomAdjustSharpness, GaussianBlur, RandomVerticalFlip
 from PIL import Image
 import math
 import matplotlib.pyplot as plt
@@ -186,9 +186,10 @@ class CTDataset(Dataset):
         self.transform = Compose([
             FixedHeightResize(224),
             #CageAugmenter(),
-            GaussianBlur(5),
-            RandomHorizontalFlip(p=0.5),
-            RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+            # GaussianBlur(7),
+            # RandomHorizontalFlip(p=0.25),
+            # RandomVerticalFlip (p=0.75),
+            RandomAdjustSharpness(sharpness_factor=5, p=0.5),
             ToTensor(),
         ])
         # the tensor format is channels, height, width
@@ -234,7 +235,7 @@ class CTDataset(Dataset):
             label = anno['category_id']
             labelIndex = labels[label]
             self.data.append([imgFileName, labelIndex])
-            images_covered.add(imgID)       # make sure image is only added once to dataset
+            images_covered.add(imgID) # make sure image is only added once to dataset
     
 
     def __len__(self):
