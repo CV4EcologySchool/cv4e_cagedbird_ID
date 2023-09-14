@@ -26,7 +26,8 @@ split = 'val'
 print(f'Using config "{config}"')
 cfg = yaml.safe_load(open(config, 'r'))
 
-# Load the experiment key from the file
+# Load the existing experiment key from file, for the experiment that is initialised in the train.py file, so these metrics can 
+# be added to that experiment space in coment
 with open("experiment_key.txt", "r") as file:
     experiment_key = file.read().strip()
 
@@ -44,7 +45,7 @@ dl_val = create_dataloader (cfg, split='val') # Or it could be with test, and th
 model, start_epoch = load_model(cfg, load_latest_version=True)
 print(start_epoch)
 
-# # Display the images
+# # Display a sample of images from the validation dataloader
 # fig1 = plt.figure(figsize=(12, 8))
 # for idx in range(12):
 #     ax1 = fig1.add_subplot(3, 4, idx + 1, xticks=[], yticks=[])
@@ -76,12 +77,13 @@ for inputs, labels in dl_val:
     inputs_list.extend(list(inputs))
     labels_list.extend(list(labels))
 
-print ("Print the length of the inputs list")
-print(len(inputs_list))
-print ("Print the length of the labels list")
-print(len(labels_list))
-print ("Print the length of the max predictions list")
-print(len(max_pred_list))
+# This code will help you see that the number of inputs, labels and lists match the number of predictions
+# print ("Print the length of the inputs list")
+# print(len(inputs_list))
+# print ("Print the length of the labels list")
+# print(len(labels_list))
+# print ("Print the length of the max predictions list")
+# print(len(max_pred_list))
 
 # Calculate the number of unique classes in your data
 num_classes = len(np.unique(labels_list))
@@ -107,11 +109,28 @@ plt.ylabel('Frequency')
 plt.title('Histogram of Positive and Negative Class Scores')
 plt.legend()
 # plt.show()
-plt.savefig('Histogram Scores Upsampling.png', dpi = 600)
+plt.savefig('Histogram Scores Whole Model.png', dpi = 600)
 
 # Try out the plots per class
 # Calculate the number of unique classes in your data
-# num_classes = len(np.unique(labels_list))
+num_classes = len(np.unique(labels_list))
+
+# Create histograms for each class
+class_histograms = {}
+
+for class_idx in range(num_classes):
+    class_scores = []
+    for pred, label in zip(pred_list, labels_list):
+        if label == class_idx:
+            class_scores.append(pred.item())
+    plt.figure(figsize=(10, 6))
+    plt.hist(class_scores, bins=50, alpha=0.5, color='blue', label=f'Class {class_idx} Scores')
+    plt.xlabel('Class Scores')
+    plt.ylabel('Frequency')
+    plt.title(f'Histogram of Class {class_idx} Scores')
+    plt.legend()
+    plt.savefig(f'Class_{class_idx}_Histogram.png', dpi=600)
+    plt.close()
 
 # Append wraps your item into a list, so you end up with a list of lists [[],[],[],[],[]]
 # Extend puts the list into a newer list, but putting it into brackets [.....]
