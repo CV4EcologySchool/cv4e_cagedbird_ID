@@ -15,6 +15,9 @@ from train import create_dataloader, load_model # experiment should add the conf
 from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve, ConfusionMatrixDisplay
 from sklearn.preprocessing import label_binarize
 import torch.nn.functional as functional  # Import functional
+from sklearn.metrics import confusion_matrix
+import csv
+
 
 from util import * # To import the init seed from the util.py file in the same folder named ct_classifier
 
@@ -67,7 +70,8 @@ max_pred_list = []
 
 for inputs, labels in dl_val:
     predictions = model(inputs) 
-    argmax_pred = predictions.argmax(dim=1) # argmax is saying what is the index position for the largest value in a list of number
+    argmax_pred = predictions.argmax(dim=1) # argmax is saying what is the index position for the largest value in a list of number, so these
+    # scores are the maximum prediction scores (i.e. the highest score so what will be the label reported for the class from the top-1 accuracy essentially)
     max_pred = predictions.max(dim=1).values
     print(max_pred.shape)
     # I have to choose a number to label this sample, it will choose the index position that has the highest score, we are convertin as we go so we don't need to relaebl
@@ -76,6 +80,16 @@ for inputs, labels in dl_val:
     max_pred_list.extend(list(max_pred))
     inputs_list.extend(list(inputs))
     labels_list.extend(list(labels))
+
+# Experiment saving the predictions from the predictions list to a .csv file, 
+# To save the full list of predictions as a CSV file, you iterate through the validation dataloader and make predictions using your model, appending each prediction to the pred_list:
+
+with open('validation_predictions.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Prediction'])  # Write a header row if needed
+    
+    for prediction in pred_list:
+        writer.writerow([prediction.item()])  # Write each prediction to a new row
 
 # This code will help you see that the number of inputs, labels and lists match the number of predictions
 # print ("Print the length of the inputs list")
@@ -115,22 +129,63 @@ plt.savefig('Histogram Scores Whole Model.png', dpi = 600)
 # Calculate the number of unique classes in your data
 num_classes = len(np.unique(labels_list))
 
-# Create histograms for each class
+# Save the class_maping in a pickle file, load it earlier so you can map the hist
+with open('ct_classifier/class_mapping.pickle', 'rb') as f:
+    class_mapping = pickle.load(f)
+
+# You can print the classes if you 
+# print(class_mapping)
+
+# Create histograms for each class, initialising a dictionary
 class_histograms = {}
+
+# for class_idx in range(num_classes):
+#     class_scores = []
+#     for pred, label in zip(pred_list, labels_list):
+#         if label == class_idx:
+#             class_scores.append(pred.item())
+#     plt.figure(figsize=(10, 6))
+#     plt.hist(class_scores, bins=50, alpha=0.5, color='blue', label=f'Class {class_idx} Scores')
+#     plt.xlabel('Class Scores')
+#     plt.ylabel('Frequency')
+#     plt.title(f'Histogram of Class {class_idx} Scores')
+#     plt.legend()
+#     plt.savefig(f'Class_{class_idx}_Histogram.png', dpi=600)
+# #     plt.close()
 
 for class_idx in range(num_classes):
     class_scores = []
+    class_name = class_mapping[class_idx]  # Get the class name from your class mapping pickle file, so the histograms are loaded per class with the correct name
+    
     for pred, label in zip(pred_list, labels_list):
         if label == class_idx:
             class_scores.append(pred.item())
+    
     plt.figure(figsize=(10, 6))
-    plt.hist(class_scores, bins=50, alpha=0.5, color='blue', label=f'Class {class_idx} Scores')
+    plt.hist(class_scores, bins=50, alpha=0.5, color='blue', label=f'{class_name} Scores')
     plt.xlabel('Class Scores')
     plt.ylabel('Frequency')
-    plt.title(f'Histogram of Class {class_idx} Scores')
+    plt.title(f'Histogram of {class_name} Scores')  # Use the class name in the title
     plt.legend()
-    plt.savefig(f'Class_{class_idx}_Histogram.png', dpi=600)
+    plt.savefig(f'{class_name}_histogram.png', dpi=600)
     plt.close()
+
+
+# Create histograms for each class with the softmax scores
+for class_idx in range(num_classes):
+    class_scores = [functional.softmax(pred.float(), dim=0)[class_idx].item() for pred, label in zip(pred_list, labels_list) if label == class_idx]
+    class_name = class_mapping[class_idx]
+    
+    plt.figure(figsize=(10, 6))
+    plt.hist(class_scores, bins=50, alpha=0.5, color='blue', label=f'{class_name} Scores')
+    plt.xlabel('Class Scores')
+    plt.ylabel('Frequency')
+    plt.title(f'Histogram of {class_name} Scores')
+    plt.legend()
+    plt.savefig(f'{class_name}_histogram.png', dpi=600)
+    plt.close()
+
+# In this modified code, we use F.softmax(pred, dim=0) to apply the softmax function to each prediction pred, and then we select the softmax score corresponding to the class_idx to create the histograms. This will show the distribution of softmax scores for each class.
 
 # Append wraps your item into a list, so you end up with a list of lists [[],[],[],[],[]]
 # Extend puts the list into a newer list, but putting it into brackets [.....]
@@ -158,12 +213,6 @@ auprc = average_precision_score(one_hot_labels, one_hot_preds,average=None)
 print ("The average precision score on the validation data")
 print (auprc)
 
-# Save the class_maping in a pickle file
-with open('ct_classifier/class_mapping.pickle', 'rb') as f:
-    class_mapping = pickle.load(f)
-
-print(class_mapping)
-
 # Intialise a list to store the names to get the unique lists
 names_label_list = []
 
@@ -188,9 +237,6 @@ for i in range (cfg['num_classes']):
 
 # print (names_label_list)
 
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn.metrics import confusion_matrix
 
 # Assuming you have defined labels_list, pred_list, inputs_list, and class_mapping
 
