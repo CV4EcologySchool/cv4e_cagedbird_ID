@@ -8,7 +8,8 @@ device: cuda
 num_workers: 4 # Was 4
 
 # dataset parameters
-data_root: /home/sicily/cv4e_cagedbird_ID/data
+data_root: /home/home01/bssbf/cv4e_cagedbird_ID/data
+# This data_root was previously: /home/sicily/cv4e_cagedbird_ID/data on the CV4E nodes
 num_classes: 29
 
 # training hyperparameters

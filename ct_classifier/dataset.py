@@ -204,7 +204,7 @@ class CTDataset(Dataset):
         # get a annotation file
         annoPath = os.path.join(
             self.data_root,
-            'high',
+            # 'high', the 'high' folder no longer exists as of 15/3/24
             # 'training.json' if self.split=='train' else 'val.json' # was formerly: training_18_08.json
             self.split+'.json' # now it will look for any file that you set as the split, so you just have to enter the filename and it will add the .json
         )
@@ -252,7 +252,8 @@ class CTDataset(Dataset):
         '''
         image_name, label = self.data[idx] # see line 57 above where we added these two items to the self.data list
         # load image
-        image_path = os.path.join(self.data_root, 'high', image_name)
+        image_path = os.path.join(self.data_root, image_name)
+        # the path used to look like this: image_path = os.path.join(self.data_root, 'high', image_name)
         # print (image_path)
         try:
             img = Image.open(image_path).convert('RGB') # the ".convert" makes sure we always get three bands in Red, Green, Blue order
