@@ -4,6 +4,11 @@ from PIL import Image
 from pathlib import Path
 from glob import glob
 
+# Code needed when you actually regenerate the annotations for the changed dataset
+# root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
+# output_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/annotations_test.json"
+
+# retest code 01.11.24, briefly change the root directory and run in-terminal, not on ARC4
 root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
 output_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/annotations_test.json"
 

@@ -6,7 +6,7 @@
 module load anaconda
 conda activate cv4e2
 
-cd *Tab* cv4e_cagedbird_ID
+cd cv4e_cagedbird_ID *Tab* 
 ```
 
 * The process of committing, to remind myself
@@ -110,11 +110,12 @@ qstat
 
 **15/07/24**
 
-I had this error initially: train.py: error: unrecognized arguments: ., but there was an extra dot before the '>'.
+* I had this error initially: train.py: error: unrecognized arguments: ., but there was an extra dot before the '>'.
 
 ```
 python example_file.py > output.txt
 ```
+* Ran a model successfully, with the output correctly exported to the output.txt file and also in the shell output files
 
 # Coding check list
 
@@ -122,12 +123,20 @@ python example_file.py > output.txt
 * [ ] Connecting models end to end (cropper to species detector)
 * [ ] Training the original model on more species
 * [ ] Train a cropper and feed those results to the first model
+* [ ] could train the cropped model on the initial yolo results than test the detector on the ones for which we don't have enough crops
+* [ ] 20 minimum folder also has some species that are nearer to 100, this needs to be further sorted
 
 ## Minor
 * [ ] Sort out the number of species I can actually work with
 * [ ] List of species that I observed in markets (interactive html format with an example image)
 * [ ] Species, file names etc for James to review
 * [ ] Re-connect your work to comet
+* [ ] The first column in our database ('Market_data_ID') has the crops but there is some independence issues so we need to label the source and discard ones
 
 ## Extra 
 * [ ] Caged bar augmenter
+
+
+11/01/24
+comet_ml not working when imported, I tried running this code to update it, but this will now be specfic to this cv4e2 environment, I might then need to update the environment.yml file later?
+pip install comet_ml --upgrade
