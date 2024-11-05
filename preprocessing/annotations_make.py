@@ -9,8 +9,9 @@ from glob import glob
 # output_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/annotations_test.json"
 
 # retest code 01.11.24, briefly change the root directory and run in-terminal, not on ARC4
-root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
-output_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/annotations_test.json"
+root_directory = "/home/home01/bssbf/cv4e_cagedbird_ID/data"
+
+output_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data/annotations_test_01_11.json"
 
 # Get a list of category names from subfolder names
 category_names = [folder_name for folder_name in os.listdir(root_directory) if os.path.isdir(os.path.join(root_directory, folder_name))]

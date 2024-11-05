@@ -11,10 +11,13 @@
 #Get email at start and end of the job
 #$ -m be
 module load anaconda
+
+source activate cv4e
+
 module unload cuda
 module add cuda/11.1.1
 
 nvidia-smi -L
 
 # Run the Python code
-python ct_classifier/train.py > output_24_10.log
+python ct_classifier/train.py > output.log

@@ -50,13 +50,13 @@ From the species_to_review folder, the was a V_CODES folder and in there was the
 I need to make a new conda environment
 On the Leeds HPC, I need to do ‘module load anaconda’ first, then conda works; https://arcdocs.leeds.ac.uk/software/compilers/anaconda.html?highlight=conda
 
-Then I did this in the command line, after logging on using WSL, then open the Remote tunnel to log into my arc4 account. The environment.yml file was cloned from my previous Github repository.
+Then I did this in the command line, after logging on using WSL, then open the Remote tunnel to log into my arc4 account. The environment.yml file was cloned from my previous Github repository.I'm not sure what both files refer to, but there are two environment .yaml files (environment and environment2), and there are two versions of the cv4e environment.
 
 ```
 conda env create -f environment.yml -n cv4e
 module load anaconda
 source activate base
-conda activate cv4e
+conda activate cv4e2
 ```
 *The path for my new environment, is '/home/home01/bssbf/.conda/envs/cv4e'
 
