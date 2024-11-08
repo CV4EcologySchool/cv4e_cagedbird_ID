@@ -12,7 +12,7 @@
 #$ -m be
 module load anaconda
 
-source activate cv4e
+source activate cv4e2
 
 module unload cuda
 module add cuda/11.1.1
