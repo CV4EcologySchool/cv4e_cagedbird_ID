@@ -1,0 +1,136 @@
+## WARNING!
+## The current directory is in your home directory. Please use the high-performance
+## cluster filesystem /nobackup. See documentation for information.
+## WARNING!
+
+## Hosts assigned to job 6346068.1:
+##
+## db04gpu5.arc4.leeds.ac.uk 10 slots
+##
+## Resources granted:
+##
+## h_vmem = 5153960755 (per slot)
+## h_rt   = 5:0:0
+## disk   = 1G (per slot)
+
+GPU 0: Tesla V100-PCIE-32GB (UUID: GPU-e5d4c585-0c30-67b2-ff5f-f23ddd0a9e27)
+Using config "configs/exp_resnet18.yaml"
+length of annotations
+4178
+{'id': 4286, 'image_id': 4286, 'category_id': 24, 'iscrowd': 0, 'segmentation': [], 'area': 7171710}
+Print the length of the dataset
+4178
+tensor([21, 17, 13, 15,  3, 10, 28, 12, 15, 16, 21, 24, 15, 17, 23, 17, 15, 21,
+        23, 12, 20, 24, 13, 20, 17, 13, 22, 17, 21, 22, 24,  0, 17, 27, 22, 22,
+        15,  0, 21, 12, 16,  0, 24,  9, 27, 22, 24,  3, 27, 19, 13, 23, 26,  2,
+        20, 15, 20, 18,  7, 28,  6, 28,  0, 20, 16, 23, 17,  5,  7, 15, 11, 11,
+         8, 24, 28, 10, 25,  5, 10, 28, 23, 21,  1, 15, 21, 23, 28, 19, 15, 15,
+        24, 12, 26,  2, 12, 23, 20, 17, 24,  7,  6, 28, 25, 15, 25,  4, 24,  4,
+        10, 24, 20,  1, 15, 12, 28,  8, 10, 22, 28,  5,  7, 21, 13, 11, 17, 21,
+         4, 28])
+length of annotations
+1045
+Print the length of the dataset
+1045
+Length of training dataloader
+Starting new model
+Epoch 1/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 2/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 3/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 4/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 5/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 6/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 7/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 8/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 9/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 10/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 11/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 12/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 13/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 14/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 15/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 16/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 17/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 18/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 19/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 20/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 21/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 22/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 23/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 24/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 25/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 26/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 27/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 28/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 29/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 30/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 31/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 32/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 33/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 34/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 35/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 36/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 37/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 38/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 39/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 40/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 41/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 42/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 43/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 44/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 45/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 46/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 47/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 48/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 49/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3
+Epoch 50/50
+Experiment Key: 5b13d44b53254202ba240201ff2f22c3

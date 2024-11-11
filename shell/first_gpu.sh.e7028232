@@ -1,0 +1,3 @@
+/var/spool/sge_prod/db04gpu4/job_scripts/7028232: line 14: modle: command not found
+usage: train.py [-h] [--config CONFIG]
+train.py: error: unrecognized arguments: .
