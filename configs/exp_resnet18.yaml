@@ -8,9 +8,12 @@ device: cuda
 num_workers: 4 # Was 4
 
 # dataset parameters
-data_root: /home/home01/bssbf/cv4e_cagedbird_ID/data
+data_root: /home/home01/bssbf/cv4e_cagedbird_ID/data2
 # This data_root was previously: /home/sicily/cv4e_cagedbird_ID/data on the CV4E nodes
-num_classes: 29
+# data_root: /home/home01/bssbf/cv4e_cagedbird_ID/data, data used in the summer school
+num_classes: 56
+# summer school first test num_classes: 29
+
 
 # training hyperparameters
 image_size: [224, 224] # [224, 224] keep it as [224] or [224, ] if you want to keep the aspect ratio the same
@@ -25,7 +28,7 @@ scheduler_gamma: 1  # 0.5 before
 # if gamma: 1 it will times this by the lr, so it is the same as using no scheduling
 
 # Comet ML experiment saving details
-experiment_name: a-resnet18_d-checked_b-128_n-50_padded_images_sharpness_medium
+experiment_name: a-resnet18_d-checked_b-128_n-50_padded_images_sharpness_medium_more_data
 
 # add the scheduler step
 project_name: cagedbird-classifier

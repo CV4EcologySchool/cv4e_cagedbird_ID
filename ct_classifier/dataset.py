@@ -206,10 +206,10 @@ class CTDataset(Dataset):
             self.data_root,
             # 'high', the 'high' folder no longer exists as of 15/3/24
             # 'training.json' if self.split=='train' else 'val.json' # was formerly: training_18_08.json
-            self.split+'.json' # now it will look for any file that you set as the split, so you just have to enter the filename and it will add the .json
+            self.split+'.json' # now it will look for any file that you set as the split, so you just have to enter the filename and it will add the .json, so it should find the .json
         )
 
-        # print(annoPath)
+        print(annoPath)
 
         meta = json.load(open(annoPath, 'r'))
         # [print(anno) for anno in meta['annotations'] if anno['image_id']==4236]

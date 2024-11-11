@@ -7,13 +7,22 @@ from collections import Counter
 import numpy as np
 import math
 
-root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
-output_train_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/train.json"
-output_upsampling_path = "/home/sicily/cv4e_cagedbird_ID/data/high/upsampling.json"
-output_val_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/val.json"
+# root_directory = "/home/sicily/cv4e_cagedbird_ID/data/high"
+# output_train_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/train.json"
+# output_upsampling_path = "/home/sicily/cv4e_cagedbird_ID/data/high/upsampling.json"
+# output_val_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/val.json"
+
+# Updated paths from ARC4 not from the node for the summer school
+root_directory = "/home/home01/bssbf/cv4e_cagedbird_ID/data2"
+output_train_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/train.json"
+output_upsampling_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/upsampling.json"
+output_val_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/val.json"
+
 
 # Load COCO annotations from a JSON file
-with open(os.path.join(root_directory, "annotations_test.json"), 'r') as coco_file:
+# with open(os.path.join(root_directory, "annotations_test.json"), 'r') as coco_file:
+
+with open(os.path.join(root_directory, "annotations_test_11_11.json"), 'r') as coco_file:
     coco_annotations = json.load(coco_file)
 
 random.seed (3) # so the shuffle is random but the same each time
