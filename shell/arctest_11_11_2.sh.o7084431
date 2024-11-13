@@ -1,0 +1,16 @@
+## WARNING!
+## The current directory is in your home directory. Please use the high-performance
+## cluster filesystem /nobackup. See documentation for information.
+## WARNING!
+
+## Hosts assigned to job 7084431.1:
+##
+## db04gpu5.arc4.leeds.ac.uk 10 slots
+##
+## Resources granted:
+##
+## h_vmem = 5153960755 (per slot)
+## h_rt   = 5:0:0
+## disk   = 1G (per slot)
+
+GPU 0: Tesla V100-PCIE-32GB (UUID: GPU-f317bb51-2fb0-ff18-d50e-05d833521867)

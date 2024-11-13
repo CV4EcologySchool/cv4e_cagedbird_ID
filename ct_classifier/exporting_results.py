@@ -1,45 +1,65 @@
-import json
 import torch
+import yaml
 import pickle
-from util import *  # Ensure your utility functions are imported
+import csv
+import torch.nn.functional as F  # For softmax function
+from train import create_dataloader, load_model
+from util import *  # Import the init_seed function
 
-# Load the class mapping (if required for class names)
-with open('ct_classifier/class_mapping.pickle', 'rb') as f:
+# Parameters
+config = 'all_model_states/a-resnet18_d-checked_b-128_n-50_padded_images_sharpness_medium/config_a-resnet18_d-checked_b-128_n-50_padded_images_sharpness_medium.yaml'
+split = 'val'
+
+# Load config
+print(f'Using config "{config}"')
+cfg = yaml.safe_load(open(config, 'r'))
+
+# Set the seed, so you can reproduce the randomness, None is there as null because the seed is already in the config
+init_seed(cfg.get('seed', None))
+
+# Setup dataloader
+dl_val = create_dataloader(cfg, split='val')  # Get the validation dataloader
+
+# Load model
+model, start_epoch = load_model(cfg, load_latest_version=True)
+print(start_epoch)
+
+# Predict and save results
+inputs_list = []
+labels_list = []
+pred_list = []
+confidence_score_list = []  # List to store the confidence score for each prediction
+mismatch_list = []  # List to store mismatch info
+
+# Load the class mapping dictionary (if it's available as a pickle file)
+class_mapping_file = '/home/home01/bssbf/cv4e_cagedbird_ID/data/class_mapping_29.pkl'
+with open(class_mapping_file, 'rb') as f:
     class_mapping = pickle.load(f)
 
-# Function to capture annotations from the validation dataloader
-def capture_annotations(dl_val):
-    annotations = []
-    for inputs, labels in dl_val:
-        for idx, label in enumerate(labels):
-            # Assuming each 'inputs' contains image data and you want to capture filename, true label, etc.
-            annotation = {
-                'filename': f'image_{idx}.jpg',  # Replace with actual filename if you have one
-                'true_label': class_mapping[label.item()],  # Map true label to class name
-                'prediction': None,  # You can leave prediction blank for now
-                'max_prediction': None  # You can leave max_prediction blank for now
-            }
-            annotations.append(annotation)
-    return annotations
-
-# Capture annotations from the validation dataloader
-annotations = capture_annotations(dl_val)
-
-# Export the captured annotations to a new JSON file
-with open('captured_annotations.json', 'w') as f:
-    json.dump(annotations, f, indent=4)
-
-# Now, you can process predictions and update the annotations in the JSON as needed
+# Iterate over validation data
 for inputs, labels in dl_val:
-    predictions = model(inputs)
-    argmax_pred = predictions.argmax(dim=1)
-    max_pred = predictions.max(dim=1).values
+    predictions = model(inputs)  # Forward pass
+    probabilities = F.softmax(predictions, dim=1)  # Apply softmax to get probabilities
+    max_pred, argmax_pred = probabilities.max(dim=1)  # Get predicted class index and max probability (confidence)
+    
+    # For each prediction, check if it matches the true label and store accuracy (1 for correct, 0 for incorrect)
+    for pred, true, score in zip(argmax_pred, labels, max_pred):
+        accuracy = 1 if pred == true else 0  # 1 for correct, 0 for incorrect
+        confidence_score_list.append(score.item())  # Store the confidence score (probability between 0 and 1)
+        mismatch_list.append('Mismatch' if pred != true else 'Match')  # Track mismatches
+    
+    # Extend the lists for predictions and true labels
+    pred_list.extend(list(argmax_pred))
+    inputs_list.extend(list(inputs))
+    labels_list.extend(list(labels))
 
-    # Update the annotations with predictions and max prediction values
-    for idx, annotation in enumerate(annotations):
-        annotation['prediction'] = class_mapping[argmax_pred[idx].item()]
-        annotation['max_prediction'] = max_pred[idx].item()
+# Map the predicted class indices to class labels
+predicted_labels = [class_mapping.get(pred.item(), 'Unknown') for pred in pred_list]
+true_labels = [class_mapping.get(label.item(), 'Unknown') for label in labels_list]
 
-# Export the final annotations with predictions to a new JSON file
-with open('annotations_with_predictions.json', 'w') as f:
-    json.dump(annotations, f, indent=4)
+# Save the predictions and true labels to CSV
+with open('validation_predictions3.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['True Label', 'Predicted Label', 'Confidence Score', 'Mismatch'])  # Write header
+    for true_label, pred_label, score, mismatch in zip(true_labels, predicted_labels, confidence_score_list, mismatch_list):
+        writer.writerow([true_label, pred_label, score, mismatch])  # Save results
