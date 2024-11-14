@@ -5,3 +5,5 @@ data2
 # .pt files that just got overwritten each time you ran the model
 # Ignoring all files within the 'all_model_states' folder
 all_model_states/
+predicted_images/
+predicted_images2/
