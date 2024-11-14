@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/home/home01/bssbf/cv4e_cagedbird_ID/ct_classifier/train_upsampling.py", line 15, in <module>
-    import comet_ml
-ModuleNotFoundError: No module named 'comet_ml'

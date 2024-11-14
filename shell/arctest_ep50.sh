@@ -12,10 +12,11 @@
 #$ -m be
 module load anaconda
 
+source activate cv4e2
+
 module unload cuda
 module add cuda/11.1.1
 
-source activate cv4e2
 
 
 nvidia-smi -L
