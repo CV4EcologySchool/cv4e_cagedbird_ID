@@ -11,7 +11,7 @@
 #Get email at start and end of the job
 #$ -m be
 module load anaconda
-source activate cv4e2
+conda activate cv4e2
 
 module unload cuda
 module add cuda/11.1.1

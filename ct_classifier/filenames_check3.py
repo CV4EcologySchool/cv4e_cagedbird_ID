@@ -6,6 +6,8 @@ import yaml
 import pickle
 import csv
 import torch.nn.functional as F
+import pandas as pd
+import seaborn as sns
 from train import create_dataloader, load_model
 from util import *
 
@@ -39,10 +41,15 @@ with open(class_mapping_file, 'rb') as f:
 print(class_mapping)
 
 # Output directories for matches and mismatches
-output_dir_match = 'predicted_images2/match'
-output_dir_mismatch = 'predicted_images2/mismatch'
+output_dir_match = 'predicted_images3/match'
+output_dir_mismatch = 'predicted_images3/mismatch'
+output_dir_match_raw = 'predicted_images3/match_raw'
+output_dir_mismatch_raw = 'predicted_images3/mismatch_raw'
+
 os.makedirs(output_dir_match, exist_ok=True)
 os.makedirs(output_dir_mismatch, exist_ok=True)
+os.makedirs(output_dir_match_raw, exist_ok=True)
+os.makedirs(output_dir_mismatch_raw, exist_ok=True)
 
 # Iterate over validation data
 for batch_idx, (inputs, labels) in enumerate(dl_val):
@@ -53,7 +60,6 @@ for batch_idx, (inputs, labels) in enumerate(dl_val):
     for idx, (pred, true, score) in enumerate(zip(argmax_pred, labels, max_pred)):
         # Determine if the prediction is a match or mismatch
         is_mismatch = pred != true
-        accuracy = 1 if not is_mismatch else 0
         confidence_score_list.append(score.item())
         mismatch_list.append('Mismatch' if is_mismatch else 'Match')
         
@@ -63,16 +69,21 @@ for batch_idx, (inputs, labels) in enumerate(dl_val):
         
         # Prepare the save path based on match/mismatch
         save_dir = output_dir_mismatch if is_mismatch else output_dir_match
+        save_dir_raw = output_dir_mismatch_raw if is_mismatch else output_dir_match_raw
         filename = f"true_{true_label_name}_pred_{pred_label_name}_conf_{score.item():.2f}_batch{batch_idx}_img{idx}.png"
-        save_path = os.path.join(save_dir, filename)
         
-        # Save the image
+        # Save annotated image
+        save_path = os.path.join(save_dir, filename)
         img = inputs[idx].permute(1, 2, 0).cpu().numpy()
         plt.imshow(img)
         plt.title(f"Predicted: {pred_label_name}, True: {true_label_name}")
         plt.axis('off')
         plt.savefig(save_path)
         plt.close()
+        
+        # Save raw image
+        save_path_raw = os.path.join(save_dir_raw, filename.replace(".png", "_raw.png"))
+        plt.imsave(save_path_raw, img)
         
         # Extend lists
         pred_list.append(pred)
@@ -84,7 +95,7 @@ predicted_labels = [class_mapping.get(pred.item(), pred.item()) for pred in pred
 true_labels = [class_mapping.get(label.item(), label.item()) for label in labels_list]
 
 # Save predictions and results to CSV with an additional 'Image Filename' column
-with open('validation_predictions5.csv', mode='w', newline='') as file:
+with open('validation_predictions7.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['True Label', 'Predicted Label', 'Confidence Score', 'Mismatch', 'Image Filename'])
     for idx, (true_label, pred_label, score, mismatch) in enumerate(zip(true_labels, predicted_labels, confidence_score_list, mismatch_list)):
@@ -99,44 +110,29 @@ with open('validation_predictions5.csv', mode='w', newline='') as file:
 
 print("Images and CSV file saved successfully with filenames.")
 
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-from collections import Counter
-
-# Assuming you already have the following lists filled:
-# true_labels, predicted_labels, mismatch_list (from the loop in your code)
-
-# Filter only the mismatches
-mismatches = [(true, pred) for true, pred, mismatch in zip(true_labels, predicted_labels, mismatch_list) if mismatch == 'Mismatch']
+# === Confusion Matrix Modification ===
 
 # Create a DataFrame for mismatches
-mismatch_df = pd.DataFrame(mismatches, columns=['True Label', 'Predicted Label'])
+mismatch_df = pd.DataFrame({
+    'True Label': true_labels,
+    'Predicted Label': predicted_labels,
+    'Mismatch': mismatch_list
+})
+mismatch_df = mismatch_df[mismatch_df['Mismatch'] == 'Mismatch']
 
-# === Method 1: Confusion Pair Summary Table ===
-
-# Count the occurrences of each mismatch pair (True Label, Predicted Label)
+# Count occurrences of each mismatch pair
 confusion_pairs = mismatch_df.groupby(['True Label', 'Predicted Label']).size().reset_index(name='Count')
 
-# Sort by count in descending order to see the most common confusions
-confusion_summary = confusion_pairs.sort_values(by='Count', ascending=False)
+# Filter for mismatches with Count > 1
+filtered_confusion_pairs = confusion_pairs[confusion_pairs['Count'] > 1]
 
-# Display the summary table
-print("Summary Table of Confused Species Pairs (Mismatches):")
-print(confusion_summary)
+# Create a filtered confusion matrix
+filtered_confusion_matrix = filtered_confusion_pairs.pivot(index='True Label', columns='Predicted Label', values='Count').fillna(0)
 
-# Optionally, save the summary table to a CSV
-confusion_summary.to_csv("species_confusion_summary.csv", index=False)
-
-# === Method 2: Confusion Matrix Heatmap ===
-
-# Create a pivot table for the confusion matrix (True Labels as rows, Predicted Labels as columns)
-confusion_matrix = mismatch_df.pivot_table(index='True Label', columns='Predicted Label', aggfunc='size', fill_value=0)
-
-# Plot the heatmap
+# Plot the filtered heatmap
 plt.figure(figsize=(12, 8))
-sns.heatmap(confusion_matrix, annot=True, cmap="YlOrRd", fmt='d', cbar=True)
-plt.title("Heatmap of Species Confusions (Mismatches Only)")
+sns.heatmap(filtered_confusion_matrix, annot=True, cmap="YlOrRd", fmt='g', cbar=True)
+plt.title("Heatmap of Species Confusions (Mismatches > 1)")
 plt.xlabel("Predicted Species")
 plt.ylabel("True Species")
 plt.xticks(rotation=45, ha='right')
@@ -144,5 +140,10 @@ plt.yticks(rotation=0)
 plt.tight_layout()
 
 # Save the heatmap to a PNG image
-plt.savefig("species_confusion_heatmap.png")
+plt.savefig("species_confusion_heatmap_filtered.png")
 plt.show()
+
+# Save the filtered confusion pairs to a CSV file
+filtered_confusion_pairs.to_csv("filtered_species_confusion_summary.csv", index=False)
+
+print("Heatmap and CSV saved successfully.")
