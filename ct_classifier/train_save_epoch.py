@@ -100,10 +100,14 @@ def save_model(cfg, epoch, model, stats):
 
     # get model parameters and add to stats...
     stats['model'] = model.state_dict()
+ # Save model after every epoch, overwriting the previous one
+    stats_file = os.path.join(experiment_folder, 'latest.pt')  # Always overwrite 'latest.pt'
+    torch.save(stats, open(stats_file, 'wb'))  # Save the model state
+    print(f"Model saved as latest.pt at epoch {epoch}")  # Print confirmation
 
-    # torch.save(stats, open(f'model_states/{epoch}.pt', 'wb'))
-    stats_file = os.path.join(experiment_folder, f'{epoch}.pt')
-    torch.save(stats, open(stats_file, 'wb'))
+    #  torch.save(stats, open(f'model_states/{epoch}.pt', 'wb'))
+    # stats_file = os.path.join(experiment_folder, f'{epoch}.pt')
+    # torch.save(stats, open(stats_file, 'wb'))
     
     # also save config file if not present
     # Construct the full path using os.path.join

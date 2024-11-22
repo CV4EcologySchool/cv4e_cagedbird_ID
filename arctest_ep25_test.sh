@@ -16,8 +16,8 @@ source activate cv4e2
 # conda activate cv4e2
 
 module unload cuda
-module add cuda/11.1.1
-
+# module add cuda/11.1.1, try a different cuda
+module load cuda/10.1.168
 
 nvidia-smi -L
 
