@@ -12,7 +12,7 @@ from train import load_model  # Assuming this function loads your trained model
 from util import *  # Assuming this is your custom utility file
 
 # Parameters
-config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/a-resnet18_d-checked_b-128_n-50_padded_images_sharpness_medium_more_data_upsampled/config_a-resnet18_d-checked_b-128_n-50_padded_images_sharpness_medium_more_data_upsampled.yaml'
+config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep75_56sp_anone_lr1e-3_snone_orig/config_ep75_56sp_anone_lr1e-3_snone_orig.yaml'
 image_folder = '/home/home01/bssbf/cv4e_cagedbird_ID/unannotated_test'  # Path to the folder containing unannotated images
 
 # Load config

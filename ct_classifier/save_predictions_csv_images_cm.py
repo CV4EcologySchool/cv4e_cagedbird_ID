@@ -39,11 +39,19 @@ with open(class_mapping_file, 'rb') as f:
     class_mapping = pickle.load(f)
 print(class_mapping)
 
-# Output directories for matches and mismatches
+# Output directories for annotated and raw images
 output_dir_match = 'predicted_images3/match'
 output_dir_mismatch = 'predicted_images3/mismatch'
+output_dir_match_raw = 'predicted_images3/match_raw'
+output_dir_mismatch_raw = 'predicted_images3/mismatch_raw'
 os.makedirs(output_dir_match, exist_ok=True)
 os.makedirs(output_dir_mismatch, exist_ok=True)
+os.makedirs(output_dir_match_raw, exist_ok=True)
+os.makedirs(output_dir_mismatch_raw, exist_ok=True)
+
+# Counters for matches and mismatches
+match_count = 0
+mismatch_count = 0
 
 # Iterate over validation data
 for batch_idx, (inputs, labels) in enumerate(dl_val):
@@ -61,18 +69,29 @@ for batch_idx, (inputs, labels) in enumerate(dl_val):
         true_label_name = class_mapping.get(true.item(), true.item())
         pred_label_name = class_mapping.get(pred.item(), pred.item())
         
-        # Prepare the save path based on match/mismatch
+        # Prepare the save path for annotated images
         save_dir = output_dir_mismatch if is_mismatch else output_dir_match
         filename = f"true_{true_label_name}_pred_{pred_label_name}_conf_{score.item():.2f}_batch{batch_idx}_img{idx}.png"
         save_path = os.path.join(save_dir, filename)
         
-        # Save the image
+        # Save the annotated image
         img = inputs[idx].permute(1, 2, 0).cpu().numpy()
         plt.imshow(img)
         plt.title(f"Predicted: {pred_label_name}, True: {true_label_name}")
         plt.axis('off')
         plt.savefig(save_path)
         plt.close()
+        
+        # Save the raw image with the same filename
+        raw_dir = output_dir_mismatch_raw if is_mismatch else output_dir_match_raw
+        raw_save_path = os.path.join(raw_dir, filename)  # Use the same filename
+        plt.imsave(raw_save_path, img)
+        
+        # Update counters
+        if is_mismatch:
+            mismatch_count += 1
+        else:
+            match_count += 1
         
         # Extend lists
         pred_list.append(pred)
@@ -88,13 +107,45 @@ with open('validation_predictions10.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['True Label', 'Predicted Label', 'Confidence Score', 'Mismatch', 'Image Filename'])
     for idx, (true_label, pred_label, score, mismatch) in enumerate(zip(true_labels, predicted_labels, confidence_score_list, mismatch_list)):
-        # Determine the saved image path
-        is_mismatch = mismatch == 'Mismatch'
-        save_dir = output_dir_mismatch if is_mismatch else output_dir_match
-        filename = f"true_{true_label}_pred_{pred_label}_conf_{score:.2f}_batch{batch_idx}_img{idx}.png"
-        save_path = os.path.join(save_dir, filename)
-        
-        # Write to CSV with the filename as an extra column
         writer.writerow([true_label, pred_label, score, mismatch, filename])
 
-print("Images and CSV file saved successfully with filenames.")
+# === Confusion Matrix Modification ===
+
+# Create a DataFrame for mismatches
+mismatch_df = pd.DataFrame({
+    'True Label': true_labels,
+    'Predicted Label': predicted_labels,
+    'Mismatch': mismatch_list
+})
+mismatch_df = mismatch_df[mismatch_df['Mismatch'] == 'Mismatch']
+
+# Count occurrences of each mismatch pair
+confusion_pairs = mismatch_df.groupby(['True Label', 'Predicted Label']).size().reset_index(name='Count')
+
+# Filter for mismatches with Count > 1
+filtered_confusion_pairs = confusion_pairs[confusion_pairs['Count'] > 1]
+
+# Create a filtered confusion matrix
+filtered_confusion_matrix = filtered_confusion_pairs.pivot(index='True Label', columns='Predicted Label', values='Count').fillna(0)
+
+# Plot the filtered heatmap
+plt.figure(figsize=(12, 8))
+sns.heatmap(filtered_confusion_matrix, annot=True, cmap="YlOrRd", fmt='g', cbar=True)
+plt.title("Heatmap of Species Confusions (Mismatches > 1)")
+plt.xlabel("Predicted Species")
+plt.ylabel("True Species")
+plt.xticks(rotation=45, ha='right')
+plt.yticks(rotation=0)
+plt.tight_layout()
+
+# Save the heatmap to a PNG image
+plt.savefig("species_confusion_heatmap_filtered.png")
+plt.show()
+
+# Save the filtered confusion pairs to a CSV file
+filtered_confusion_pairs.to_csv("filtered_species_confusion_summary.csv", index=False)
+
+# Print the total number of matches and mismatches
+print(f"Total Matches: {match_count}")
+print(f"Total Mismatches: {mismatch_count}")
+print("Images, CSV files, and heatmap saved successfully.")

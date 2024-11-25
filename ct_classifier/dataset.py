@@ -15,7 +15,7 @@
 import os
 import json
 from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip,RandomAdjustSharpness, GaussianBlur, RandomVerticalFlip
+from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip,RandomAdjustSharpness, GaussianBlur, RandomVerticalFlip, RandomErasing
 from PIL import Image
 import math
 import matplotlib.pyplot as plt
@@ -189,7 +189,8 @@ class CTDataset(Dataset):
             # GaussianBlur(7),
             # RandomHorizontalFlip(p=0.3),
             # RandomVerticalFlip (p=0.3),
-            RandomAdjustSharpness(sharpness_factor=5, p=0.3),
+            # RandomAdjustSharpness(sharpness_factor=5, p=0.3),
+            # RandomErasing(p=0.3)
             ToTensor(),
         ])
         # the tensor format is channels, height, width

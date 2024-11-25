@@ -22,5 +22,9 @@ Print the length of the dataset
 Length of training dataloader
 Starting new model
 Epoch 1/25
-/home/home01/bssbf/cv4e_cagedbird_ID/data2/bc_hanging_parrot/bc_hanging_parrot_leeds_4.jpg
-bad image:
+Model saved as latest.pt at epoch 1
+Experiment Key: 8075a6c867f5498184980d248f11ebc6
+Epoch 2/25
+Model saved as latest.pt at epoch 2
+Experiment Key: 8075a6c867f5498184980d248f11ebc6
+Epoch 3/25

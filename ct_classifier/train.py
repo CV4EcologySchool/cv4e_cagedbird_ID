@@ -10,8 +10,7 @@ import argparse
 import yaml
 import glob
 from tqdm import trange
-
-# COMET WARNING: To get all data logged automatically, import comet_ml before the following modules: torch.
+# WARNING: To get all data logged automatically, import comet_ml before the following modules: torch.
 import comet_ml
 from sklearn.metrics import confusion_matrix, average_precision_score, precision_recall_curve, ConfusionMatrixDisplay
 from sklearn.preprocessing import label_binarize

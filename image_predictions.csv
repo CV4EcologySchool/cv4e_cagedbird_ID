@@ -1,14 +1,14 @@
 Image Filename,Predicted Label,Confidence Score
-download (1).jpeg,bw_leafbird,0.11802344769239426
-download.jpeg,bw_leafbird,0.13869281113147736
-images (1).jpeg,bw_leafbird,0.0729132667183876
-images (2).jpeg,great_myna,0.09352423995733261
-images.jpeg,bluethroat,0.0686669871211052
-large (1).jpeg,bw_leafbird,0.16628038883209229
-large (2).jpeg,bw_leafbird,0.2579387128353119
-large (3).jpeg,bw_leafbird,0.1578359156847
-large (4).jpeg,bw_leafbird,0.21304674446582794
-large (5).jpeg,bw_leafbird,0.24966005980968475
-large.jpeg,bw_leafbird,0.10085495561361313
-large.jpg,bw_leafbird,0.1484108567237854
-mynah1-1000x1000-3FTk49m9Za.jpg,bw_leafbird,0.0975688025355339
+download (1).jpeg,hoopoe,0.11556968837976456
+download.jpeg,sb_munia,0.0863785669207573
+images (1).jpeg,hoopoe,0.3162875473499298
+images (2).jpeg,hoopoe,0.2323058545589447
+images.jpeg,hoopoe,0.25572726130485535
+large (1).jpeg,zebra_finch,0.2593439221382141
+large (2).jpeg,wr_munia,0.17991843819618225
+large (3).jpeg,hoopoe,0.202129527926445
+large (4).jpeg,hoopoe,0.09133758395910263
+large (5).jpeg,sb_munia,0.1358872950077057
+large.jpeg,vh_sunbird,0.07401889562606812
+large.jpg,hoopoe,0.20236068964004517
+mynah1-1000x1000-3FTk49m9Za.jpg,hoopoe,0.234869122505188
