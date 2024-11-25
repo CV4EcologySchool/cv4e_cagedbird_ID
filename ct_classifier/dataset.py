@@ -187,9 +187,9 @@ class CTDataset(Dataset):
             FixedHeightResize(224),
             #CageAugmenter(),
             # GaussianBlur(7),
-            # RandomHorizontalFlip(p=0.25),
-            # RandomVerticalFlip (p=0.75),
-            RandomAdjustSharpness(sharpness_factor=5, p=0.5),
+            # RandomHorizontalFlip(p=0.3),
+            # RandomVerticalFlip (p=0.3),
+            RandomAdjustSharpness(sharpness_factor=5, p=0.3),
             ToTensor(),
         ])
         # the tensor format is channels, height, width

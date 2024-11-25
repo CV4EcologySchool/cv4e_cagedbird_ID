@@ -22,4 +22,4 @@ module load cuda/10.1.168
 nvidia-smi -L
 
 # Run the Python code
-python ct_classifier/train.py --config configs/ep25_56sp_anone_lr1e-3_snone_orig.yaml > outputep25test.log
+python ct_classifier/train_save_epoch.py --config configs/ep25_56sp_anone_lr1e-3_snone_orig.yaml > outputep25test.log

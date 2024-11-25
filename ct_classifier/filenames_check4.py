@@ -6,12 +6,12 @@ import yaml
 import pickle
 import csv
 import torch.nn.functional as F
-from train import create_dataloader, load_model
+from train import create_dataloader
 from util import *
 
 # Parameters
-config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/a-resnet18_d-checked_b-128_n-50_padded_images_sharpness_medium_more_data_upsampled/config_a-resnet18_d-checked_b-128_n-50_padded_images_sharpness_medium_more_data_upsampled.yaml'
-split = 'val'
+config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep75_56sp_anone_lr1e-3_snone_orig/config_ep75_56sp_anone_lr1e-3_snone_orig.yaml'
+model_path = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep75_56sp_anone_lr1e-3_snone_orig/latest.pt'
 
 # Load config
 print(f'Using config "{config}"')
@@ -21,9 +21,11 @@ init_seed(cfg.get('seed', None))
 # Setup dataloader
 dl_val = create_dataloader(cfg, split='val')
 
-# Load model
-model, start_epoch = load_model(cfg, load_latest_version=True)
-print(start_epoch)
+# Load model directly from a specified path
+print(f"Loading model from {model_path}")
+model = torch.load(model_path)
+model.eval()
+print("Model loaded successfully")
 
 # Lists to store data
 inputs_list = []
@@ -53,7 +55,6 @@ for batch_idx, (inputs, labels) in enumerate(dl_val):
     for idx, (pred, true, score) in enumerate(zip(argmax_pred, labels, max_pred)):
         # Determine if the prediction is a match or mismatch
         is_mismatch = pred != true
-        accuracy = 1 if not is_mismatch else 0
         confidence_score_list.append(score.item())
         mismatch_list.append('Mismatch' if is_mismatch else 'Match')
         
@@ -98,6 +99,3 @@ with open('validation_predictions10.csv', mode='w', newline='') as file:
         writer.writerow([true_label, pred_label, score, mismatch, filename])
 
 print("Images and CSV file saved successfully with filenames.")
-
- 
- 

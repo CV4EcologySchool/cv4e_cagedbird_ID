@@ -22,51 +22,66 @@ Print the length of the dataset
 Length of training dataloader
 Starting new model
 Epoch 1/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 1
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 2/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 2
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 3/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 3
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 4/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 4
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 5/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 5
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 6/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 6
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 7/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 7
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 8/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 8
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 9/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 9
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 10/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 10
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 11/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 11
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 12/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 12
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 13/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 13
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 14/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 14
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 15/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 15
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 16/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 16
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 17/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 17
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 18/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 18
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 19/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 19
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 20/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 20
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 21/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
+Model saved as latest.pt at epoch 21
+Experiment Key: 95845dae23094978a330e2e65b146ec5
 Epoch 22/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
-Epoch 23/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
-Epoch 24/100
-Experiment Key: cc78bdfcdb22463dbf730befb78d7b9e
-Epoch 25/100
