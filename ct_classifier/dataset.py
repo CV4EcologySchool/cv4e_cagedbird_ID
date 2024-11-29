@@ -189,7 +189,7 @@ class CTDataset(Dataset):
             # GaussianBlur(7),
             # RandomHorizontalFlip(p=0.3),
             # RandomVerticalFlip (p=0.3),
-            # RandomAdjustSharpness(sharpness_factor=5, p=0.3),
+            RandomAdjustSharpness(sharpness_factor=5, p=0.3),
             # RandomErasing(p=0.3)
             ToTensor(),
         ])

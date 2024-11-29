@@ -1,0 +1,33 @@
+# Here's where you define experiment-specific hyperparameters.
+# You can also create lists and group parameters together into nested sub-parts.
+# In Python, this is all read as a dict.
+
+# environment/computational parameters
+seed: 32678456782       # random number generator seed (long integer value)
+device: cuda
+num_workers: 4 # Was 1
+
+# dataset parameters
+data_root: /home/home01/bssbf/cv4e_cagedbird_ID/data2
+# This data_root was previously: /home/sicily/cv4e_cagedbird_ID/data on the CV4E nodes
+# data_root: /home/home01/bssbf/cv4e_cagedbird_ID/data, data used in the summer school
+num_classes: 56
+# summer school first test num_classes: 29
+
+
+# training hyperparameters
+image_size: [224, 224] # [224, 224] keep it as [224] or [224, ] if you want to keep the aspect ratio the same
+num_epochs: 100 # 200, dataset is currently unbalanced, was 10 and then 20 first
+batch_size: 128
+learning_rate: 0.001 # was 0.001 before (for ALL previous experiments) so multiply lr by 10 to see if you can get the val to plateau earlier than 100 epochs, reduce LR on plateau
+weight_decay: 0.001
+scheduler_step_size: 10
+# the number of epochs when the lr updates
+scheduler_gamma: 1  # 0.5 before
+# if gamma: 1 it will times this by the lr, so it is the same as using no scheduling
+
+# Comet ML experiment saving details
+experiment_name: ep100_56sp_ahorflip_lr1e-3_snone_orig
+
+project_name: cagedbird-classifier
+api_key: 6D79SKeAIuSjteySwQwqx96nq

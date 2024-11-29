@@ -1,0 +1,248 @@
+Using config "configs/ep75_56sp_anone_lr1e-3_snone_orig.yaml"
+WARNING: device set to "cuda" but CUDA not available; falling back to CPU...
+/home/home01/bssbf/cv4e_cagedbird_ID/data2/train.json
+length of annotations
+4971
+{'id': 4286, 'image_id': 4286, 'category_id': 7, 'iscrowd': 0, 'segmentation': [], 'area': 73528}
+Print the length of the dataset
+4971
+tensor([11, 22,  3, 42, 22, 49, 12,  4, 18, 32, 18, 22, 24, 32, 23,  8, 36,  6,
+        27, 35, 26, 35, 27, 51, 40, 41, 35, 22, 27, 33, 23, 34, 16,  3, 52, 49,
+         0, 43, 27, 18, 39, 44, 11, 20, 21, 11,  9,  0, 55, 55, 35, 43, 46, 54,
+        35,  4, 22, 51,  5, 31, 37, 14,  7,  7, 47, 45,  7, 40, 52, 22,  2, 55,
+        14, 48, 34,  3, 17, 49,  4, 34, 36, 44, 10,  2, 54, 15, 38, 12, 23, 11,
+        49, 44, 40,  1, 45, 52, 36, 10, 41, 29, 26, 10, 54, 51,  2, 22, 53, 46,
+        36, 46, 44, 21, 42, 15, 22, 41, 15, 16, 10, 10, 12, 21,  3, 20, 54,  0,
+        52, 33])
+/home/home01/bssbf/cv4e_cagedbird_ID/data2/val.json
+length of annotations
+1243
+Print the length of the dataset
+1243
+Length of training dataloader
+Starting new model
+Epoch 1/75
+Model saved as latest.pt at epoch 1
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 2/75
+Model saved as latest.pt at epoch 2
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 3/75
+Model saved as latest.pt at epoch 3
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 4/75
+Model saved as latest.pt at epoch 4
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 5/75
+Model saved as latest.pt at epoch 5
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 6/75
+Model saved as latest.pt at epoch 6
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 7/75
+Model saved as latest.pt at epoch 7
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 8/75
+Model saved as latest.pt at epoch 8
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 9/75
+Model saved as latest.pt at epoch 9
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 10/75
+Model saved as latest.pt at epoch 10
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 11/75
+Model saved as latest.pt at epoch 11
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 12/75
+Model saved as latest.pt at epoch 12
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 13/75
+Model saved as latest.pt at epoch 13
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 14/75
+Model saved as latest.pt at epoch 14
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 15/75
+Model saved as latest.pt at epoch 15
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 16/75
+Model saved as latest.pt at epoch 16
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 17/75
+Model saved as latest.pt at epoch 17
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 18/75
+Model saved as latest.pt at epoch 18
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 19/75
+Model saved as latest.pt at epoch 19
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 20/75
+Model saved as latest.pt at epoch 20
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 21/75
+Model saved as latest.pt at epoch 21
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 22/75
+Model saved as latest.pt at epoch 22
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 23/75
+Model saved as latest.pt at epoch 23
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 24/75
+Model saved as latest.pt at epoch 24
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 25/75
+Model saved as latest.pt at epoch 25
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 26/75
+Model saved as latest.pt at epoch 26
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 27/75
+Model saved as latest.pt at epoch 27
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 28/75
+Model saved as latest.pt at epoch 28
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 29/75
+Model saved as latest.pt at epoch 29
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 30/75
+Model saved as latest.pt at epoch 30
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 31/75
+Model saved as latest.pt at epoch 31
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 32/75
+Model saved as latest.pt at epoch 32
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 33/75
+Model saved as latest.pt at epoch 33
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 34/75
+Model saved as latest.pt at epoch 34
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 35/75
+Model saved as latest.pt at epoch 35
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 36/75
+Model saved as latest.pt at epoch 36
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 37/75
+Model saved as latest.pt at epoch 37
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 38/75
+Model saved as latest.pt at epoch 38
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 39/75
+Model saved as latest.pt at epoch 39
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 40/75
+Model saved as latest.pt at epoch 40
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 41/75
+Model saved as latest.pt at epoch 41
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 42/75
+Model saved as latest.pt at epoch 42
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 43/75
+Model saved as latest.pt at epoch 43
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 44/75
+Model saved as latest.pt at epoch 44
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 45/75
+Model saved as latest.pt at epoch 45
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 46/75
+Model saved as latest.pt at epoch 46
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 47/75
+Model saved as latest.pt at epoch 47
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 48/75
+Model saved as latest.pt at epoch 48
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 49/75
+Model saved as latest.pt at epoch 49
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 50/75
+Model saved as latest.pt at epoch 50
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 51/75
+Model saved as latest.pt at epoch 51
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 52/75
+Model saved as latest.pt at epoch 52
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 53/75
+Model saved as latest.pt at epoch 53
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 54/75
+Model saved as latest.pt at epoch 54
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 55/75
+Model saved as latest.pt at epoch 55
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 56/75
+Model saved as latest.pt at epoch 56
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 57/75
+Model saved as latest.pt at epoch 57
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 58/75
+Model saved as latest.pt at epoch 58
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 59/75
+Model saved as latest.pt at epoch 59
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 60/75
+Model saved as latest.pt at epoch 60
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 61/75
+Model saved as latest.pt at epoch 61
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 62/75
+Model saved as latest.pt at epoch 62
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 63/75
+Model saved as latest.pt at epoch 63
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 64/75
+Model saved as latest.pt at epoch 64
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 65/75
+Model saved as latest.pt at epoch 65
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 66/75
+Model saved as latest.pt at epoch 66
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 67/75
+Model saved as latest.pt at epoch 67
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 68/75
+Model saved as latest.pt at epoch 68
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 69/75
+Model saved as latest.pt at epoch 69
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 70/75
+Model saved as latest.pt at epoch 70
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 71/75
+Model saved as latest.pt at epoch 71
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 72/75
+Model saved as latest.pt at epoch 72
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 73/75
+Model saved as latest.pt at epoch 73
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 74/75
+Model saved as latest.pt at epoch 74
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e
+Epoch 75/75
+Model saved as latest.pt at epoch 75
+Experiment Key: 58423bea5a584467b22b91aafc1b4b9e

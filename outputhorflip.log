@@ -1,0 +1,27 @@
+Using config "configs/ep100_56sp_ahorflip_lr1e-3_snone_orig.yaml"
+WARNING: device set to "cuda" but CUDA not available; falling back to CPU...
+/home/home01/bssbf/cv4e_cagedbird_ID/data2/train.json
+length of annotations
+4971
+{'id': 4286, 'image_id': 4286, 'category_id': 7, 'iscrowd': 0, 'segmentation': [], 'area': 73528}
+Print the length of the dataset
+4971
+tensor([11, 22,  3, 42, 22, 49, 12,  4, 18, 32, 18, 22, 24, 32, 23,  8, 36,  6,
+        27, 35, 26, 35, 27, 51, 40, 41, 35, 22, 27, 33, 23, 34, 16,  3, 52, 49,
+         0, 43, 27, 18, 39, 44, 11, 20, 21, 11,  9,  0, 55, 55, 35, 43, 46, 54,
+        35,  4, 22, 51,  5, 31, 37, 14,  7,  7, 47, 45,  7, 40, 52, 22,  2, 55,
+        14, 48, 34,  3, 17, 49,  4, 34, 36, 44, 10,  2, 54, 15, 38, 12, 23, 11,
+        49, 44, 40,  1, 45, 52, 36, 10, 41, 29, 26, 10, 54, 51,  2, 22, 53, 46,
+        36, 46, 44, 21, 42, 15, 22, 41, 15, 16, 10, 10, 12, 21,  3, 20, 54,  0,
+        52, 33])
+/home/home01/bssbf/cv4e_cagedbird_ID/data2/val.json
+length of annotations
+1243
+Print the length of the dataset
+1243
+Length of training dataloader
+Starting new model
+Epoch 1/100
+Model saved as latest.pt at epoch 1
+Experiment Key: acfaf1c4312148c1af25819633ca63d6
+Epoch 2/100
