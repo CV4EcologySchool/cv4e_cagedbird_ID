@@ -6,5 +6,5 @@ data2
 # Ignoring all files within the 'all_model_states' folder
 all_model_states/
 predicted_images/
-predicted_images2/
 predicted_images3/
+predicted_images4/
