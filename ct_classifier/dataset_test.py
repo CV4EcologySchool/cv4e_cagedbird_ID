@@ -53,12 +53,13 @@ def rotatedRectWithMaxArea(w, h, angle):
 
 class CTDataset(Dataset):
 
-    def __init__(self, cfg, split='train'):
+    def __init__(self, cfg, split='train2'):
         '''
             Constructor. Here, we collect and index the dataset inputs and
             labels.
         '''
         self.data_root = cfg['data_root']
+
         # Add a test_root attribute to the CTDataset class, which points to the test set directory
         self.test_root = cfg.get('test_root', None)  # Add support for test_root
 
@@ -190,9 +191,9 @@ class CTDataset(Dataset):
             FixedHeightResize(224),
             #CageAugmenter(),
             # GaussianBlur(7),
-            # RandomHorizontalFlip(p=0.25),
+            RandomHorizontalFlip(p=0.5),
             # RandomVerticalFlip (p=0.75),
-            RandomAdjustSharpness(sharpness_factor=5, p=0.5),
+            # RandomAdjustSharpness(sharpness_factor=5, p=0.5),
             ToTensor(),
         ])
         # the tensor format is channels, height, width
@@ -203,7 +204,6 @@ class CTDataset(Dataset):
         
         # index data into list
         self.data = []
-
 
         # Determine which root directory to use for annotations based on the split
         if self.split == 'test' and self.test_root:

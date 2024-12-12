@@ -13,16 +13,23 @@ import math
 # output_val_json_path = "/home/sicily/cv4e_cagedbird_ID/data/high/val.json"
 
 # Updated paths from ARC4 not from the node for the summer school
+# The root directory remains the same as we added the unknown class to the same one,
+# If you remove it, you'll have to return to the older annotation file
 root_directory = "/home/home01/bssbf/cv4e_cagedbird_ID/data2"
-output_train_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/train.json"
-output_upsampling_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/upsampling.json"
-output_val_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/val.json"
+# output_train_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/train.json"
+# output_upsampling_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/upsampling.json"
+# output_val_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/val.json"
 
+# Regenerating the annotation jsons for the unknown data
+output_train_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/train2.json"
+output_upsampling_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/upsampling2.json"
+output_val_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/data2/val2.json"
 
 # Load COCO annotations from a JSON file
 # with open(os.path.join(root_directory, "annotations_test.json"), 'r') as coco_file:
 
-with open(os.path.join(root_directory, "annotations_test_11_11.json"), 'r') as coco_file:
+# Now has the new annotation for 57 species, including an unknown class
+with open(os.path.join(root_directory, "annotations_12_12.json"), 'r') as coco_file:
     coco_annotations = json.load(coco_file)
 
 random.seed (3) # so the shuffle is random but the same each time

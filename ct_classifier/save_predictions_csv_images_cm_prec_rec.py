@@ -13,7 +13,7 @@ from train import create_dataloader, load_model
 from util import *
 
 # Parameters
-config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep100_56sp_anone_lr1e-3_snone_orig/config_ep100_56sp_anone_lr1e-3_snone_orig.yaml'
+config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep100_56sp_ahorflip0.5_lr1e-2_snone_orig/config_ep100_56sp_ahorflip0.5_lr1e-2_snone_orig.yaml'
 
 # Load config
 print(f'Using config "{config}"')
@@ -42,10 +42,10 @@ with open(class_mapping_file, 'rb') as f:
 print(class_mapping)
 
 # Output directories for annotated and raw images
-output_dir_match = 'predicted_images4/match'
-output_dir_mismatch = 'predicted_images4/mismatch'
-output_dir_match_raw = 'predicted_images4/match_raw'
-output_dir_mismatch_raw = 'predicted_images4/mismatch_raw'
+output_dir_match = 'predicted_images5/match'
+output_dir_mismatch = 'predicted_images5/mismatch'
+output_dir_match_raw = 'predicted_images5/match_raw'
+output_dir_mismatch_raw = 'predicted_images5/mismatch_raw'
 os.makedirs(output_dir_match, exist_ok=True)
 os.makedirs(output_dir_mismatch, exist_ok=True)
 os.makedirs(output_dir_match_raw, exist_ok=True)
@@ -107,7 +107,7 @@ predicted_labels = [class_mapping.get(pred.item(), pred.item()) for pred in pred
 true_labels = [class_mapping.get(label.item(), label.item()) for label in labels_list]
 
 # Save predictions and results to CSV
-with open('validation_predictions12.csv', mode='w', newline='') as file:
+with open('validation_predictions13.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['True Label', 'Predicted Label', 'Confidence Score', 'Mismatch', 'Image Filename'])
     for true_label, pred_label, score, mismatch, filename in zip(true_labels, predicted_labels, confidence_score_list, mismatch_list, filename_list):
@@ -125,7 +125,7 @@ class_metrics_df = pd.DataFrame({
     "Recall": recall,
     "F1 Score": f1
 })
-class_metrics_df.to_csv("species_class_metrics.csv", index=False)
+class_metrics_df.to_csv("species_class_metrics2.csv", index=False)
 
 # Overall metrics
 precision_avg, recall_avg, f1_avg, _ = precision_recall_fscore_support(true_labels_numeric, predicted_labels_numeric, average='weighted')
@@ -146,7 +146,7 @@ plt.xlabel("Predicted Labels")
 plt.ylabel("True Labels")
 plt.xticks(rotation=45, ha='right')
 plt.tight_layout()
-plt.savefig("confusion_matrix_normalized.png")
+plt.savefig("confusion_matrix_normalized2.png")
 plt.show()
 
 # === Histograms for Problematic Species ===
@@ -210,7 +210,7 @@ plt.xlabel("Recall")
 plt.ylabel("Precision")
 plt.legend(loc="lower left")
 plt.grid()
-plt.savefig("precision_recall_curve_micro.png")
+plt.savefig("precision_recall_curve_micro2.png")
 plt.show()
 
 print(f"Micro-averaged Mean Average Precision (mAP): {mean_ap:.2f}")
