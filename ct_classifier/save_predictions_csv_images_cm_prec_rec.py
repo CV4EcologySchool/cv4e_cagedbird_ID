@@ -107,7 +107,7 @@ predicted_labels = [class_mapping.get(pred.item(), pred.item()) for pred in pred
 true_labels = [class_mapping.get(label.item(), label.item()) for label in labels_list]
 
 # Save predictions and results to CSV
-with open('validation_predictions13.csv', mode='w', newline='') as file:
+with open('full_preds_val.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['True Label', 'Predicted Label', 'Confidence Score', 'Mismatch', 'Image Filename'])
     for true_label, pred_label, score, mismatch, filename in zip(true_labels, predicted_labels, confidence_score_list, mismatch_list, filename_list):
@@ -125,7 +125,7 @@ class_metrics_df = pd.DataFrame({
     "Recall": recall,
     "F1 Score": f1
 })
-class_metrics_df.to_csv("species_class_metrics2.csv", index=False)
+class_metrics_df.to_csv("species_class_metrics_val.csv", index=False)
 
 # Overall metrics
 precision_avg, recall_avg, f1_avg, _ = precision_recall_fscore_support(true_labels_numeric, predicted_labels_numeric, average='weighted')
@@ -146,7 +146,7 @@ plt.xlabel("Predicted Labels")
 plt.ylabel("True Labels")
 plt.xticks(rotation=45, ha='right')
 plt.tight_layout()
-plt.savefig("confusion_matrix_normalized2.png")
+plt.savefig("confusion_matrix_normalized_val.png")
 plt.show()
 
 # === Histograms for Problematic Species ===
@@ -200,17 +200,17 @@ binary_true_labels = label_binarize(all_true_labels, classes=range(num_classes))
 
 # Compute micro-averaged Precision-Recall curve
 precision, recall, _ = precision_recall_curve(binary_true_labels.ravel(), all_pred_scores.ravel())
-mean_ap = average_precision_score(binary_true_labels, all_pred_scores, average='micro')
+mean_ap = average_precision_score(binary_true_labels, all_pred_scores, average='macro')
 
 # Plot the Precision-Recall curve
 plt.figure(figsize=(10, 8))
-plt.plot(recall, precision, label=f"Micro-averaged PR Curve (AP = {mean_ap:.2f})")
-plt.title("Precision-Recall Curve (Micro-averaged)")
+plt.plot(recall, precision, label=f"Macro-averaged PR Curve (AP = {mean_ap:.2f})")
+plt.title("Precision-Recall Curve (Macro-averaged)")
 plt.xlabel("Recall")
 plt.ylabel("Precision")
 plt.legend(loc="lower left")
 plt.grid()
-plt.savefig("precision_recall_curve_micro2.png")
+plt.savefig("precision_recall_curve_macro.png")
 plt.show()
 
-print(f"Micro-averaged Mean Average Precision (mAP): {mean_ap:.2f}")
+print(f"Macro-averaged Mean Average Precision (mAP): {mean_ap:.2f}")

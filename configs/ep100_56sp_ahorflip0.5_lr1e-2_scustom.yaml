@@ -1,0 +1,30 @@
+# environment/computational parameters
+seed: 32678456782       # random number generator seed (long integer value)
+device: cuda
+num_workers: 4 # Was 1
+
+# dataset parameters
+data_root: /home/home01/bssbf/cv4e_cagedbird_ID/data2
+num_classes: 56
+
+# training hyperparameters
+image_size: [224, 224] # [224, 224] keep it as [224] or [224, ] if you want to keep the aspect ratio the same
+num_epochs: 100 # Total number of epochs for training
+batch_size: 128
+learning_rate: 0.01 # Initial learning rate for SGD optimizer
+weight_decay: 0.001
+
+# Custom scheduler parameters
+
+# Custom scheduler parameters
+scheduler_gamma: 0.9  # Add gamma here (value for 10% reduction)
+
+scheduler:
+  name: MultiStepLR  # Set to MultiStepLR as per the code provided
+  params:
+    milestones: [50, 75]  # Learning rate will change at epoch 50 and 75
+
+# Comet ML experiment saving details
+experiment_name: ep100_56sp_ahorflip0.5_lr1e-2_scustom
+project_name: cagedbird-classifier
+api_key: 6D79SKeAIuSjteySwQwqx96nq
