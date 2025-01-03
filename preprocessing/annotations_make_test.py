@@ -6,7 +6,9 @@ from glob import glob
 
 # Paths
 root_directory = "/home/home01/bssbf/cv4e_cagedbird_ID/test"
-output_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/test/annotations_test.json"  # Path for test data
+
+# was annotations_test.json before
+output_json_path = "/home/home01/bssbf/cv4e_cagedbird_ID/test/test.json"  # Path for test data
 
 # Get a list of category names from subfolder names
 category_names = [folder_name for folder_name in os.listdir(root_directory) if os.path.isdir(os.path.join(root_directory, folder_name))]

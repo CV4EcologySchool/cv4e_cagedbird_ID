@@ -14,3 +14,4 @@ predicted_images4/
 predicted_images5/
 model_histograms/unknown/
 val_images/
+test_images/

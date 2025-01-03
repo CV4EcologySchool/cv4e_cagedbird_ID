@@ -15,7 +15,7 @@
 import os
 import json
 from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip,RandomAdjustSharpness, GaussianBlur, RandomVerticalFlip
+from torchvision.transforms import Compose, Resize, ToTensor, Lambda, Pad, functional, RandomHorizontalFlip,RandomAdjustSharpness, GaussianBlur, RandomVerticalFlip, RandomErasing, RandomRotation
 from PIL import Image
 import math
 import matplotlib.pyplot as plt
@@ -53,16 +53,12 @@ def rotatedRectWithMaxArea(w, h, angle):
 
 class CTDataset(Dataset):
 
-    def __init__(self, cfg, split='train2'):
+    def __init__(self, cfg, split='train'):
         '''
             Constructor. Here, we collect and index the dataset inputs and
             labels.
         '''
         self.data_root = cfg['data_root']
-
-        # Add a test_root attribute to the CTDataset class, which points to the test set directory
-        self.test_root = cfg.get('test_root', None)  # Add support for test_root
-
         self.split = split
 
         class FixedHeightResize:
@@ -192,24 +188,24 @@ class CTDataset(Dataset):
             #CageAugmenter(),
             # GaussianBlur(7),
             RandomHorizontalFlip(p=0.5),
-            # RandomVerticalFlip (p=0.75),
-            # RandomAdjustSharpness(sharpness_factor=5, p=0.5),
+            # RandomVerticalFlip (p=0.3),
+            # RandomAdjustSharpness(sharpness_factor=5, p=0.3),
+            # RandomRotation(degrees=15),
             ToTensor(),
+            # RandomErasing(p=0.5),
         ])
         # the tensor format is channels, height, width
-
-        # RandomShadow
-        # CutOut or RandomErasing(p=0.5)
-        # GaussianBlur(5)
         
         # index data into list
         self.data = []
 
-        # Determine which root directory to use for annotations based on the split
-        if self.split == 'test' and self.test_root:
-            annoPath = os.path.join(self.test_root, self.split + '.json')
-        else:
-            annoPath = os.path.join(self.data_root, self.split + '.json')
+        # get a annotation file
+        annoPath = os.path.join(
+            self.data_root,
+            # 'high', the 'high' folder no longer exists as of 15/3/24
+            # 'training.json' if self.split=='train' else 'val.json' # was formerly: training_18_08.json
+            self.split+'.json' # now it will look for any file that you set as the split, so you just have to enter the filename and it will add the .json, so it should find the .json
+        )
 
         print(annoPath)
 
@@ -246,25 +242,33 @@ class CTDataset(Dataset):
         '''
         return len(self.data)
 
+    
     def __getitem__(self, idx):
-        image_name, label = self.data[idx]
-        if self.split == 'test' and self.test_root:
-            image_path = os.path.join(self.test_root, image_name)
-        else:
-            image_path = os.path.join(self.data_root, image_name)
-        
+        '''
+            Returns a single data point at given idx.
+            Here's where we actually load the image.
+        '''
+        image_name, label = self.data[idx] # see line 57 above where we added these two items to the self.data list
+        # load image
+        image_path = os.path.join(self.data_root, image_name)
+        # the path used to look like this: image_path = os.path.join(self.data_root, 'high', image_name)
+        # print (image_path)
         try:
-            img = Image.open(image_path).convert('RGB')
+            img = Image.open(image_path).convert('RGB') # the ".convert" makes sure we always get three bands in Red, Green, Blue order
         except:
             print(image_path)
-            pass
-
+            pass # Doesn't do anything if it can't be opened
+    
+        # print(img.size)
+        # transform: see lines 31ff above where we define our transformations
         try:
             img_tensor = self.transform(img)
         except Exception as exc:
             print('bad image:')
             print(type(img))
-            print(exc)
-            img_tensor = None  # Return None if image loading fails
-        
+            print(image_path)
+            print(idx)
+            raise Exception from exc
+
+        # print(img_tensor.size())
         return img_tensor, label
