@@ -1,5 +1,8 @@
 data
 data2
+
+# test data
+test
 *.pt* 
 # this used to exclude any .pt file that was just saved into a model_states folder with all the files per experiment, we'll keep the old ones there
 # .pt files that just got overwritten each time you ran the model
@@ -10,3 +13,4 @@ predicted_images3/
 predicted_images4/
 predicted_images5/
 model_histograms/unknown/
+val_images/

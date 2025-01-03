@@ -11,6 +11,9 @@ import seaborn as sns
 from sklearn.metrics import classification_report, precision_recall_fscore_support, confusion_matrix, precision_recall_curve, average_precision_score
 from train import create_dataloader, load_model
 from util import *
+import plotly.express as px
+# PR curve generation
+from sklearn.preprocessing import label_binarize
 
 # Parameters
 config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep100_56sp_ahorflip0.5_lr1e-2_snone_orig/config_ep100_56sp_ahorflip0.5_lr1e-2_snone_orig.yaml'
@@ -42,10 +45,10 @@ with open(class_mapping_file, 'rb') as f:
 print(class_mapping)
 
 # Output directories for annotated and raw images
-output_dir_match = 'predicted_images5/match'
-output_dir_mismatch = 'predicted_images5/mismatch'
-output_dir_match_raw = 'predicted_images5/match_raw'
-output_dir_mismatch_raw = 'predicted_images5/mismatch_raw'
+output_dir_match = 'val_images/match'
+output_dir_mismatch = 'val_images/mismatch'
+output_dir_match_raw = 'val_images/match_raw'
+output_dir_mismatch_raw = 'val_images/mismatch_raw'
 os.makedirs(output_dir_match, exist_ok=True)
 os.makedirs(output_dir_mismatch, exist_ok=True)
 os.makedirs(output_dir_match_raw, exist_ok=True)
@@ -57,9 +60,10 @@ mismatch_count = 0
 
 # Iterate over validation data
 for batch_idx, (inputs, labels) in enumerate(dl_val):
-    predictions = model(inputs)
-    probabilities = F.softmax(predictions, dim=1)
-    max_pred, argmax_pred = probabilities.max(dim=1)
+    with torch.no_grad():
+        predictions = model(inputs)
+        probabilities = F.softmax(predictions, dim=1)
+        max_pred, argmax_pred = probabilities.max(dim=1)
 
     for idx, (pred, true, score) in enumerate(zip(argmax_pred, labels, max_pred)):
         is_mismatch = pred != true
@@ -98,24 +102,24 @@ for batch_idx, (inputs, labels) in enumerate(dl_val):
             match_count += 1
 
         # Extend lists
-        pred_list.append(pred)
+        pred_list.append(pred.item())
         inputs_list.append(inputs[idx])
-        labels_list.append(labels[idx])
+        labels_list.append(labels[idx].item())
 
 # Map predicted and true labels
-predicted_labels = [class_mapping.get(pred.item(), pred.item()) for pred in pred_list]
-true_labels = [class_mapping.get(label.item(), label.item()) for label in labels_list]
+predicted_labels = [class_mapping.get(pred, pred) for pred in pred_list]
+true_labels = [class_mapping.get(label, label) for label in labels_list]
 
 # Save predictions and results to CSV
-with open('full_preds_val.csv', mode='w', newline='') as file:
+with open('preds_val.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['True Label', 'Predicted Label', 'Confidence Score', 'Mismatch', 'Image Filename'])
     for true_label, pred_label, score, mismatch, filename in zip(true_labels, predicted_labels, confidence_score_list, mismatch_list, filename_list):
         writer.writerow([true_label, pred_label, score, mismatch, filename])
 
 # === Classification Metrics ===
-true_labels_numeric = [label.item() for label in labels_list]
-predicted_labels_numeric = [pred.item() for pred in pred_list]
+true_labels_numeric = labels_list
+predicted_labels_numeric = pred_list
 
 # Per-class metrics
 precision, recall, f1, _ = precision_recall_fscore_support(true_labels_numeric, predicted_labels_numeric, average=None)
@@ -133,11 +137,11 @@ print(f"Overall Precision: {precision_avg:.3f}")
 print(f"Overall Recall: {recall_avg:.3f}")
 print(f"Overall F1 Score: {f1_avg:.3f}")
 
+# === Confusion Matrix PNG ===
 # Generate classification report
 report = classification_report(true_labels_numeric, predicted_labels_numeric, target_names=class_mapping.values())
 print(report)
 
-# === Confusion Matrix ===
 conf_matrix = confusion_matrix(true_labels_numeric, predicted_labels_numeric, normalize='true')
 plt.figure(figsize=(12, 10))
 sns.heatmap(conf_matrix, annot=True, cmap="Blues", fmt='.2f', xticklabels=class_mapping.values(), yticklabels=class_mapping.values())
@@ -149,8 +153,78 @@ plt.tight_layout()
 plt.savefig("confusion_matrix_normalized_val.png")
 plt.show()
 
+# === Generate and Save Confusion Matrix as HTML, with Actual Values and Complete Axis Labels ===
+
+# Generate classification report
+report = classification_report(true_labels_numeric, predicted_labels_numeric, target_names=class_mapping.values())
+print(report)
+
+# === Generate and Save Full Confusion Matrix with Improved Label Spacing ===
+
+# Ensure all classes are included in the confusion matrix
+all_classes = list(class_mapping.keys())  # Numeric keys for all species
+all_class_names = list(class_mapping.values())  # Corresponding species names
+
+# Generate confusion matrix with actual values
+conf_matrix = confusion_matrix(
+    true_labels_numeric, 
+    predicted_labels_numeric, 
+    labels=all_classes  # Include all classes
+)
+
+# Convert numeric labels to class names for DataFrame
+df_cm = pd.DataFrame(conf_matrix, index=all_class_names, columns=all_class_names)
+
+# Create interactive heatmap with Plotly
+fig = px.imshow(
+    df_cm,
+    labels=dict(x="Predicted Labels", y="True Labels", color="Count"),
+    x=df_cm.columns,  # Predicted labels
+    y=df_cm.index,    # True labels
+    text_auto=True,   # Display actual counts
+    aspect="equal",   # Ensure square cells
+    color_continuous_scale=px.colors.sequential.Viridis
+)
+
+# Update layout for improved spacing and readability
+fig.update_layout(
+    title=(
+        "Confusion Matrix of True Positives (Diagonal) and Misclassifications (Off-Diagonal) <br>"
+        "for Validation Data Regarding 56 Species of Traded Birds"
+    ),
+    title_font_size=18,
+    xaxis=dict(
+        title="Predicted Labels",
+        title_font=dict(size=14),
+        tickmode='linear',
+        tickangle=-45,  # Rotate x-axis labels
+        tickfont=dict(size=10),
+        automargin=True,  # Automatically adjust margins
+    ),
+    yaxis=dict(
+        title="True Labels",
+        title_font=dict(size=14),
+        tickmode='linear',
+        tickfont=dict(size=10),
+        automargin=True,  # Automatically adjust margins
+    ),
+    margin=dict(t=100, l=200, b=150, r=100),  # Extra space for axis labels and tick labels
+    height=900,  # Increase plot height
+    width=900    # Increase plot width
+)
+
+# Save as HTML file
+output_html_file = "confusion_matrix_improved_spacing.html"
+fig.write_html(output_html_file)
+print(f"Confusion matrix saved to {output_html_file}")
+
+# Show the plot in the browser
+fig.show()
+
 # === Histograms for Problematic Species ===
-low_f1_species = class_metrics_df[class_metrics_df['F1 Score'] < 0.7]['Species'].tolist()
+# Note if the model performs well there may not be any
+
+low_f1_species = class_metrics_df[class_metrics_df['F1 Score'] < 0.75]['Species'].tolist()
 for species in low_f1_species:
     species_df = pd.DataFrame({
         "True Label": true_labels,
@@ -166,18 +240,12 @@ for species in low_f1_species:
     plt.xlabel("Confidence Score")
     plt.ylabel("Frequency")
     plt.tight_layout()
-    plt.savefig(f"histogram_{species}.png")
+    plt.savefig(f"histogram_val_{species}.png")
     plt.show()
 
 # Summary of matches and mismatches
 print(f"Total Matches: {match_count}")
 print(f"Total Mismatches: {mismatch_count}")
-
-# PR curve generation
-# Collect ground truth labels and prediction scores
-
-from sklearn.metrics import precision_recall_curve, average_precision_score
-from sklearn.preprocessing import label_binarize
 
 # Collect ground truth labels and prediction scores
 all_true_labels = []
@@ -210,7 +278,7 @@ plt.xlabel("Recall")
 plt.ylabel("Precision")
 plt.legend(loc="lower left")
 plt.grid()
-plt.savefig("precision_recall_curve_macro.png")
+plt.savefig("precision_recall_curve_macro_val.png")
 plt.show()
 
 print(f"Macro-averaged Mean Average Precision (mAP): {mean_ap:.2f}")
