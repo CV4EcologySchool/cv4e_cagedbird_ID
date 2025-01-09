@@ -9,11 +9,8 @@ import math
 import torch.nn.functional as F
 from PIL import Image
 import torchvision.transforms as transforms
-import pandas as pd
-import seaborn as sns
-from sklearn.metrics import classification_report, precision_recall_fscore_support, confusion_matrix, precision_recall_curve, average_precision_score, accuracy_score
-from train_save_epoch import create_dataloader, load_model
 from torch.utils.data import DataLoader, Dataset
+from train_save_epoch import create_dataloader, load_model
 from dataset import CTDataset  # FixedHeightResize is a class in CTDataset
 from util import *
 
@@ -42,7 +39,7 @@ class FixedHeightResize:
         return img
 
 # Parameters, config has been edited to include a test root
-config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep100_56sp_ahorflip0.5_lr1e-2_s10/config_ep100_56sp_ahorflip0.5_lr1e-2_s10.yaml'
+config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep100_56sp_ahorflip0.5_lr1e-2_snone_orig/config_ep100_56sp_ahorflip0.5_lr1e-2_snone_orig.yaml'
 
 # Load config
 print(f'Using config "{config}"')
@@ -176,16 +173,12 @@ print(f'Top 1 Accuracy: {top_1_accuracy * 100:.2f}%')
 print(f'Top 2 Accuracy: {top_2_accuracy * 100:.2f}%')
 
 # Save top 2 predictions with confidence to a CSV
-with open("test_pred_top_2_with_confidence2.csv", "w", newline="") as f:
+with open("test_pred_top_2_with_confidence4.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(['Filename', 'Top 1 Predicted Class', 'Top 1 Confidence', 'Top 2 Predicted Class', 'Top 2 Confidence'])  # Added confidence
     writer.writerows(top_2_predictions)
 
 print("Top 2 predictions and confidences saved")
-
-import csv
-from PIL import Image
-import os
 
 # Step 1: Load the average pixel count per class from the CSV
 avg_pixel_count_per_class = {}
@@ -213,7 +206,7 @@ def get_image_resolution(image_path):
 # Step 3: Add this information to your predictions CSV
 # We assume that your `true_labels` dictionary and `class_mapping` are already available from the previous steps.
 
-with open("test_pred_top_2_with_confidence2.csv", "w", newline="") as f:
+with open("test_pred_top_2_with_confidence4.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow([
         'Filename', 
