@@ -32,10 +32,7 @@ test_species = [
 ]
 
 # Create a new test mapping based on the training class mapping
-test_mapping = {}
-for idx, species in class_mapping_train.items():
-    if species in test_species:
-        test_mapping[idx] = species
+test_mapping = {idx: species for idx, species in class_mapping_train.items() if species in test_species}
 
 # Save the new test mapping to a pickle file
 test_mapping_file = '/home/home01/bssbf/cv4e_cagedbird_ID/ct_classifier/test_mapping.pickle'
@@ -43,7 +40,6 @@ with open(test_mapping_file, 'wb') as f:
     pickle.dump(test_mapping, f)
 
 print("Test mapping saved:", test_mapping)
-
 
 # Parameters, config has been edited to include a test root
 config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep100_56sp_ahorflip0.5_lr1e-2_snone_orig/config_ep100_56sp_ahorflip0.5_lr1e-2_snone_orig.yaml'
@@ -80,18 +76,26 @@ mismatch_count = 0
 
 # Iterate over validation data
 for batch_idx, (inputs, labels) in enumerate(dl_test):
+    print(f"Processing batch {batch_idx}, batch size: {len(inputs)}")
+    
+    # Print the labels to debug
+    print(f"Labels: {labels}")
+
+    # Make predictions and compute probabilities
     predictions = model(inputs)
     probabilities = F.softmax(predictions, dim=1)
     max_pred, argmax_pred = probabilities.max(dim=1)
 
     for idx, (pred, true, score) in enumerate(zip(argmax_pred, labels, max_pred)):
+        # Debugging the labels and predictions
+        true_label_name = test_mapping.get(true.item(), true.item())
+        pred_label_name = test_mapping.get(pred.item(), pred.item())
+        print(f"True label: {true_label_name}, Predicted label: {pred_label_name}, Confidence score: {score.item()}")
+
+        # Check if the prediction is a mismatch
         is_mismatch = pred != true
         confidence_score_list.append(score.item())
         mismatch_list.append('Mismatch' if is_mismatch else 'Match')
-
-        # Get true and predicted label names
-        true_label_name = class_mapping_train.get(true.item(), true.item())
-        pred_label_name = class_mapping_train.get(pred.item(), pred.item())
 
         # Prepare filename for CSV output
         filename = f"true_{true_label_name}_pred_{pred_label_name}_conf_{score.item():.2f}_batch{batch_idx}_img{idx}.png"
@@ -109,8 +113,8 @@ for batch_idx, (inputs, labels) in enumerate(dl_test):
         labels_list.append(labels[idx])
 
 # Map predicted and true labels
-predicted_labels = [class_mapping_train.get(pred.item(), pred.item()) for pred in pred_list]
-true_labels = [class_mapping_train.get(label.item(), label.item()) for label in labels_list]
+predicted_labels = [test_mapping.get(pred.item(), pred.item()) for pred in pred_list]
+true_labels = [test_mapping.get(label.item(), label.item()) for label in labels_list]
 
 # Check the lengths of lists
 print(f"Lengths of lists:")
@@ -136,9 +140,9 @@ true_labels_numeric = [label.item() for label in labels_list]
 predicted_labels_numeric = [pred.item() for pred in pred_list]
 
 # Per-class metrics
-precision, recall, f1, _ = precision_recall_fscore_support(true_labels_numeric, predicted_labels_numeric, average=None)
+precision, recall, f1, _ = precision_recall_fscore_support(true_labels_numeric, predicted_labels_numeric, average=None, zero_division=0)
 class_metrics_df = pd.DataFrame({
-    "Species": list(class_mapping_train.values()),
+    "Species": list(test_mapping.values()),
     "Precision": precision,
     "Recall": recall,
     "F1 Score": f1
@@ -146,13 +150,13 @@ class_metrics_df = pd.DataFrame({
 class_metrics_df.to_csv("species_class_metrics_test.csv", index=False)
 
 # Overall metrics
-precision_avg, recall_avg, f1_avg, _ = precision_recall_fscore_support(true_labels_numeric, predicted_labels_numeric, average='weighted')
+precision_avg, recall_avg, f1_avg, _ = precision_recall_fscore_support(true_labels_numeric, predicted_labels_numeric, average='weighted', zero_division=0)
 print(f"Overall Precision: {precision_avg:.3f}")
 print(f"Overall Recall: {recall_avg:.3f}")
 print(f"Overall F1 Score: {f1_avg:.3f}")
 
 # Generate classification report
-report = classification_report(true_labels_numeric, predicted_labels_numeric, target_names=class_mapping_train.values())
+report = classification_report(true_labels_numeric, predicted_labels_numeric, target_names=test_mapping.values(), zero_division=0)
 print(report)
 
 # === Histograms for Problematic Species ===
@@ -172,9 +176,5 @@ for species in low_f1_species:
     plt.xlabel("Confidence Score")
     plt.ylabel("Frequency")
     plt.tight_layout()
-    plt.savefig(f"histogram_test{species}.png")
+    plt.savefig(f"histogram_test_{species}.png")
     plt.close()
-
-# Summary of matches and mismatches
-print(f"Total Matches: {match_count}")
-print(f"Total Mismatches: {mismatch_count}")

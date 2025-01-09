@@ -71,7 +71,7 @@ for batch_idx, (inputs, labels) in enumerate(dl_val):
         mismatch_list.append('Mismatch' if is_mismatch else 'Match')
 
         # Get true and predicted label names
-        true_label_name = class_mapping.get(true.item(), true.item())
+        true_label_name = class_mapping.get(true.item(), true.item()) # Why are there two
         pred_label_name = class_mapping.get(pred.item(), pred.item())
 
         # Prepare save paths

@@ -3,6 +3,9 @@ data2
 
 # test data
 test
+# Consolidated test data
+test_con
+
 *.pt* 
 # this used to exclude any .pt file that was just saved into a model_states folder with all the files per experiment, we'll keep the old ones there
 # .pt files that just got overwritten each time you ran the model
