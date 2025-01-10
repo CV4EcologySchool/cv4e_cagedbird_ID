@@ -5,8 +5,8 @@ import pickle
 
 # Paths
 original_test_folder = '/home/home01/bssbf/cv4e_cagedbird_ID/test'  # Path to the original test set folder with species subfolders
-flattened_test_folder = '/home/home01/bssbf/cv4e_cagedbird_ID/test_con'  # Path where the flattened images will be stored
-true_labels_csv = 'true_labels_test2.csv'  # CSV file for true labels
+flattened_test_folder = '/home/home01/bssbf/cv4e_cagedbird_ID/test_con2'  # Path where the flattened images will be stored
+true_labels_csv = 'true_labels_test5.csv'  # CSV file for true labels
 class_mapping_file = '/home/home01/bssbf/cv4e_cagedbird_ID/ct_classifier/class_mapping_56.pickle'  # Path to your class mapping pickle file
 
 # Load the class mapping pickle file

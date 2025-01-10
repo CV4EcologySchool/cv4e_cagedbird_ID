@@ -1,10 +1,14 @@
 data
 data2
-
+summer_2023
 # test data
 test
+test_old
 # Consolidated test data
 test_con
+
+# Can't remove it for now
+OneDrive
 
 *.pt* 
 # this used to exclude any .pt file that was just saved into a model_states folder with all the files per experiment, we'll keep the old ones there

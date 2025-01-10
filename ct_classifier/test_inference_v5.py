@@ -78,9 +78,9 @@ transform = transforms.Compose([
 ])
 
 # Set up the DataLoader
-image_dir = '/home/home01/bssbf/cv4e_cagedbird_ID/test_con'  # Path to the folder containing all the images
+image_dir = '/home/home01/bssbf/cv4e_cagedbird_ID/test_con2'  # Path to the folder containing all the images
 dataset = FlatDirectoryDataset(image_dir=image_dir, transform=transform)
-dl_test = DataLoader(dataset, batch_size=128, shuffle=False)  # No shuffling for test set
+dl_test = DataLoader(dataset, batch_size=128, shuffle=False)  # No shuffling for test set, same batch size as used during model training
 
 # Visualize and save a sample of images
 sample_batch = next(iter(dl_test))
@@ -94,12 +94,12 @@ for idx in range(12):  # Display 12 images
     ax.set_title(f"Filename: {filenames[idx]}")
 
 plt.tight_layout()
-plt.savefig("test_loader_sample2.png")  # Save the plot as PNG
+plt.savefig("test_loader_sample4.png")  # Save the plot as PNG
 plt.close() 
 
 # Read true labels from the CSV file
 true_labels = {}
-true_labels_csv = 'true_labels_test2.csv'  # Your true labels CSV file, labels in number format
+true_labels_csv = 'true_labels_test4.csv'  # Your true labels CSV file, labels in number format
 
 with open(true_labels_csv, mode='r') as file:
     reader = csv.reader(file)
@@ -173,7 +173,7 @@ print(f'Top 1 Accuracy: {top_1_accuracy * 100:.2f}%')
 print(f'Top 2 Accuracy: {top_2_accuracy * 100:.2f}%')
 
 # Save top 2 predictions with confidence to a CSV
-with open("test_pred_top_2_with_confidence4.csv", "w", newline="") as f:
+with open("test_pred_top_2_with_confidence5.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(['Filename', 'Top 1 Predicted Class', 'Top 1 Confidence', 'Top 2 Predicted Class', 'Top 2 Confidence'])  # Added confidence
     writer.writerows(top_2_predictions)
