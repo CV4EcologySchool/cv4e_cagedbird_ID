@@ -7,7 +7,7 @@ def count_images_in_folder(folder_path):
         image_count += len([f for f in files if f.lower().endswith((".jpg", ".png", ".jpeg"))])
     return image_count
 
-root_directory = "E:/species_to_review/crops/90species"
+root_directory = "/home/home01/bssbf/cv4e_cagedbird_ID/data2"
 subfolders = [f.path for f in os.scandir(root_directory) if f.is_dir()]
 
 image_counts = []
@@ -35,4 +35,8 @@ plt.title('Image counts per species')
 plt.legend().set_visible(False)
 
 plt.tight_layout()
-plt.show()
+
+# Save the plot as a PNG file
+plt.savefig("image_counts_plot.png")
+
+print("Plot saved as 'image_counts_plot.png'.")

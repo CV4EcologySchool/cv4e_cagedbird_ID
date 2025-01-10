@@ -206,7 +206,7 @@ def get_image_resolution(image_path):
 # Step 3: Add this information to your predictions CSV
 # We assume that your `true_labels` dictionary and `class_mapping` are already available from the previous steps.
 
-with open("test_pred_top_2_with_confidence4.csv", "w", newline="") as f:
+with open("test_pred_top_2_with_confidence5.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow([
         'Filename', 
@@ -248,3 +248,54 @@ with open("test_pred_top_2_with_confidence4.csv", "w", newline="") as f:
         ])
 
 print("Top 2 predictions with confidence and pixel count comparison saved.")
+
+# Plot all the test accuracies
+# Initialize dictionaries to store counts for top 1 accuracies per species
+top_1_correct_per_species = {}
+total_per_species = {}
+
+# Read the CSV file and compute top 1 accuracies per species
+with open('test_pred_top_2_with_confidence5.csv', mode='r') as file:
+    reader = csv.reader(file)
+    next(reader)  # Skip header row
+    for row in reader:
+        filename, top1_class, top1_confidence, top2_class, top2_confidence, _ = row[:6]
+        true_label = filename.split('_')[0]  # Assuming true label is part of the filename
+
+        if true_label not in total_per_species:
+            top_1_correct_per_species[true_label] = 0
+            total_per_species[true_label] = 0
+
+        total_per_species[true_label] += 1
+
+        if top1_class == true_label:
+            top_1_correct_per_species[true_label] += 1
+
+# Calculate average accuracy per species
+average_accuracy_per_species = {
+    species: top_1_correct_per_species[species] / total_per_species[species]
+    for species in total_per_species
+}
+
+# Sort classes by average accuracy
+sorted_classes = sorted(average_accuracy_per_species, key=average_accuracy_per_species.get, reverse=True)
+sorted_accuracies = [average_accuracy_per_species[cls] for cls in sorted_classes]
+
+# Plot the average accuracies
+plt.figure(figsize=(12, 6))
+plt.scatter(sorted_classes, sorted_accuracies, color='blue')
+
+# Label poor-performing classes (e.g., accuracy below a threshold)
+threshold = 0.5  # Define your threshold for poor performance
+for i, acc in enumerate(sorted_accuracies):
+    if acc < threshold:
+        plt.text(i, acc, sorted_classes[i], fontsize=9, ha='right')
+
+plt.xlabel('Classes')
+plt.ylabel('Average Accuracy')
+plt.title('Average Accuracy per Class')
+plt.xticks(rotation=90)  # Rotate class labels for better readability
+plt.tight_layout()
+plt.savefig("average_accuracy_per_class2.png")
+
+print("Plot saved as 'average_accuracy_per_class2.png'.")
