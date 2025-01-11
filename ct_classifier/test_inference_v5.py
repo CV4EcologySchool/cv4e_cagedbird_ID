@@ -5,8 +5,10 @@ import torch
 import yaml
 import pickle
 import csv
+import random
 import math
 import torch.nn.functional as F
+import pandas as pd
 from PIL import Image
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader, Dataset
@@ -249,53 +251,227 @@ with open("test_pred_top_2_with_confidence5.csv", "w", newline="") as f:
 
 print("Top 2 predictions with confidence and pixel count comparison saved.")
 
-# Plot all the test accuracies
-# Initialize dictionaries to store counts for top 1 accuracies per species
-top_1_correct_per_species = {}
-total_per_species = {}
+# Plot the test accuracies
 
-# Read the CSV file and compute top 1 accuracies per species
-with open('test_pred_top_2_with_confidence5.csv', mode='r') as file:
+# # List of accuracies (arranged alphabetically by class)
+# accuracies = [1.0, 0.8, 0.0, 0.83, 0.0, 0.2, 0.5, 0.8, 0.57, 0.33, 1.0, 0.0, 1.0, 1.0, 0.0, 0.8, 0.17, 0.0, 1.0, 0.0, 1.0, 0.75, 0.67, 0.83, 0.83, 0.67, 0.33, 0.67, 0.67, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.67, 1.0, 1.0, 1.0, 0.5, 0.6, 1.0, 1.0, 0.5, 0.8] # Replace with your actual accuracy values
+
+# # List of true labels (arranged alphabetically)
+# classes = ['af_bluebird', 'bali_myna', 'bc_hanging_parrot', 'bh_bulbul', 'bm_leafbird',
+#     'bt_laughingthrush', 'bw_leafbird', 'cc_laughing', 'cc_thrush', 'cg_magpie',
+#     'common_myna', 'crested_lark', 'crested_myna', 'Eurasian_jay', 'Eurasian_siskin', 'ft_barbet', 'gf_leafbird',
+#     'gg_leafbird', 'hill_myna', 'hooded_butcherbird', 'hoopoe', 'hwamei',
+#     'jap_grosbeak', 'javan_sparrow', 'jb_pitta', 'jp_starling', 'lg_leafbird',
+#     'oh_thrush', 'om_robin', 'rb_leiothrix', 'rubythroat', 'rw_bulbul', 'sb_munia',
+#     'scarlet_minivet', 'se_mesia', 'sh_bulbul', 'spotted_dove', 'sum_laughingthrush',
+#     'swinhoes_white_eye', 'wc_laughingthrush', 'wh_munia', 'wr_munia', 'wr_shama',
+#     'yb_tit', 'zebra_dove', 'zebra_finch']  # Replace with actual class names
+
+# # Sort classes alphabetically to ensure alignment with the accuracies list
+# sorted_classes = sorted(classes)
+# sorted_accuracies = [accuracies[classes.index(cls)] for cls in sorted_classes]
+
+# # Plot the average accuracies
+# plt.figure(figsize=(12, 6))
+# plt.scatter(sorted_classes, sorted_accuracies, color='blue')
+
+# # Label poor-performing classes (e.g., accuracy below a threshold)
+# threshold = 0.67  # Define your threshold for poor performance
+# for i, acc in enumerate(sorted_accuracies):
+#     if acc < threshold:
+#         plt.text(i, acc, sorted_classes[i], fontsize=9, ha='right')
+
+# plt.xlabel('Classes')
+# plt.ylabel('Average Accuracy')
+# plt.title('Average Accuracy per Class')
+# plt.xticks(rotation=90)  # Rotate class labels for better readability
+# plt.tight_layout()
+# plt.savefig("average_accuracy_per_class_fixed.png")
+
+# print("Plot saved as 'average_accuracy_per_class_fixed.png'.")
+
+# File paths
+csv_file = '/home/home01/bssbf/cv4e_cagedbird_ID/species_class_metrics_val.csv'
+
+# Classes (species) to match and their accuracies
+classes = [
+    'af_bluebird', 'bali_myna', 'bc_hanging_parrot', 'bh_bulbul', 'bm_leafbird',
+    'bt_laughingthrush', 'bw_leafbird', 'cc_laughing', 'cc_thrush', 'cg_magpie',
+    'common_myna', 'crested_lark', 'crested_myna', 'Eurasian_jay', 'Eurasian_siskin', 
+    'ft_barbet', 'gf_leafbird', 'gg_leafbird', 'hill_myna', 'hooded_butcherbird', 
+    'hoopoe', 'hwamei', 'jap_grosbeak', 'javan_sparrow', 'jb_pitta', 'jp_starling', 
+    'lg_leafbird', 'oh_thrush', 'om_robin', 'rb_leiothrix', 'rubythroat', 'rw_bulbul', 
+    'sb_munia', 'scarlet_minivet', 'se_mesia', 'sh_bulbul', 'spotted_dove', 
+    'sum_laughingthrush', 'swinhoes_white_eye', 'wc_laughingthrush', 'wh_munia', 
+    'wr_munia', 'wr_shama', 'yb_tit', 'zebra_dove', 'zebra_finch'
+]
+accuracies = [1.0, 0.8, 0.0, 0.83, 0.0, 0.2, 0.5, 0.8, 0.57, 0.33, 1.0, 0.0, 1.0, 1.0, 0.0, 
+              0.8, 0.17, 0.0, 1.0, 0.0, 1.0, 0.75, 0.67, 0.83, 0.83, 0.67, 0.33, 0.67, 0.67, 
+              1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.67, 1.0, 1.0, 1.0, 0.5, 0.6, 1.0, 1.0, 
+              0.5, 0.8]  # Replace with actual accuracy values
+
+# Dictionary to store F1 scores for the 46 species
+f1_scores = {species: None for species in classes}
+
+# Read F1 scores from the CSV
+with open(csv_file, mode='r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        species_name = row['Species']  # Correct column for species
+        f1_score = float(row['F1 Score'])  # Adjusted to match the actual column name
+
+        # If the species is in the list of classes, store its F1 score
+        if species_name in f1_scores:
+            f1_scores[species_name] = f1_score
+
+# Ensure the F1 scores are in the same order as the classes
+sorted_f1_scores = [f1_scores[cls] for cls in classes]
+
+# Define the Top 1 and Top 2 accuracies
+top_1_accuracy = 67.52
+top_2_accuracy = 84.08
+
+# Define a function to split class names by underscore and return both parts
+def split_class_name(class_name):
+    parts = class_name.split('_')
+    return parts[0], parts[1] if len(parts) > 1 else parts[0]
+
+# Apply the function to split class names
+split_class_names = [split_class_name(cls) for cls in classes]
+
+# Plot accuracies and F1 scores
+plt.figure(figsize=(12, 6))
+
+# Plot accuracies
+plt.scatter(classes, accuracies, color='blue', label='Test Accuracy (Top 1)')
+
+# Plot F1 scores
+plt.scatter(classes, sorted_f1_scores, color='green', label='Validation F1 Score')
+
+# Add labels for poor-performing classes
+threshold = 0.67
+for i, (acc, f1) in enumerate(zip(accuracies, sorted_f1_scores)):
+    if acc < threshold or (f1 is not None and f1 < threshold):
+        # Add offset for better readability and reduce overlap
+        offset_y = 0.05 if acc < 0.5 else -0.05  # Adjust based on y position
+        # Stack the labels (class part 1 above class part 2)
+        plt.text(
+            i, 
+            acc + offset_y,  # Slight vertical offset to avoid overlap
+            f"{split_class_names[i][0]}\n{split_class_names[i][1]}",  # Stack the two parts of the class name
+            fontsize=10,  # Increased font size slightly
+            ha='center',  # Center-align the text for better positioning
+            color='red'  # Red color for emphasis
+        )
+
+# Add Top 1 and Top 2 accuracy text on bottom right
+plt.text(0.9, 0.05, f"Top 1 Accuracy: {top_1_accuracy:.2f}%", fontsize=12, color='blue', transform=plt.gca().transAxes)
+plt.text(0.9, 0.025, f"Top 2 Accuracy: {top_2_accuracy:.2f}%", fontsize=12, color='black', transform=plt.gca().transAxes)
+
+# Adjust plot settings
+plt.xticks(rotation=45, ha='right')  # Rotate x labels for readability
+plt.tight_layout()
+
+# Add legend
+plt.legend(loc='upper right')
+
+# Save and show the plot
+plt.savefig("accuracy_f1_comparison_improved.png")
+plt.show()
+
+
+# Visualise a sample of the mismatches
+# On visual inspection, these are some of the incorrect pairings by the model
+
+# bc_hanging_parrot_inat_1.jpg	lg_leafbird
+# bm_leafbird_inat_1.jpg	bh_bulbul
+# crested_lark_inat_1.jpg	oriental_skylark
+# Eurasian_siskin_inat_1.jpg	yb_tit
+# gg_leafbird_inat_1.jpg	ft_barbet
+# hooded_butcherbird_suk_1.jpg	om_robin
+# scarlet_minivet_inat_1.jpg	hill_myna
+
+
+# Load the true labels
+true_labels = {}
+with open('true_labels_test4.csv', mode='r') as file:
     reader = csv.reader(file)
     next(reader)  # Skip header row
     for row in reader:
-        filename, top1_class, top1_confidence, top2_class, top2_confidence, _ = row[:6]
-        true_label = filename.split('_')[0]  # Assuming true label is part of the filename
+        filename, label = row
+        true_labels[filename] = int(label)
 
-        if true_label not in total_per_species:
-            top_1_correct_per_species[true_label] = 0
-            total_per_species[true_label] = 0
+# Load class mapping pickle file
+class_mapping_file = '/home/home01/bssbf/cv4e_cagedbird_ID/ct_classifier/class_mapping_56.pickle'
+with open(class_mapping_file, 'rb') as f:
+    class_mapping = pickle.load(f)
 
-        total_per_species[true_label] += 1
+# Select pairs for comparison
+pairs = [
+    ('bc_hanging_parrot', 'lg_leafbird'),
+    # ('crested_lark', 'oriental_skylark'),
+    ('Eurasian_siskin', 'yb_tit'),
+    ('hooded_butcherbird', 'om_robin')
+]
 
-        if top1_class == true_label:
-            top_1_correct_per_species[true_label] += 1
+# Get the image paths for these species
+image_dir = '/home/home01/bssbf/cv4e_cagedbird_ID/test_con2'
 
-# Calculate average accuracy per species
-average_accuracy_per_species = {
-    species: top_1_correct_per_species[species] / total_per_species[species]
-    for species in total_per_species
-}
+def get_image_paths_for_species(species):
+    return [f for f in os.listdir(image_dir) if species in f]
 
-# Sort classes by average accuracy
-sorted_classes = sorted(average_accuracy_per_species, key=average_accuracy_per_species.get, reverse=True)
-sorted_accuracies = [average_accuracy_per_species[cls] for cls in sorted_classes]
+# Randomly select one image from each of the pairs
+selected_images = {}
+for pair in pairs:
+    species1_images = get_image_paths_for_species(pair[0])
+    species2_images = get_image_paths_for_species(pair[1])
+    
+    # Ensure there are images available for each species
+    if species1_images:
+        selected_images[pair[0]] = random.choice(species1_images)
+    else:
+        print(f"No images found for species: {pair[0]}")
 
-# Plot the average accuracies
-plt.figure(figsize=(12, 6))
-plt.scatter(sorted_classes, sorted_accuracies, color='blue')
+    if species2_images:
+        selected_images[pair[1]] = random.choice(species2_images)
+    else:
+        print(f"No images found for species: {pair[1]}")
 
-# Label poor-performing classes (e.g., accuracy below a threshold)
-threshold = 0.5  # Define your threshold for poor performance
-for i, acc in enumerate(sorted_accuracies):
-    if acc < threshold:
-        plt.text(i, acc, sorted_classes[i], fontsize=9, ha='right')
+# Dynamically set the number of rows/columns based on the number of selected images
+num_images = len(selected_images)
+ncols = 2
+nrows = (num_images + ncols - 1) // ncols  # Calculate rows needed based on number of images
 
-plt.xlabel('Classes')
-plt.ylabel('Average Accuracy')
-plt.title('Average Accuracy per Class')
-plt.xticks(rotation=90)  # Rotate class labels for better readability
+# Load images for visualization
+fig, axes = plt.subplots(nrows, ncols, figsize=(12, nrows * 6))
+
+# Flatten the axes array for easier iteration if there are multiple rows
+axes = axes.flatten()
+
+# Loop through the selected images and plot them
+for idx, (species, filename) in enumerate(selected_images.items()):
+    img_path = os.path.join(image_dir, filename)
+    
+    # Check if the image exists before trying to open it
+    if os.path.exists(img_path):
+        image = Image.open(img_path)
+        
+        # Plot the image
+        ax = axes[idx]
+        ax.imshow(image)
+        ax.set_title(f"{species}: {filename}")
+        ax.axis('off')
+
+# Hide any remaining empty subplots if fewer images than expected
+for idx in range(num_images, len(axes)):
+    axes[idx].axis('off')
+
+# Save the plot to a file
+plot_filename = 'mismatch_visualization.png'
 plt.tight_layout()
-plt.savefig("average_accuracy_per_class2.png")
+plt.savefig(plot_filename)
 
-print("Plot saved as 'average_accuracy_per_class2.png'.")
+# Show the plot
+plt.show()
+
+print(f"Plot saved as '{plot_filename}'.")
