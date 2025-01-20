@@ -53,7 +53,7 @@ def rotatedRectWithMaxArea(w, h, angle):
 
 class CTDataset(Dataset):
 
-    def __init__(self, cfg, split='train2'): # Not sure why it says train2
+    def __init__(self, cfg, split='upsampled'): # Train2 is the json generated when i had the unknown folder, should usually be with train2
         '''
             Constructor. Here, we collect and index the dataset inputs and
             labels.

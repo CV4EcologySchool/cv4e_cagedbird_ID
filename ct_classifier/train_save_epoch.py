@@ -28,10 +28,10 @@ from model import CustomResNet18
 import matplotlib.pyplot as plt
 import numpy as np
 
-def create_dataloader(cfg, split='train'):
+def create_dataloader(cfg, split='upsampling'):
     '''
         Loads a dataset according to the provided split and wraps it in a
-        PyTorch DataLoader object.
+        PyTorch DataLoader object. Was train before
     '''
     dataset_instance = CTDataset(cfg, split)        # create an object instance of our CTDataset class
     print ("Print the length of the dataset")
@@ -349,7 +349,7 @@ def main():
         cfg['device'] = 'cpu'
 
     # initialize data loaders for training and validation set
-    dl_train = create_dataloader(cfg, split='train') # was just train before, or upsampling
+    dl_train = create_dataloader(cfg, split='upsampling') # was just train before, or upsampling
     sample_batch = next(iter(dl_train))
     inputs, labels = sample_batch
     print (labels)
