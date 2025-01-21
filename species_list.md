@@ -1,11 +1,56 @@
-## **Species List**
+# **Species List**
 
-# Asian-fairy Bluebird
+## Asian-fairy Bluebird | Kecembang Gadung
 * Species code: af_bluebird
 * Latin name: *Irena puella*
-* Indonesian name: 
+* IUCN status: LC
+* Population trend: Decreasing  
+![3 photos of an Asian-fairy Bluebird](species_examples/af_bluebird.jpg)
+
+## Bali Myna | Curik Bali/Jalak Bali
+* Species code: bali_myna
+* Latin name: *Leucopsar rothschildi*
+* IUCN status:CR
+* Population trend: Decreasing 
+![3 photos of a Bali Myna](species_examples/bali_myna.jpg)  
+
+## Black-headed Bulbul | Cucak Kuricang
+* Species code: bh_bulbul
+* Latin name: *Brachypodius atriceps*, formerly *Pycnonotus atriceps*
+* IUCN status: LC
+* Population trend: Stable
+
+## Black-throated Laughingthrush | Poksai Hongkong/Poksai Hitam
+* Species code: bt_laughingthrush
+* Latin name: *Ianthocincla chinensis*, formerly *Garrulax chinensis*
+* IUCN status: LC
+* Population trend: Decreasing
+ ![3 photos of a Black-throated Laughingthrush](species_examples/bt_laughingthrush.jpg)
+
+## Blue-crowned Hanging-parrot | Serindit Melayu
+* Species code: bc_hanging_parrot
+* Latin name: *Loriculus galgulus*
+* IUCN status: LC
+* Population trend: Decreasing
+![3 photos of a Blue-crowned Hanging-parrot](species_examples/bc_hanging_parrot.jpg)
+
+## Blue-masked Leafbird | Cicadaun Sumatera
+* Species code: bm_leafbird
+* Latin name: *Chloropsis venusta*
+* IUCN status: NT
+* Population trend: Decreasing
+![3 photos of a Blue-masked Leafbird ](species_examples/bm_leafbird.jpg)
+REGENERATE
+
+## Bluethroat
+* Species code: bluethroat
+* Latin name: *Luscinia svecica*
+* IUCN status: LC
+* Population trend: Stable
+WHERE IS THE PIC 
+
+## Blue-winged Leafbird |
+* Species code: 
+* Latin name: **
 * IUCN status:
 * Population trend: 
-
-![alt text](val_images/match_raw/true_af_bluebird_pred_af_bluebird_conf_0.96_batch0_img34.png)
-

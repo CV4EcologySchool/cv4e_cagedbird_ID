@@ -42,6 +42,7 @@ class FixedHeightResize:
 
 # Parameters, config has been edited to include a test root
 config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep100_56sp_ahorflip0.5_lr1e-2_snone_orig/config_ep100_56sp_ahorflip0.5_lr1e-2_snone_orig.yaml'
+# config = '/home/home01/bssbf/cv4e_cagedbird_ID/all_model_states/ep100_56sp_ahorflip0.5_lr1e-2_snone_upsampled/config_ep100_56sp_ahorflip0.5_lr1e-2_snone_upsampled.yaml'
 
 # Load config
 print(f'Using config "{config}"')
@@ -96,12 +97,12 @@ for idx in range(12):  # Display 12 images
     ax.set_title(f"Filename: {filenames[idx]}")
 
 plt.tight_layout()
-plt.savefig("test_loader_sample4.png")  # Save the plot as PNG
+plt.savefig("test_loader_sample_orig.png")  # Save the plot as PNG
 plt.close() 
 
 # Read true labels from the CSV file
 true_labels = {}
-true_labels_csv = 'true_labels_test4.csv'  # Your true labels CSV file, labels in number format
+true_labels_csv = 'true_labels_test5.csv'  # Your true labels CSV file, labels in number format
 
 with open(true_labels_csv, mode='r') as file:
     reader = csv.reader(file)
@@ -175,7 +176,7 @@ print(f'Top 1 Accuracy: {top_1_accuracy * 100:.2f}%')
 print(f'Top 2 Accuracy: {top_2_accuracy * 100:.2f}%')
 
 # Save top 2 predictions with confidence to a CSV
-with open("test_pred_top_2_with_confidence5.csv", "w", newline="") as f:
+with open("test_pred_top_2_with_confidence_orig.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(['Filename', 'Top 1 Predicted Class', 'Top 1 Confidence', 'Top 2 Predicted Class', 'Top 2 Confidence'])  # Added confidence
     writer.writerows(top_2_predictions)
@@ -208,7 +209,7 @@ def get_image_resolution(image_path):
 # Step 3: Add this information to your predictions CSV
 # We assume that your `true_labels` dictionary and `class_mapping` are already available from the previous steps.
 
-with open("test_pred_top_2_with_confidence5.csv", "w", newline="") as f:
+with open("test_pred_top_2_with_confidence_orig2.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow([
         'Filename', 
@@ -308,7 +309,7 @@ classes = [
 accuracies = [1.0, 0.8, 0.0, 0.83, 0.0, 0.2, 0.5, 0.8, 0.57, 0.33, 1.0, 0.0, 1.0, 1.0, 0.0, 
               0.8, 0.17, 0.0, 1.0, 0.0, 1.0, 0.75, 0.67, 0.83, 0.83, 0.67, 0.33, 0.67, 0.67, 
               1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.67, 1.0, 1.0, 1.0, 0.5, 0.6, 1.0, 1.0, 
-              0.5, 0.8]  # Replace with actual accuracy values
+              0.5, 0.8] 
 
 # Dictionary to store F1 scores for the 46 species
 f1_scores = {species: None for species in classes}
@@ -375,9 +376,14 @@ plt.tight_layout()
 # Add legend
 plt.legend(loc='upper right')
 
-# Save and show the plot
-plt.savefig("accuracy_f1_comparison_improved.png")
-plt.show()
+# Save and show the plot as a png and as a pdf
+# plt.savefig("accuracy_f1_comparison_upsampled.png")
+# plt.show()
+# Save as PNG (high resolution)
+plt.savefig("accuracy_f1_comparison_highres.png", dpi=300)
+
+# Save as PDF
+plt.savefig("accuracy_f1_comparison_highres.pdf", bbox_inches='tight', transparent=False)
 
 
 # Visualise a sample of the mismatches
@@ -394,7 +400,7 @@ plt.show()
 
 # Load the true labels
 true_labels = {}
-with open('true_labels_test4.csv', mode='r') as file:
+with open('true_labels_test5.csv', mode='r') as file:
     reader = csv.reader(file)
     next(reader)  # Skip header row
     for row in reader:
@@ -467,12 +473,11 @@ for idx in range(num_images, len(axes)):
     axes[idx].axis('off')
 
 # Save the plot to a file
-plot_filename = 'mismatch_visualization.png'
+plot_filename = 'mismatch_visualization_orig.png'
 plt.tight_layout()
-plt.savefig(plot_filename)
+plt.savefig(plot_filename, dpi=300)
 
 # Show the plot
 plt.show()
 
 print(f"Plot saved as '{plot_filename}'.")
-
