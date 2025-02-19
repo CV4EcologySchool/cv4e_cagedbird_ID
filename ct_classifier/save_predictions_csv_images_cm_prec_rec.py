@@ -175,6 +175,11 @@ conf_matrix = confusion_matrix(
 # Convert numeric labels to class names for DataFrame
 df_cm = pd.DataFrame(conf_matrix, index=all_class_names, columns=all_class_names)
 
+# Save as a csv for the correlation analysis: 
+# Save confusion matrix as CSV file
+df_cm.to_csv("confusion_matrix.csv")
+print("Confusion matrix saved to confusion_matrix.csv")
+
 # Create interactive heatmap with Plotly
 fig = px.imshow(
     df_cm,

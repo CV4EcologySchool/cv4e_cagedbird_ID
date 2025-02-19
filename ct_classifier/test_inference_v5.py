@@ -481,3 +481,83 @@ plt.savefig(plot_filename, dpi=300)
 plt.show()
 
 print(f"Plot saved as '{plot_filename}'.")
+
+# Accuracy with error bars
+
+# Example accuracy values for each species (replace with your actual data)
+accuracies = { 
+'af_bluebird': [1.0, 1.0], 
+'bali_myna': [1.0, 1.0, 1.0, 1.0, 0], 
+'bc_hanging_parrot': [0, 0, 0, 0],
+'bh_bulbul': [1.0, 1.0, 1.0, 1.0, 1.0, 0.0], 
+'bm_leafbird': [0],
+'bt_laughingthrush': [0, 1, 0, 0 ], 
+'bw_leafbird': [1, 0], 
+'cc_laughing': [1, 0, 1, 1], 
+'cc_thrush': [1, 1, 1, 0, 0, 0, 1], 
+'cg_magpie': [0, 0, 1, 0, 1, 0],
+'common_myna': [1, 1, 1, 1], 
+'crested_lark': [0], 
+'crested_myna': [1, 1], 
+'Eurasian_jay': [1], 
+'Eurasian_siskin': [0, 0], 
+'ft_barbet': [1, 1, 1, 0, 1], 
+'gf_leafbird': [0, 0, 1, 0, 0], 
+'gg_leafbird': [0, 0], 
+'hill_myna': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 
+'hooded_butcherbird': [0, 0, 0, 0], 
+'hoopoe': [1], 
+'hwamei': [1, 1, 1, 0], 
+'jap_grosbeak': [0, 1, 1], 
+'javan_sparrow': [1, 0, 1, 1, 1, 1], 
+'jb_pitta': [1, 0, 1, 1, 1, 1], 
+'jp_starling': [1, 0, 1, 1, 0, 1], 
+'lg_leafbird': [0, 1, 0], 
+'oh_thrush': [0, 1, 1],
+'om_robin': [1, 0, 1], 
+'rb_leiothrix': [1, 1, 1, 1], 
+'rubythroat': [1], 
+'rw_bulbul': [1, 1], 
+'sb_munia': [1], 
+'scarlet_minivet': [0], 
+'se_mesia': [1, 1, 1, 1, 1, 1], 
+'sh_bulbul': [1], 
+'spotted_dove': [1, 0, 1], 
+'sum_laughingthrush': [1, 1, 1],
+'swinhoes_white_eye': [1, 1], 
+'wc_laughingthrush': [1, 1, 1], 
+'wh_munia': [1, 0], 
+'wr_munia': [1, 1, 1, 0, 0], 
+'wr_shama': [0, 1], 
+'yb_tit': [1], 
+'zebra_dove': [0, 1], 
+'zebra_finch': [1, 0, 1, 1, 1]
+} 
+
+# Calculate the mean, minimum, and maximum accuracies for each species
+mean_accuracies = []
+min_accuracies = []
+max_accuracies = []
+species_names = []
+
+for species, values in accuracies.items():
+    mean_accuracies.append(np.mean(values))
+    min_accuracies.append(np.min(values))
+    max_accuracies.append(np.max(values))
+    species_names.append(species)
+
+# Calculate the error bars (range)
+error_bars = [np.array(mean_accuracies) - np.array(min_accuracies), np.array(max_accuracies) - np.array(mean_accuracies)]
+
+# Plot accuracies with error bars
+plt.figure(figsize=(12, 6))
+plt.errorbar(species_names, mean_accuracies, yerr=error_bars, fmt='o', ecolor='red', capsize=5, label='Test Accuracy (Top 1)')
+
+plt.xticks(rotation=45, ha='right')
+plt.xlabel('Species')
+plt.ylabel('Accuracy')
+plt.title('Accuracy per Species with Range Error Bars')
+plt.legend()
+plt.tight_layout()
+plt.savefig("accuracy_with_range_error_bars.png", dpi=300)
+plt.show()

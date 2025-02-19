@@ -27,16 +27,16 @@ bars = plt.bar(range(len(sorted_subfolders)), sorted(image_counts, reverse=True)
 # Set x-axis labels to empty strings (ticks only)
 plt.xticks(range(len(sorted_subfolders)), [''] * len(sorted_subfolders))
 
-plt.xlabel('Species')
-plt.ylabel('Number of Images')
-plt.title('Image counts per species')
+plt.xlabel('Species', fontsize=14)
+plt.ylabel('Number of Images', fontsize=14)
+plt.title('Image counts per species', fontsize=16)
 
 # Removing legend
 plt.legend().set_visible(False)
 
 plt.tight_layout()
 
-# Save the plot as a PNG file
-plt.savefig("image_counts_plot.png")
+# Save the plot as a PNG file with 300 DPI
+plt.savefig("image_counts_plot.png", dpi=300)
 
-print("Plot saved as 'image_counts_plot.png'.")
+print("Plot saved as 'image_counts_plot.png' with 300 DPI.")
