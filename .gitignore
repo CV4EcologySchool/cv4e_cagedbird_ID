@@ -10,6 +10,7 @@ test_con
 # Can't remove it for now
 
 species_examples
+species_examples2
 
 *.pt* 
 # this used to exclude any .pt file that was just saved into a model_states folder with all the files per experiment, we'll keep the old ones there

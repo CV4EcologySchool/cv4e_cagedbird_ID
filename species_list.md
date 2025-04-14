@@ -22,6 +22,7 @@
 * IUCN status: Least Concern
 * Population trend: Stable
 * Indonesian protection status: Not Protected
+![3 photos of a Black-headed Bulbul](species_examples/bh_bulbul.jpg)  
 
 ## Black-throated Laughingthrush | Poksai Hongkong/Poksai Hitam
 * Species code: bt_laughingthrush
@@ -45,8 +46,7 @@
 * IUCN status: Near Threatened
 * Population trend: Decreasing
 * Indonesian protection status: Protected
-![3 photos of a Blue-masked Leafbird ](species_examples/bm_leafbird.jpg)
-REGENERATE
+![3 photos of a Blue-masked Leafbird ](species_examples2/bm_leafbird.jpg)
 
 ## Bluethroat
 * Species code: bluethroat
@@ -54,7 +54,7 @@ REGENERATE
 * IUCN status: Least Concern
 * Population trend: Stable
 * Indonesian protection status: Not Protected
-WHERE IS THE PIC 
+![3 photos of a Bluethroat ](species_examples2/bluethroat.jpg)
 
 ## Blue-winged Leafbird | Cica-daun Sayap-biru
 * Species code: bw_leafbird
@@ -66,11 +66,19 @@ WHERE IS THE PIC
 
 ## Chestnut-capped Laughingthrush | Poksai Genting
 * Species code: cc_laughing
-* Latin name: *Ianthocincla mitrata*
+* Latin name: *Ianthocincla mitrata*, formerly *Garrulax mitratus*
 * IUCN status: Near Threatened
 * Population trend: Decreasing
 * Indonesian protection status: Not Protected
 ![3 photos of a Chestnut-capped Laughingthrush](species_examples/cc_laughing.jpg)
+
+## Chestnut-capped Thrush | Anis Kembang
+* Species code: cc_laughing
+* Latin name: *Geokichla interpre*, formerly *Zoothera interpres*
+* IUCN status: Near Threatened
+* Population trend: Decreasing
+* Indonesian protection status: Not Protecteds
+![3 photos of a Chestnut-capped Thrush](species_examples/cc_thrush.jpg)
 
 ## Chinese Hwamei | Burung Hwa Mei
 * Species code: hwamei
@@ -80,7 +88,7 @@ WHERE IS THE PIC
 * Indonesian protection status: Not Protected
 ![3 photos of a Chinese Hwamei](species_examples/hwamei.jpg)
 
-## Common Green Magpie| Ekek Layongan
+## Common Green Magpie | Ekek Layongan
 * Species code: cg_magpie
 * Latin name: *Cissa chinensis*
 * IUCN status: Least Concern
@@ -88,7 +96,7 @@ WHERE IS THE PIC
 * Indonesian protection status: Protected
 ![3 photos of a Common Green Magpie](species_examples/cg_magpie.jpg)
 
-## Common Hill Myna | Tiong Emas/ Burung Beo
+## Common Hill Myna | Tiong Emas/Burung Beo
 * Species code: hill_myna
 * Latin name: *Gracula religiosa*
 * IUCN status: Least Concern
@@ -103,6 +111,14 @@ WHERE IS THE PIC
 * Population trend: Increasing
 * Indonesian protection status: Not Protected
 ![3 photos of a Common Myna](species_examples/common_myna.jpg)
+
+## Common Redpoll
+* Species code: Common_redpoll
+* Latin name: *Acanthis flammea*, formerly *Carduelis flammea*
+* IUCN status: Least Concern
+* Population trend: Decreasing
+* Indonesian protection status: Not Protected
+![3 photos of a Common Redpoll](species_examples2/Common_redpoll.jpg)
 
 ## Crested Lark
 * Species code: crested_lark
@@ -138,11 +154,19 @@ WHERE IS THE PIC
 
 ## Eurasian Siskin 
 * Species code: Eurasian_siskin
-* Latin name: *Spinus spinus*
+* Latin name: *Spinus spinus*, formerly *Carduelis spinus*
 * IUCN status: Least Concern
 * Population trend: Decreasing
 * Indonesian protection status: Not Protected
 ![3 photos of a Eurasian Siskin](species_examples/Eurasian_siskin.jpg)
+
+## Fischer's Lovebird | Lovebird
+* Species code: fischers_lovebird
+* Latin name: *Agapornis fischeri*
+* IUCN status: Near Threatened
+* Population trend: Decreasing
+* Indonesian protection status: Not Protected
+![3 photos of a Fischer's Lovebird](species_examples2/fischers_lovebird.jpg)
 
 ## Fire-tufted Barbet | Takur Api
 * Species code: ft_barbet
@@ -166,7 +190,15 @@ WHERE IS THE PIC
 * IUCN status: Endangered
 * Population trend: Decreasing
 * Indonesian protection status: Protected
-![3 photos of a Greater Green Leafbird](species_examples/gg_leafbird.jpg)
+![3 photos of a Greater Green Leafbird](species_examples2/gg_leafbird.jpg)
+
+## Great Myna | Kerak Perut-pucat
+* Species code: great_myna
+* Latin name: *Acridotheres grandis*
+* IUCN status: Least Concern
+* Population trend: Stable
+* Indonesian protection status: Not Protected
+![3 photos of a Great Myna](species_examples2/great_myna.jpgg)
 
 ## Hooded Butcherbird | Jagal Papua
 * Species code: hooded_butcherbird
@@ -186,28 +218,35 @@ WHERE IS THE PIC
 
 ## Java Sparrow | Gelatik Jawa
 * Species code: javan_sparrow
-* Latin name: *Lonchura oryzivora*
+* Latin name: *Lonchura oryzivora*, formerly *Padda oryzivora*
 * IUCN status: Endangered
 * Population trend: Decreasing
 * Indonesian protection status: Protected
 ![3 photos of a Java Sparrow](species_examples/javan_sparrow.jpg)
 
-## Javan Banded Pitta| Paok Pancawarna
+## Javan Banded Pitta | Paok Pancawarna
 * Species code: jb_pitta
-* Latin name: *Hydrornis guajanus*
+* Latin name: *Hydrornis guajanus*, formerly *Pitta guajana*
 * IUCN status: Least Concern
 * Population trend: Decreasing
 * Indonesian protection status: Protected
-![3 photos of a Java Sparrow](species_examples/jb_pitta.jpg)
+![3 photos of a Javan Banded Pitta](species_examples/jb_pitta.jpg)
 
 ## Javan Pied Starling | Jalak Suren
 * Species code: jp_starling
-* Latin name: *Gracupica jalla*
+* Latin name: *Gracupica jalla*, formerly *Sturnus contra*, conspecific with the Asian Pied Starling
 * IUCN status: Critically Endangered
 * Population trend: Decreasing
 * Indonesian protection status: Not Protected
-![3 photos of a Java Sparrow](species_examples/jp_starling.jpg)
+![3 photos of a Javan Pied Starling](species_examples/jp_starling.jpg)
 
+## Lemon-bellied White-eye | Kacamata Laut
+* Species code: lb_white_eye
+* Latin name: *Zosterops chloris*
+* IUCN status: Least Concern
+* Population trend: Stable
+* Indonesian protection status: Not Protected
+![3 photos of a Lemon-bellied White-eye](species_examples2/lb_white_eye.jpg)
 
 ## Lesser Green Leafbird | Cicadaun Kecil
 * Species code: lg_leafbird
@@ -215,15 +254,15 @@ WHERE IS THE PIC
 * IUCN status: Near Threatened
 * Population trend: Decreasing
 * Indonesian protection status: Protected
-![3 photos of a Lesser Green Leafbird](species_examples/lg_leafbird.jpg)
+![3 photos of a Lesser Green Leafbird](species_examples2/lg_leafbird.jpg)
 
-## Orange-headed Thrush | Anis Merah/ Anis Cacing
+## Orange-headed Thrush | Anis Merah/Anis Cacing
 * Species code: oh_thrush
-* Latin name: *Geokichla citrina*
+* Latin name: *Geokichla citrina*, formerly *Zoothera citrina*
 * IUCN status: Least Concern
 * Population trend: Decreasing
 * Indonesian protection status: Not Protected
-![3 photos of a Orange-headed Thrush](species_examples/oh_thrush.jpg)
+![3 photos of an Orange-headed Thrush](species_examples/oh_thrush.jpg)
 
 ## Oriental Magpie-robin | Kucica Kampung/ Kacer
 * Species code: om_robin
@@ -231,7 +270,15 @@ WHERE IS THE PIC
 * IUCN status: Least Concern
 * Population trend: Stable
 * Indonesian protection status: Not Protected
-![3 photos of a Oriental Magpie-robin](species_examples/om_robin.jpg)
+![3 photos of an Oriental Magpie-robin](species_examples/om_robin.jpg)
+
+## Oriental Skylark | Branjangan Langit-kecil
+* Species code: oriental_skylark
+* Latin name: *Alauda gulgula*
+* IUCN status: Least Concern
+* Population trend: Decreasing
+* Indonesian protection status: Not Protected
+![3 photos of an Oriental Skylark](species_examples2/oriental_skylark.jpg)
 
 ## Red-billed Leiothrix | Burung Pekin Robin
 * Species code: rb_leiothrix
@@ -241,6 +288,22 @@ WHERE IS THE PIC
 * Indonesian protection status: Not Protected
 ![3 photos of a Red-billed Leiothrix](species_examples/rb_leiothrix.jpg)
 
+## Red-billed Starling | Jalak Sutera
+* Species code: rb_starling
+* Latin name: *Leiothrix lutea*
+* IUCN status: Least Concern
+* Population trend: Stable
+* Indonesian protection status: Not Protected
+![3 photos of a Red-billed Starling](species_examples2/rb_starling.jpg)
+
+## Rufous-fronted Laughingthrush | Poksai Kuda
+* Species code: rf_laughingthrush
+* Latin name: *Garrulax rufifrons*
+* IUCN status: Critically Endangered
+* Population trend: Decreasing
+* Indonesian protection status:  Protected
+![3 photos of a Rufous-fronted Laughingthrush](species_examples2/rf_laughingthrush.jpg)
+
 ## Siberian Rubythroat
 * Species code: rubythroat
 * Latin name: *Calliope calliope*
@@ -249,7 +312,7 @@ WHERE IS THE PIC
 * Indonesian protection status: Not Protected
 ![3 photos of a Siberian Rubythroat](species_examples/rubythroat.jpg)
 
-## Red-whiskered Bulbul
+## Red-whiskered Bulbul | Cucak camban-merah
 * Species code: rw_bulbul
 * Latin name: *Pycnonotus jocosus*
 * IUCN status: Least Concern
@@ -305,13 +368,29 @@ WHERE IS THE PIC
 * Indonesian protection status: Protected
 ![3 photos of a Sumatran Laughingthrush](species_examples/sum_laughingthrush.jpg)
 
-## Swinhoe's White-eye | Kacamata
+## Swinhoe's White-eye | Kacamata Melayu
 * Species code: swinhoes_white_eye
 * Latin name: *Zosterops simplex*
 * IUCN status: Least Concern
-* Population trend: Stable
+* Population trend: Increasing
 * Indonesian protection status: Not Protected
 ![3 photos of a Swinhoe's White-eye](species_examples/swinhoes_white_eye.jpg)
+
+## Van Hasselt’s Sunbird | Burung-madu pengantin
+* Species code: vh_sunbird
+* Latin name: *Leptocoma brasiliana*, formerly *Nectarinia sperata*
+* IUCN status: Least Concern
+* Population trend: Stable
+* Indonesian protection status: Not Protected
+![3 photos of a Velvet-fronted Nuthatch](species_examples2/vh_sunbird.jpg)
+
+## Velvet-fronted Nuthatch | Munguk Beledu
+* Species code: vf_nuthatch
+* Latin name: *Sitta frontalis*
+* IUCN status: Least Concern
+* Population trend: Decreasing
+* Indonesian protection status: Not Protected
+![3 photos of a Velvet-fronted Nuthatch](species_examples2/vf_nuthatch.jpg)
 
 ## White-crested Laughingthrush | Poksai Jambul
 * Species code: wc_laughingthrush
@@ -336,3 +415,35 @@ WHERE IS THE PIC
 * Population trend: Stable
 * Indonesian protection status: Not Protected
 ![3 photos of a White-rumped Munia](species_examples/wr_munia.jpg)
+
+## White-rumped Shama | Kucica Hutan/Murai Batu
+* Species code: wr_shama
+* Latin name: *Copsychus malabaricus*
+* IUCN status: Least Concern
+* Population trend: Decreasing
+* Indonesian protection status: Not Protected
+![3 photos of a White-rumped Shama](species_examples/wr_shama.jpg)
+
+## Yellow-bellied Tit
+* Species code: yb_tit
+* Latin name: *Pardaliparus venustulus*
+* IUCN status: Least Concern
+* Population trend: Decreasing
+* Indonesian protection status: Not Protected
+![3 photos of a Yellow-bellied Tit](species_examples/yb_tit.jpg)
+
+## Zebra Dove | Perkutut Jawa
+* Species code: zebra_dove
+* Latin name: *Geopelia striata*
+* IUCN status: Least Concern
+* Population trend: Stable
+* Indonesian protection status: Not Protected
+![3 photos of a Zebra Dove](species_examples/zebra_dove.jpg)
+
+## Zebra Finch | Taeniopygia guttata
+* Species code: zebra_finch
+* Latin name: *Taeniopygia guttata*
+* IUCN status: Least Concern
+* Population trend: Stable
+* Indonesian protection status: Not Protected
+![3 photos of a Zebra Dove](species_examples/zebra_finch.jpg)
